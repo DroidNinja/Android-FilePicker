@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<droidninja.filepicker.views.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:padding="1dip"
+        android:layout_gravity="center"
+        android:id="@+id/iv_photo"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:background="@drawable/image_placeholder"
+        android:layout_height="match_parent"
+        />
+
+    <View
+        android:id="@+id/transparent_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent_black"
+        android:visibility="gone"
+        />
+
+</droidninja.filepicker.views.SquareRelativeLayout>

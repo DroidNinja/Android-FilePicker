@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="row_active">#efefef</color>
+  <color name="colorPrimary">#da4d26</color>
+  <color name="colorPrimaryDark">#a93409</color>
+  <color name="colorAccent">#FF4081</color>
+  <color name="bg_gray">#ecedef</color>
+  <color name="transparent_black">#94333232</color>
+
+  <drawable name="tab_gray">@color/bg_gray</drawable>
+  <drawable name="tab_white">@android:color/white</drawable>
+</resources>

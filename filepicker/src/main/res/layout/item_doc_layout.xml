@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    >
+
+    <ImageView
+        android:id="@+id/file_iv"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_pdf"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:id="@+id/file_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PPDF_112121.pdf"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:layout_toRightOf="@+id/file_iv"
+        android:layout_toEndOf="@+id/file_iv"
+        android:layout_toLeftOf="@+id/checkbox"
+        android:layout_toStartOf="@+id/checkbox"
+        android:layout_marginTop="15dp"
+        android:padding="5dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        />
+
+    <TextView
+        android:id="@+id/file_size_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/file_name_tv"
+        android:text="1.2MB"
+        android:layout_toRightOf="@+id/file_iv"
+        android:layout_toEndOf="@+id/file_iv"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"/>
+
+
+    <droidninja.filepicker.views.SmoothCheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="20dp"
+        />
+
+</RelativeLayout>
