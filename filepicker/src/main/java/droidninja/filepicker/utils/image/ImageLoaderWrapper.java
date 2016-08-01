@@ -5,9 +5,6 @@ import android.support.annotation.DrawableRes;
 
 import java.io.File;
 
-/**
- * Created by someHui on 16/4/22.
- */
 public interface ImageLoaderWrapper<TARGET extends Object,OPTION extends ImageLoaderWrapper.ImageOption> {
     interface ImageOption{}
 

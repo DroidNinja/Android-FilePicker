@@ -5,9 +5,6 @@ import android.widget.ImageView;
 
 import java.io.File;
 
-/**
- * Created by someHui on 16/4/22.
- */
 public abstract class BaseImageLoader<TARGET extends ImageView,OPTION extends ImageLoaderWrapper.ImageOption>
         implements ImageLoaderWrapper<TARGET,OPTION>{
     @Override

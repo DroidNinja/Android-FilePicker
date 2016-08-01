@@ -19,9 +19,6 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
-/**
- * Created by someHui on 16/4/22.
- */
 public class FrescoLoader extends BaseImageLoader<DraweeView, FrescoLoader.FrescoOption> {
     public static class FrescoOption implements ImageLoaderWrapper.ImageOption {
         private ResizeOptions mResizeOptions;

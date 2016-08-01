@@ -6,14 +6,7 @@ import android.net.Uri;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 
-/**
- * Fresco
- * @author wangheng on 2016-03-11 16:41
- */
 public class FrescoManager {
-    /**
-     * 初始化Fresco
-     */
     public static void init(Context context){
 
         ImagePipelineConfig config = ImagePipelineConfig.newBuilder(context)

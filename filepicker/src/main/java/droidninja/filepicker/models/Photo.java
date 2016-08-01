@@ -1,8 +1,6 @@
 package droidninja.filepicker.models;
 
-/**
- * Created by donglua on 15/6/30.
- */
+
 public class Photo extends BaseFile {
 
   public Photo(int id, String name, String path) {

@@ -1,10 +1,6 @@
 package droidninja.filepicker.utils.image;
 
 
-/**
- * Created by someHui on 16/4/22.
- * TODO may return other Loader which most fit the TARGET
- */
 public class FrescoFactory {
     private static FrescoLoader sInstance;
 

@@ -21,9 +21,6 @@ import droidninja.filepicker.models.Photo;
 import droidninja.filepicker.utils.image.FrescoFactory;
 import droidninja.filepicker.views.SmoothCheckBox;
 
-/**
- * Created by donglua on 15/5/31.
- */
 public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoViewHolder, Photo>{
 
   private final Context context;

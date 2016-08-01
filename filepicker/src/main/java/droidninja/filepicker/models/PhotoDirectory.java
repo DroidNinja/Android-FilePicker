@@ -5,9 +5,6 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by donglua on 15/6/28.
- */
 public class PhotoDirectory {
 
   private String id;
