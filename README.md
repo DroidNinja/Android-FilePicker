@@ -4,9 +4,43 @@
   ![demo](http://i.imgur.com/TDIBxLY.png)
   ![demo](http://i.imgur.com/HrmUEvS.png)
 
-  **Instruction**
+***Installation***
+
+* As of now, It is only available in jCenter(), So just put this in your app dependencies:
+```gradle
+    compile 'com.droidninja:filepicker:1.0.0'
+```
+
+* If you are using Application class in the manifest file (android:name), you need to include **tools:replace="android:name"** in the <application> tag. e.g
+```xml
+<application
+        android:name=".ApplicationClass"
+        android:icon="@drawable/ic_launcher"
+        tools:replace="android:name">
+        ......
+        </application>
+```
   
-  #TODO (soon)
+  ***Usage***
+  
+  Just include this in your onclick function:
+  * For **photopicker**:
+ ```java
+ FilePickerBuilder.getInstance().setMaxCount(5)
+                .setSelectedFiles(filePaths)
+                .setActivityTheme(R.style.AppTheme)
+                .pickPhoto(this);
+ ```
+ 
+  * For **document picker**:
+ ```java
+  FilePickerBuilder.getInstance().setMaxCount(10)
+                .setSelectedFiles(filePaths)
+                .setActivityTheme(R.style.AppTheme)
+                .pickDocument(this);
+ ```
+ 
+ 
   
   **Credits**
   
