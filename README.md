@@ -42,7 +42,22 @@ A photopicker to select and click photos and document picker to select different
                 .pickDocument(this);
  ```
  
- 
+ After this, you will get list of file paths in activity result:
+ ```java
+ @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode)
+        {
+            case FilePickerConst.REQUEST_CODE:
+                if(resultCode==RESULT_OK && data!=null)
+                {
+                    filePaths = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS);
+                    //use them anywhere
+                }
+        }
+    }
+ ```
   
   **Credits**
   
