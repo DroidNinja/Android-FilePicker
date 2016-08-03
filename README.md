@@ -1,4 +1,4 @@
-#Android-FilePicker
+# Android-FilePicker
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android--FilePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4044)
 
 A photopicker to select and click photos and document picker to select different types of documents.
@@ -7,7 +7,7 @@ A photopicker to select and click photos and document picker to select different
   ![demo](http://i.imgur.com/TDIBxLY.png)
   ![demo](http://i.imgur.com/HrmUEvS.png)
 
-***Installation***
+# Installation
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
@@ -24,7 +24,7 @@ A photopicker to select and click photos and document picker to select different
         </application>
 ```
   
-  ***Usage***
+ # Usage
   
   Just include this in your onclick function:
   * For **photopicker**:
@@ -60,14 +60,29 @@ A photopicker to select and click photos and document picker to select different
     }
  ```
   
-  **Credits**
+ # Credits
   
   Inspired by [PhotoPicker](https://github.com/donglua/PhotoPicker)
   
   [SmoothCheckbox](https://github.com/andyxialm/SmoothCheckBox)
   
-  **Youtube Demo**
+# Youtube Demo
 
   [![Demo](https://img.youtube.com/vi/r3u2uKjN4Ks/0.jpg)](https://www.youtube.com/watch?v=r3u2uKjN4Ks)
 
+# License
+```license
+Copyright 2016 Arun Sharma
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
