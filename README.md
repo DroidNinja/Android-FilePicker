@@ -1,5 +1,7 @@
 #Android-FilePicker
 
+A photopicker to select and click photos and document picker to select different types of documents.
+
   ![demo](http://i.imgur.com/WxWuJKn.png)
   ![demo](http://i.imgur.com/TDIBxLY.png)
   ![demo](http://i.imgur.com/HrmUEvS.png)
