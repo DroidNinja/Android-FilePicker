@@ -1,4 +1,5 @@
 #Android-FilePicker
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android--FilePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4044)
 
 A photopicker to select and click photos and document picker to select different types of documents.
 
