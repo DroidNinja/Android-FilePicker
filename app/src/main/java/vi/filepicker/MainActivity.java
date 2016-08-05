@@ -75,13 +75,17 @@ public class MainActivity extends AppCompatActivity {
     public void onPickPhoto() {
         FilePickerBuilder.getInstance().setMaxCount(5)
                 .setSelectedFiles(filePaths)
-                .pickPhoto(MainActivity.this);
+                //make your own Dark action bar theme according to your app design and set it here
+                .setActivityTheme(R.style.FilePickerTheme)
+                .pickPhoto(this);
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickDoc() {
         FilePickerBuilder.getInstance().setMaxCount(10)
                 .setSelectedFiles(filePaths)
+                //make your own Dark action bar theme according to your app design and set it here
+                .setActivityTheme(R.style.FilePickerTheme)
                 .pickDocument(MainActivity.this);
     }
 
