@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -148,7 +149,10 @@ public class PhotoPickerFragment extends BaseFragment {
                     public void onClick(View v) {
                         try {
                             Intent intent = imageCaptureManager.dispatchTakePictureIntent();
-                            startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
+                            if(intent!=null)
+                                startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
+                            else
+                                Toast.makeText(getActivity(), "No Application exists for camera!", Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

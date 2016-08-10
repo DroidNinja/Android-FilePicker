@@ -32,7 +32,7 @@ public class ImageCaptureManager {
     // Create an image file name
     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
     String imageFileName = "JPEG_" + timeStamp + ".jpg";
-    File storageDir = Environment.getExternalStoragePublicDirectory("FilePicker");
+    File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
     if (!storageDir.exists()) {
       if (!storageDir.mkdir()) {
@@ -59,14 +59,9 @@ public class ImageCaptureManager {
     // Ensure that there's a camera activity to handle the intent
     if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
       // Create the File where the photo should go
-      File photoFile = createImageFile();
-      // Continue only if the File was successfully created
-      if (photoFile != null) {
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-            Uri.fromFile(photoFile));
-      }
+      return takePictureIntent;
     }
-    return takePictureIntent;
+    return null;
   }
 
 
