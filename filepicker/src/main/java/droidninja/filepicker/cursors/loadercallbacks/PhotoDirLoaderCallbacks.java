@@ -42,9 +42,6 @@ public class PhotoDirLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cu
 
       if (data == null)  return;
       List<PhotoDirectory> directories = new ArrayList<>();
-      PhotoDirectory photoDirectoryAll = new PhotoDirectory();
-      photoDirectoryAll.setName(context.get().getString(R.string.all_images));
-      photoDirectoryAll.setId("ALL");
 
       while (data.moveToNext()) {
 
@@ -67,12 +64,8 @@ public class PhotoDirLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cu
           directories.get(directories.indexOf(photoDirectory)).addPhoto(imageId, fileName, path);
         }
 
-        photoDirectoryAll.addPhoto(imageId, fileName,path);
       }
-      if (photoDirectoryAll.getPhotoPaths().size() > 0) {
-        photoDirectoryAll.setCoverPath(photoDirectoryAll.getPhotoPaths().get(0));
-      }
-      directories.add(INDEX_ALL_PHOTOS, photoDirectoryAll);
+
       if (resultCallback != null) {
         resultCallback.onResultCallback(directories);
       }

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -30,8 +31,8 @@ public class ImageCaptureManager {
 
   private File createImageFile() throws IOException {
     // Create an image file name
-    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
-    String imageFileName = "JPEG_" + timeStamp + ".jpg";
+//    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
+    String imageFileName = "JPEG_" + System.currentTimeMillis() + ".jpg";
     File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
     if (!storageDir.exists()) {
@@ -59,6 +60,7 @@ public class ImageCaptureManager {
     // Ensure that there's a camera activity to handle the intent
     if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
       // Create the File where the photo should go
+      takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(createImageFile()));
       return takePictureIntent;
     }
     return null;
@@ -77,7 +79,7 @@ public class ImageCaptureManager {
     mediaScanIntent.setData(contentUri);
     mContext.sendBroadcast(mediaScanIntent);
 
-    notifyMediaStoreScanner(context, f);
+//    notifyMediaStoreScanner(context, f);
   }
 
   public final void notifyMediaStoreScanner(Context mContext, final File file) {
