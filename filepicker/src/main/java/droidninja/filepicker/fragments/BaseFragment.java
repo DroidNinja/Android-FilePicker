@@ -36,19 +36,4 @@ public abstract class BaseFragment extends Fragment {
         view.startAnimation(bottomUp);
         view.setVisibility(View.GONE);
     }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        return inflater.inflate(getFragmentLayout(), container, false);
-    }
-
-
-    /**
-     * Every fragment has to inflate a layout in the onCreateView method. We have added this method to
-     * avoid duplicate all the inflate code in every fragment. You only have to return the layout to
-     * inflate in this method when extends BaseFragment.
-     */
-    protected abstract int getFragmentLayout();
 }

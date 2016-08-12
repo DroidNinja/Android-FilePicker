@@ -50,14 +50,8 @@ public class PhotoPickerFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return super.onCreateView(inflater,container,savedInstanceState);
+        return inflater.inflate(R.layout.fragment_photo_picker, container, false);
     }
-
-    @Override
-    protected int getFragmentLayout() {
-        return R.layout.fragment_photo_picker;
-    }
-
 
     @Override
     public void onAttach(Context context) {

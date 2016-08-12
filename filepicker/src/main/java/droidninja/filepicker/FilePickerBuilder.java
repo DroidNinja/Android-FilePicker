@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StyleableRes;
+import android.support.v4.app.Fragment;
 
 import java.util.ArrayList;
 
@@ -48,7 +49,19 @@ public class FilePickerBuilder {
         start(context);
     }
 
+    public void pickPhoto(Fragment context)
+    {
+        mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.PHOTO_PICKER);
+        start(context);
+    }
+
     public void pickDocument(Activity context)
+    {
+        mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.DOC_PICKER);
+        start(context);
+    }
+
+    public void pickDocument(Fragment context)
     {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.DOC_PICKER);
         start(context);
@@ -59,6 +72,13 @@ public class FilePickerBuilder {
         Intent intent = new Intent(context, FilePickerActivity.class);
         intent.putExtras(mPickerOptionsBundle);
         context.startActivityForResult(intent,FilePickerConst.REQUEST_CODE);
+    }
+
+    private void start(Fragment fragment)
+    {
+        Intent intent = new Intent(fragment.getActivity(), FilePickerActivity.class);
+        intent.putExtras(mPickerOptionsBundle);
+        fragment.startActivityForResult(intent,FilePickerConst.REQUEST_CODE);
     }
 
 }

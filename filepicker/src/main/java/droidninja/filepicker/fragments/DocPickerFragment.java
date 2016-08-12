@@ -48,14 +48,8 @@ public class DocPickerFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return super.onCreateView(inflater,container,savedInstanceState);
+        return inflater.inflate(R.layout.fragment_doc_picker, container, false);
     }
-
-    @Override
-    protected int getFragmentLayout() {
-        return R.layout.fragment_doc_picker;
-    }
-
 
     public static DocPickerFragment newInstance(ArrayList<String> selectedPaths) {
         DocPickerFragment docPickerFragment = new DocPickerFragment();
