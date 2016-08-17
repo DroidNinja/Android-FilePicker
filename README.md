@@ -12,7 +12,7 @@ A photopicker to select and click photos and document picker to select different
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    compile 'com.droidninja:filepicker:1.0.3'
+    compile 'com.droidninja:filepicker:1.0.4'
 ```
 
 * If you are using Application class in the manifest file (android:name), you need to include **tools:replace="android:name"** in the <application> tag. e.g
