@@ -22,4 +22,20 @@ public class Utils {
         }
         return result;
     }
+
+    public static String getFileExtension(File file) {
+        String name = file.getName();
+        try {
+            return name.substring(name.lastIndexOf(".") + 1);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public static boolean contains(String[] types, String path) {
+        for (String string : types) {
+            if (path.endsWith(string)) return true;
+        }
+        return false;
+    }
 }

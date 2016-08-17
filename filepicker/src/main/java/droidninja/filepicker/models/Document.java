@@ -1,9 +1,13 @@
 package droidninja.filepicker.models;
 
+import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+
+import java.io.File;
 
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.R;
+import droidninja.filepicker.utils.Utils;
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -68,7 +72,7 @@ public class Document extends BaseFile {
     }
 
     public String getTitle() {
-        return name;
+        return new File(this.path).getName();
     }
 
     public void setTitle(String title) {
@@ -101,27 +105,52 @@ public class Document extends BaseFile {
 
     public FilePickerConst.FILE_TYPE getFileType()
     {
-        if(this.mimeType==null)
+        String fileExtension = Utils.getFileExtension(new File(this.path));
+        if(TextUtils.isEmpty(fileExtension))
             return FilePickerConst.FILE_TYPE.UNKNOWN;
 
-        if(this.mimeType.equals(MimeTypeMap.getSingleton().getMimeTypeFromExtension("xls")) ||
-                this.mimeType.equals(MimeTypeMap.getSingleton().getMimeTypeFromExtension("xlsx")))
+        if(isExcelFile())
             return FilePickerConst.FILE_TYPE.EXCEL;
-        if(this.mimeType.equals(MimeTypeMap.getSingleton().getMimeTypeFromExtension("doc")) ||
-                this.mimeType.equals(MimeTypeMap.getSingleton().getMimeTypeFromExtension("docx")) ||
-                this.mimeType.equals(MimeTypeMap.getSingleton().getMimeTypeFromExtension("dot")) ||
-                this.mimeType.equals(MimeTypeMap.getSingleton().getMimeTypeFromExtension("dotx")))
+        if(isDocFile())
             return FilePickerConst.FILE_TYPE.WORD;
-        if(this.mimeType.equals(MimeTypeMap.getSingleton().getMimeTypeFromExtension("ppt")) ||
-                this.mimeType.equals(MimeTypeMap.getSingleton().getMimeTypeFromExtension("pptx"))||
-                this.mimeType.equals(FilePickerConst.PPT_MIME_TYPE))
+        if(isPPTFile())
             return FilePickerConst.FILE_TYPE.PPT;
-        if(this.mimeType.equals(MimeTypeMap.getSingleton().getMimeTypeFromExtension("pdf")))
+        if(isPDFFile())
             return FilePickerConst.FILE_TYPE.PDF;
-        if(this.mimeType.equals(MimeTypeMap.getSingleton().getMimeTypeFromExtension("txt")))
+        if(isTxtFile())
             return FilePickerConst.FILE_TYPE.TXT;
         else
             return FilePickerConst.FILE_TYPE.UNKNOWN;
+    }
+
+    public boolean isExcelFile()
+    {
+        String[] types = {"xls","xlsx"};
+        return Utils.contains(types, this.path);
+    }
+
+    public boolean isDocFile()
+    {
+        String[] types = {"doc","docx", "dot","dotx"};
+        return Utils.contains(types, this.path);
+    }
+
+    public boolean isPPTFile()
+    {
+        String[] types = {"ppt","pptx"};
+        return Utils.contains(types, this.path);
+    }
+
+    public boolean isPDFFile()
+    {
+        String[] types = {"pdf"};
+        return Utils.contains(types, this.path);
+    }
+
+    public boolean isTxtFile()
+    {
+        String[] types = {"txt"};
+        return Utils.contains(types, this.path);
     }
 
 }
