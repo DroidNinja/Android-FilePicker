@@ -18,12 +18,14 @@ public class PickerManager {
         return ourInstance;
     }
 
-    private ArrayList<BaseFile> files;
+    private ArrayList<BaseFile> imageFiles;
+    private ArrayList<BaseFile> docFiles;
 
     private int theme = R.style.AppTheme;
 
     private PickerManager() {
-        files = new ArrayList<>();
+        imageFiles = new ArrayList<>();
+        docFiles = new ArrayList<>();
     }
 
     public void setMaxCount(int count)
@@ -48,9 +50,12 @@ public class PickerManager {
 
     public void add(BaseFile file)
     {
-        if(file!=null && shouldAdd() && !files.contains(file))
+        if(file!=null && shouldAdd() && !imageFiles.contains(file))
         {
-            files.add(file);
+            if(file.isImage())
+                imageFiles.add(file);
+            else
+                docFiles.add(file);
             currentCount++;
 
             if(pickerManagerListener!=null)
@@ -60,12 +65,20 @@ public class PickerManager {
 
     public void remove(BaseFile file)
     {
-        if(files.contains(file))
+        if(file.isImage() && imageFiles.contains(file))
         {
-            files.remove(file);
+            imageFiles.remove(file);
             currentCount--;
 
-            if(pickerManagerListener!=null)
+            if (pickerManagerListener != null)
+                pickerManagerListener.onItemSelected(currentCount);
+        }
+        else if(docFiles.contains(file)){
+            docFiles.remove(file);
+
+            currentCount--;
+
+            if (pickerManagerListener != null)
                 pickerManagerListener.onItemSelected(currentCount);
         }
     }
@@ -75,12 +88,17 @@ public class PickerManager {
         return currentCount < maxCount;
     }
 
-    public ArrayList<BaseFile> getSelectedFiles()
+    public ArrayList<String> getSelectedPhotos()
     {
-        return files;
+        return getSelectedFilePaths(imageFiles);
     }
 
-    public ArrayList<String> getSelectedFilePaths()
+    public ArrayList<String> getSelectedFiles()
+    {
+        return getSelectedFilePaths(docFiles);
+    }
+
+    public ArrayList<String> getSelectedFilePaths(ArrayList<BaseFile> files)
     {
         ArrayList<String> paths = new ArrayList<>();
         for (int index = 0; index < files.size(); index++) {
@@ -91,7 +109,8 @@ public class PickerManager {
 
     public void clearSelections()
     {
-        files.clear();
+        docFiles.clear();
+        imageFiles.clear();
         currentCount = 0;
         maxCount=0;
     }

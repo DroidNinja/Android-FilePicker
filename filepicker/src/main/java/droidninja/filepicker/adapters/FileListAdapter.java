@@ -56,14 +56,6 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
 
         //in some cases, it will prevent unwanted situations
         holder.checkBox.setOnCheckedChangeListener(null);
-        holder.checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!holder.checkBox.isChecked() && !PickerManager.getInstance().shouldAdd()) {
-                    return;
-                }
-            }
-        });
 
         //if true, your checkbox will be selected, else unselected
         holder.checkBox.setChecked(isSelected(document));

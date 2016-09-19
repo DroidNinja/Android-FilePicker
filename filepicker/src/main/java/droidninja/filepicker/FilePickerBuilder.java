@@ -3,7 +3,6 @@ package droidninja.filepicker;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.StyleableRes;
 import android.support.v4.app.Fragment;
 
 import java.util.ArrayList;
@@ -46,39 +45,46 @@ public class FilePickerBuilder {
     public void pickPhoto(Activity context)
     {
        mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.PHOTO_PICKER);
-        start(context);
+        start(context,FilePickerConst.PHOTO_PICKER);
     }
 
     public void pickPhoto(Fragment context)
     {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.PHOTO_PICKER);
-        start(context);
+        start(context,FilePickerConst.PHOTO_PICKER);
     }
 
     public void pickDocument(Activity context)
     {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.DOC_PICKER);
-        start(context);
+        start(context,FilePickerConst.DOC_PICKER);
     }
 
     public void pickDocument(Fragment context)
     {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.DOC_PICKER);
-        start(context);
+        start(context,FilePickerConst.DOC_PICKER);
     }
 
-    private void start(Activity context)
+    private void start(Activity context, int pickerType)
     {
         Intent intent = new Intent(context, FilePickerActivity.class);
         intent.putExtras(mPickerOptionsBundle);
-        context.startActivityForResult(intent,FilePickerConst.REQUEST_CODE);
+
+        if(pickerType==FilePickerConst.PHOTO_PICKER)
+            context.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_PHOTO);
+        else
+            context.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_DOC);
     }
 
-    private void start(Fragment fragment)
+    private void start(Fragment fragment, int pickerType)
     {
         Intent intent = new Intent(fragment.getActivity(), FilePickerActivity.class);
         intent.putExtras(mPickerOptionsBundle);
-        fragment.startActivityForResult(intent,FilePickerConst.REQUEST_CODE);
+        if(pickerType==FilePickerConst.PHOTO_PICKER)
+            fragment.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_PHOTO);
+        else
+            fragment.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_DOC);
     }
 
 }

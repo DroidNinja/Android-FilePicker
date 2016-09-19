@@ -12,17 +12,7 @@ A photopicker to select and click photos and document picker to select different
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    compile 'com.droidninja:filepicker:1.0.3'
-```
-
-* If you are using Application class in the manifest file (android:name), you need to include **tools:replace="android:name"** in the <application> tag. e.g
-```xml
-<application
-        android:name=".ApplicationClass"
-        android:icon="@drawable/ic_launcher"
-        tools:replace="android:name">
-        ......
-        </application>
+    compile 'com.droidninja:filepicker:1.0.5'
 ```
   
  # Usage
@@ -47,18 +37,26 @@ A photopicker to select and click photos and document picker to select different
  After this, you will get list of file paths in activity result:
  ```java
  @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode)
-        {
-            case FilePickerConst.REQUEST_CODE:
-                if(resultCode==RESULT_OK && data!=null)
-                {
-                    filePaths = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS);
-                    //use them anywhere
-                }
+     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            switch (requestCode)
+            {
+                case FilePickerConst.REQUEST_CODE_PHOTO:
+                    if(resultCode== Activity.RESULT_OK && data!=null)
+                    {
+                        photoPaths = new ArrayList<>();
+                        photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS));
+                    }
+                    break;
+                case FilePickerConst.REQUEST_CODE_DOC:
+                    if(resultCode== Activity.RESULT_OK && data!=null)
+                    {
+                        docPaths = new ArrayList<>();
+                        docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
+                    }
+                    break;
+            }
+            addThemToView(photoPaths,docPaths);
         }
-    }
  ```
   
  # Credits

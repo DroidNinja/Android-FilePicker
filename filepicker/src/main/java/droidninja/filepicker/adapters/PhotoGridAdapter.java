@@ -69,14 +69,6 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
       //in some cases, it will prevent unwanted situations
       holder.checkBox.setVisibility(View.VISIBLE);
       holder.checkBox.setOnCheckedChangeListener(null);
-      holder.checkBox.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          if (!holder.checkBox.isChecked() && !PickerManager.getInstance().shouldAdd()) {
-            return;
-          }
-        }
-      });
 
       //if true, your checkbox will be selected, else unselected
       holder.checkBox.setChecked(isSelected(photo));

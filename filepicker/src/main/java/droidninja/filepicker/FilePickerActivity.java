@@ -13,6 +13,7 @@ import droidninja.filepicker.fragments.DocFragment;
 import droidninja.filepicker.fragments.DocPickerFragment;
 import droidninja.filepicker.fragments.PhotoPickerFragment;
 import droidninja.filepicker.utils.FragmentUtil;
+import droidninja.filepicker.utils.image.FrescoManager;
 
 public class FilePickerActivity extends AppCompatActivity implements PhotoPickerFragment.PhotoPickerFragmentListener, DocFragment.PhotoPickerFragmentListener,
         PickerManagerListener{
@@ -25,7 +26,7 @@ public class FilePickerActivity extends AppCompatActivity implements PhotoPicker
         setTheme(PickerManager.getInstance().getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_picker);
-
+        FrescoManager.init(this);
         if (savedInstanceState == null) {
             initView();
         }
@@ -95,8 +96,11 @@ public class FilePickerActivity extends AppCompatActivity implements PhotoPicker
         int i = item.getItemId();
         if (i == R.id.action_done) {
             Intent intent = new Intent();
-            intent.putStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS, PickerManager.getInstance().getSelectedFilePaths());
 
+            if(type==FilePickerConst.PHOTO_PICKER)
+                intent.putStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS, PickerManager.getInstance().getSelectedPhotos());
+            else
+                intent.putStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS, PickerManager.getInstance().getSelectedFiles());
             setResult(RESULT_OK, intent);
             finish();
 

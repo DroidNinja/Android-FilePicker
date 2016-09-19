@@ -1,5 +1,7 @@
 package droidninja.filepicker.models;
 
+import droidninja.filepicker.utils.Utils;
+
 /**
  * Created by droidNinja on 29/07/16.
  */
@@ -12,6 +14,12 @@ public class BaseFile {
         this.id = id;
         this.name = name;
         this.path = path;
+    }
+
+    public boolean isImage()
+    {
+        String[] types = {"jpg","png","gif"};
+        return Utils.contains(types, this.path);
     }
 
     @Override

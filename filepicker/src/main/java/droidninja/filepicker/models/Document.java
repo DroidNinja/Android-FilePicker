@@ -82,17 +82,17 @@ public class Document extends BaseFile {
     public int getTypeDrawable()
     {
         if(getFileType()== FilePickerConst.FILE_TYPE.EXCEL)
-            return R.drawable.ic_xls;
+            return R.drawable.ic_excel;
         if(getFileType()== FilePickerConst.FILE_TYPE.WORD)
-            return R.drawable.ic_doc;
+            return R.drawable.ic_word;
         if(getFileType()== FilePickerConst.FILE_TYPE.PPT)
-            return R.drawable.icon_ppt;
+            return R.drawable.ic_ppt;
         if(getFileType()== FilePickerConst.FILE_TYPE.PDF)
             return R.drawable.ic_pdf;
         if(getFileType()== FilePickerConst.FILE_TYPE.TXT)
             return R.drawable.ic_txt;
         else
-            return R.drawable.ic_doc;
+            return R.drawable.ic_txt;
     }
 
     public boolean isThisType(FilePickerConst.FILE_TYPE type)

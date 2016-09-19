@@ -1,6 +1,7 @@
 package vi.filepicker;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -25,7 +26,9 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<String> filePaths;
+    private int MAX_ATTACHMENT_COUNT = 10;
+    private ArrayList<String> photoPaths = new ArrayList<>();
+    private ArrayList<String> docPaths = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +49,35 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode)
         {
-            case FilePickerConst.REQUEST_CODE:
-                if(resultCode==RESULT_OK && data!=null)
+            case FilePickerConst.REQUEST_CODE_PHOTO:
+                if(resultCode== Activity.RESULT_OK && data!=null)
                 {
-                    filePaths = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS);
-                    addThemToView(filePaths);
+                    photoPaths = new ArrayList<>();
+                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS));
+
                 }
+                break;
+
+            case FilePickerConst.REQUEST_CODE_DOC:
+                if(resultCode== Activity.RESULT_OK && data!=null)
+                {
+                    docPaths = new ArrayList<>();
+                    docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
+                }
+                break;
         }
+
+        addThemToView(photoPaths,docPaths);
     }
 
-    private void addThemToView(ArrayList<String> filePaths) {
+    private void addThemToView(ArrayList<String> imagePaths, ArrayList<String> docPaths) {
+        ArrayList<String> filePaths = new ArrayList<>();
+        if(imagePaths!=null)
+            filePaths.addAll(imagePaths);
+
+        if(docPaths!=null)
+            filePaths.addAll(docPaths);
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         if(recyclerView!=null) {
             StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL);
@@ -68,25 +90,31 @@ public class MainActivity extends AppCompatActivity {
             recyclerView.setItemAnimator(new DefaultItemAnimator());
         }
 
-        Toast.makeText(MainActivity.this, "Num of files selected: "+ filePaths.size(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Num of files selected: "+ filePaths.size(), Toast.LENGTH_SHORT).show();
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickPhoto() {
-        FilePickerBuilder.getInstance().setMaxCount(5)
-                .setSelectedFiles(filePaths)
-                //make your own Dark action bar theme according to your app design and set it here
-                .setActivityTheme(R.style.FilePickerTheme)
-                .pickPhoto(this);
+        int maxCount = MAX_ATTACHMENT_COUNT-docPaths.size();
+        if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
+            Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
+        else
+            FilePickerBuilder.getInstance().setMaxCount(maxCount)
+                    .setSelectedFiles(photoPaths)
+                    .setActivityTheme(R.style.FilePickerTheme)
+                    .pickPhoto(this);
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickDoc() {
-        FilePickerBuilder.getInstance().setMaxCount(10)
-                .setSelectedFiles(filePaths)
-                //make your own Dark action bar theme according to your app design and set it here
-                .setActivityTheme(R.style.FilePickerTheme)
-                .pickDocument(MainActivity.this);
+        int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size();
+        if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
+            Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
+        else
+            FilePickerBuilder.getInstance().setMaxCount(maxCount)
+                    .setSelectedFiles(docPaths)
+                    .setActivityTheme(R.style.FilePickerTheme)
+                    .pickDocument(this);
     }
 
     @Override
