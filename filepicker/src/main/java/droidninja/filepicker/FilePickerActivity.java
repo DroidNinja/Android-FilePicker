@@ -26,8 +26,9 @@ public class FilePickerActivity extends AppCompatActivity implements PhotoPicker
         setTheme(PickerManager.getInstance().getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_picker);
-        FrescoManager.init(this);
+
         if (savedInstanceState == null) {
+            FrescoManager.init(this);
             initView();
         }
     }
