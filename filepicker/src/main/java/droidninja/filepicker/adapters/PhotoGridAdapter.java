@@ -60,14 +60,17 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
       holder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          if (holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
+          if(PickerManager.getInstance().getMaxCount()==1)
+            PickerManager.getInstance().add(photo);
+          else
+            if (holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
             holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
           }
         }
       });
 
       //in some cases, it will prevent unwanted situations
-      holder.checkBox.setVisibility(View.VISIBLE);
+      holder.checkBox.setVisibility(View.GONE);
       holder.checkBox.setOnCheckedChangeListener(null);
       holder.checkBox.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -82,6 +85,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
       holder.checkBox.setChecked(isSelected(photo));
 
       holder.selectBg.setVisibility(isSelected(photo) ? View.VISIBLE : View.GONE);
+      holder.checkBox.setVisibility(isSelected(photo) ? View.VISIBLE : View.GONE);
 
       holder.checkBox.setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
         @Override
@@ -90,9 +94,15 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
           holder.selectBg.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 
           if (isChecked)
+          {
+            holder.checkBox.setVisibility(View.VISIBLE);
             PickerManager.getInstance().add(photo);
+          }
           else
+          {
+            holder.checkBox.setVisibility(View.GONE);
             PickerManager.getInstance().remove(photo);
+          }
         }
       });
     }

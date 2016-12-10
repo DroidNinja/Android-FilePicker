@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import droidninja.filepicker.FilePickerConst;
+import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.R;
 import droidninja.filepicker.adapters.PhotoGridAdapter;
 import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback;
@@ -29,7 +30,7 @@ import droidninja.filepicker.utils.ImageCaptureManager;
 import droidninja.filepicker.utils.MediaStoreHelper;
 
 
-public class PhotoPickerFragment extends BaseFragment {
+public class PhotoPickerFragment extends BaseFragment{
 
     private static final String TAG = PhotoPickerFragment.class.getSimpleName();
     RecyclerView recyclerView;
@@ -77,8 +78,6 @@ public class PhotoPickerFragment extends BaseFragment {
     }
 
     public interface PhotoPickerFragmentListener {
-        // TODO: Update argument type and name
-
     }
 
     @Override
@@ -146,7 +145,7 @@ public class PhotoPickerFragment extends BaseFragment {
                             if(intent!=null)
                                 startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
                             else
-                                Toast.makeText(getActivity(), "No Application exists for camera!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), R.string.no_camera_exists, Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

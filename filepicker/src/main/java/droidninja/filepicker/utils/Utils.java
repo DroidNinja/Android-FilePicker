@@ -34,7 +34,7 @@ public class Utils {
 
     public static boolean contains(String[] types, String path) {
         for (String string : types) {
-            if (path.endsWith(string)) return true;
+            if (path.toLowerCase().endsWith(string)) return true;
         }
         return false;
     }

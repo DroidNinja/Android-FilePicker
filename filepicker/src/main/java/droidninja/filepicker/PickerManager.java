@@ -50,16 +50,21 @@ public class PickerManager {
 
     public void add(BaseFile file)
     {
-        if(file!=null && shouldAdd() && !imageFiles.contains(file))
+        if(file!=null && shouldAdd())
         {
-            if(file.isImage())
+            if(file.isImage() && !imageFiles.contains(file))
                 imageFiles.add(file);
             else
                 docFiles.add(file);
             currentCount++;
 
-            if(pickerManagerListener!=null)
+            if (pickerManagerListener != null)
+            {
                 pickerManagerListener.onItemSelected(currentCount);
+
+                if(maxCount==1)
+                    pickerManagerListener.onSingleItemSelected(file.isImage()?getSelectedPhotos():getSelectedFiles());
+            }
         }
     }
 
@@ -70,16 +75,15 @@ public class PickerManager {
             imageFiles.remove(file);
             currentCount--;
 
-            if (pickerManagerListener != null)
-                pickerManagerListener.onItemSelected(currentCount);
         }
         else if(docFiles.contains(file)){
             docFiles.remove(file);
 
             currentCount--;
+        }
 
-            if (pickerManagerListener != null)
-                pickerManagerListener.onItemSelected(currentCount);
+        if (pickerManagerListener != null) {
+            pickerManagerListener.onItemSelected(currentCount);
         }
     }
 

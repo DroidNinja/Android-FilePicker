@@ -48,9 +48,10 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
-                    holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
-                }
+                if(PickerManager.getInstance().getMaxCount()==1)
+                    PickerManager.getInstance().add(document);
+                else
+                    onItemClicked(document,holder);
             }
         });
 
@@ -59,9 +60,7 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
-                    holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
-                }
+                onItemClicked(document,holder);
             }
         });
 
@@ -69,6 +68,7 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
         holder.checkBox.setChecked(isSelected(document));
 
         holder.itemView.setBackgroundResource(isSelected(document)?R.color.bg_gray:android.R.color.white);
+        holder.checkBox.setVisibility(isSelected(document) ? View.VISIBLE : View.GONE);
 
         holder.checkBox.setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
             @Override
@@ -76,12 +76,26 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
                 toggleSelection(document);
                 holder.itemView.setBackgroundResource(isChecked?R.color.bg_gray:android.R.color.white);
 
-                if(isChecked)
-                    PickerManager.getInstance().add(document);
-                else
-                    PickerManager.getInstance().remove(document);
             }
         });
+    }
+
+    private void onItemClicked(Document document, FileViewHolder holder)
+    {
+        if(holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
+            holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
+        }
+
+        if (holder.checkBox.isChecked())
+        {
+            holder.checkBox.setVisibility(View.VISIBLE);
+            PickerManager.getInstance().add(document);
+        }
+        else
+        {
+            holder.checkBox.setVisibility(View.GONE);
+            PickerManager.getInstance().remove(document);
+        }
     }
 
     @Override

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import droidninja.filepicker.fragments.DocFragment;
 import droidninja.filepicker.fragments.DocPickerFragment;
 import droidninja.filepicker.fragments.PhotoPickerFragment;
+import droidninja.filepicker.models.Photo;
 import droidninja.filepicker.utils.FragmentUtil;
 import droidninja.filepicker.utils.image.FrescoManager;
 
@@ -59,6 +60,9 @@ public class FilePickerActivity extends AppCompatActivity implements PhotoPicker
 
     private void openSpecificFragment(int type, ArrayList<String> selectedPaths)
     {
+        if(PickerManager.getInstance().getMaxCount()==1)
+            selectedPaths.clear();
+
         if(type==FilePickerConst.PHOTO_PICKER)
         {
             PhotoPickerFragment photoFragment = PhotoPickerFragment.newInstance(selectedPaths);
@@ -74,14 +78,14 @@ public class FilePickerActivity extends AppCompatActivity implements PhotoPicker
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null)
         {
-            if(count>0)
-                actionBar.setTitle("Attachments (" + count + "/" + PickerManager.getInstance().getMaxCount() + ")");
+            if(PickerManager.getInstance().getMaxCount()>1)
+                actionBar.setTitle(String.format(getString(R.string.attachments_title_text),count,PickerManager.getInstance().getMaxCount()));
             else
             {
                 if(type==FilePickerConst.PHOTO_PICKER)
-                    actionBar.setTitle("Select a photo");
+                    actionBar.setTitle(R.string.select_photo_text);
                 else
-                    actionBar.setTitle("Select a document");
+                    actionBar.setTitle(R.string.select_doc_text);
             }
         }
     }
@@ -121,9 +125,21 @@ public class FilePickerActivity extends AppCompatActivity implements PhotoPicker
     }
 
     @Override
+    public void onSingleItemSelected(ArrayList<String> paths) {
+        Intent intent = new Intent();
+        if(type==FilePickerConst.PHOTO_PICKER)
+            intent.putStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS, paths);
+        else
+            intent.putStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS, paths);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         setResult(RESULT_CANCELED);
         finish();
     }
+
 }

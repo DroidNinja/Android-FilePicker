@@ -27,12 +27,6 @@ public class DocPickerFragment extends BaseFragment {
 
     private static final String TAG = DocPickerFragment.class.getSimpleName();
 
-    public static final String PDF_FRAGMENT = "PDF";
-    public static final String PPT_FRAGMENT = "PPT";
-    public static final String WORD_FRAGMENT = "DOC";
-    public static final String EXCEL_FRAGMENT = "XLS";
-    public static final String TXT_FRAGMENT = "TXT";
-
     TabLayout tabLayout;
 
     ViewPager viewPager;
@@ -110,11 +104,11 @@ public class DocPickerFragment extends BaseFragment {
 
     private void setUpViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(DocFragment.newInstance(selectedPaths), PDF_FRAGMENT);
-        adapter.addFragment(DocFragment.newInstance(selectedPaths), PPT_FRAGMENT);
-        adapter.addFragment(DocFragment.newInstance(selectedPaths), WORD_FRAGMENT);
-        adapter.addFragment(DocFragment.newInstance(selectedPaths), EXCEL_FRAGMENT);
-        adapter.addFragment(DocFragment.newInstance(selectedPaths), TXT_FRAGMENT);
+        adapter.addFragment(DocFragment.newInstance(selectedPaths), getString(R.string.pdf_title));
+        adapter.addFragment(DocFragment.newInstance(selectedPaths), getString(R.string.ppt_title));
+        adapter.addFragment(DocFragment.newInstance(selectedPaths), getString(R.string.word_title));
+        adapter.addFragment(DocFragment.newInstance(selectedPaths), getString(R.string.excel_title));
+        adapter.addFragment(DocFragment.newInstance(selectedPaths), getString(R.string.txt_title));
 
         viewPager.setOffscreenPageLimit(5);
         viewPager.setAdapter(adapter);
