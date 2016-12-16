@@ -18,7 +18,7 @@ public class BaseFile {
 
     public boolean isImage()
     {
-        String[] types = {"jpg","png","gif"};
+        String[] types = {"jpg","jpeg","png","gif"};
         return Utils.contains(types, this.path);
     }
 
