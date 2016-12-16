@@ -55,7 +55,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
 
       final Photo photo = getItems().get(position-1);
 
-      FrescoFactory.getLoader().showImage(holder.imageView, Uri.fromFile(new File(photo.getPath())), FrescoFactory.newOption(imageSize, imageSize));
+      FrescoFactory.getLoader().showImage(holder.imageView, Uri.fromFile(new File(photo.getPath())), null);
 
       holder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override
