@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">File Picker</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -15,7 +14,7 @@
     <string name="permission_camera_never_askagain">Camera permission was denied with never ask again.</string>
     <string name="no_files_found">No Files Found</string>
     <string name="attachments_title_text" formatted="false">Attachments (%d/%d)</string>
-    <string name="select_photo_text">Select a photo</string>
+    <string name="select_photo_text">Select a media</string>
     <string name="select_doc_text">Select a document</string>
     <string name="no_camera_exists">No Application exists for camera!</string>
     <string name="pdf_title">PDF</string>
@@ -23,5 +22,10 @@
     <string name="word_title">DOC</string>
     <string name="excel_title">XLS</string>
     <string name="txt_title">TXT</string>
+    <string name="videos">Videos</string>
+    <string name="images">Images</string>
+    <string name="all_photos">All Photos</string>
+    <string name="all_videos">All Videos</string>
+    <string name="all_files">All Files</string>
 
 </resources>

@@ -11,11 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import droidninja.filepicker.FilePickerConst;
+import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.R;
 import droidninja.filepicker.cursors.PhotoDirectoryLoader;
 import droidninja.filepicker.models.PhotoDirectory;
 
 import static android.provider.BaseColumns._ID;
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE;
 import static android.provider.MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME;
 import static android.provider.MediaStore.Images.ImageColumns.BUCKET_ID;
 import static android.provider.MediaStore.MediaColumns.DATA;
@@ -28,51 +30,56 @@ public class PhotoDirLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cu
     private FileResultCallback<PhotoDirectory> resultCallback;
 
     public PhotoDirLoaderCallbacks(Context context, FileResultCallback<PhotoDirectory> resultCallback) {
-      this.context = new WeakReference<>(context);
-      this.resultCallback = resultCallback;
+        this.context = new WeakReference<>(context);
+        this.resultCallback = resultCallback;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-      return new PhotoDirectoryLoader(context.get(), args.getBoolean(FilePickerConst.EXTRA_SHOW_GIF, false));
+        return new PhotoDirectoryLoader(context.get(), args);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-      if (data == null)  return;
-      List<PhotoDirectory> directories = new ArrayList<>();
+        if (data == null) return;
+        List<PhotoDirectory> directories = new ArrayList<>();
 
-      while (data.moveToNext()) {
+        while (data.moveToNext()) {
 
-        int imageId  = data.getInt(data.getColumnIndexOrThrow(_ID));
-        String bucketId = data.getString(data.getColumnIndexOrThrow(BUCKET_ID));
-        String name = data.getString(data.getColumnIndexOrThrow(BUCKET_DISPLAY_NAME));
-        String path = data.getString(data.getColumnIndexOrThrow(DATA));
-          String fileName  = data.getString(data.getColumnIndexOrThrow(TITLE));
+            int imageId = data.getInt(data.getColumnIndexOrThrow(_ID));
+            String bucketId = data.getString(data.getColumnIndexOrThrow(BUCKET_ID));
+            String name = data.getString(data.getColumnIndexOrThrow(BUCKET_DISPLAY_NAME));
+            String path = data.getString(data.getColumnIndexOrThrow(DATA));
+            String fileName = data.getString(data.getColumnIndexOrThrow(TITLE));
+            int mediaType = data.getInt(data.getColumnIndexOrThrow(MEDIA_TYPE));
 
-        PhotoDirectory photoDirectory = new PhotoDirectory();
-        photoDirectory.setId(bucketId);
-        photoDirectory.setName(name);
+            PhotoDirectory photoDirectory = new PhotoDirectory();
+            photoDirectory.setBucketId(bucketId);
+            photoDirectory.setName(name);
 
-        if (!directories.contains(photoDirectory)) {
-          photoDirectory.setCoverPath(path);
-          photoDirectory.addPhoto(imageId,fileName, path);
-          photoDirectory.setDateAdded(data.getLong(data.getColumnIndexOrThrow(DATE_ADDED)));
-          directories.add(photoDirectory);
-        } else {
-          directories.get(directories.indexOf(photoDirectory)).addPhoto(imageId, fileName, path);
+            if (!directories.contains(photoDirectory)) {
+                photoDirectory.setCoverPath(path);
+                if (PickerManager.getInstance().isShowGif() && path.toLowerCase().endsWith("gif"))
+                    photoDirectory.addPhoto(imageId, fileName, path, mediaType);
+                else
+                    photoDirectory.addPhoto(imageId, fileName, path, mediaType);
+
+                photoDirectory.setDateAdded(data.getLong(data.getColumnIndexOrThrow(DATE_ADDED)));
+                directories.add(photoDirectory);
+            } else {
+                directories.get(directories.indexOf(photoDirectory)).addPhoto(imageId, fileName, path, mediaType);
+            }
+
         }
 
-      }
-
-      if (resultCallback != null) {
-        resultCallback.onResultCallback(directories);
-      }
+        if (resultCallback != null) {
+            resultCallback.onResultCallback(directories);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
-  }
+}

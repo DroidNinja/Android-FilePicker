@@ -2,17 +2,17 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android--FilePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4044)
  [ ![Latest Version](https://api.bintray.com/packages/droidninja/maven/com.droidninja.filepicker/images/download.svg) ](https://bintray.com/droidninja/maven/com.droidninja.filepicker/_latestVersion)
  
-A photopicker to select and click photos and document picker to select different types of documents.
+A filepicker which allows to select images and videos with flexibility. It also supports selection of files by specifying its file type. Check out app module for example.
 
-  ![demo](http://i.imgur.com/WxWuJKn.png)
-  ![demo](http://i.imgur.com/TDIBxLY.png)
-  ![demo](http://i.imgur.com/HrmUEvS.png)
+  ![demo](https://image.ibb.co/iRpztv/device_2017_03_10_164003.png)
+  ![demo](https://image.ibb.co/m75uRF/device_2017_03_10_163900.png)
+  ![demo](https://image.ibb.co/ct4A0a/device_2017_03_10_163835.png)
 
 # Installation
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    compile 'com.droidninja:filepicker:1.0.8'
+    compile 'com.droidninja:filepicker:2.0.0'
 ```
   
  # Usage
@@ -31,7 +31,7 @@ A photopicker to select and click photos and document picker to select different
   FilePickerBuilder.getInstance().setMaxCount(10)
                 .setSelectedFiles(filePaths)
                 .setActivityTheme(R.style.AppTheme)
-                .pickDocument(this);
+                .pickFile(this);
  ```
  
  After this, you will get list of file paths in activity result:
@@ -58,7 +58,31 @@ A photopicker to select and click photos and document picker to select different
             addThemToView(photoPaths,docPaths);
         }
  ```
-  
+
+ # Builder Methods
+
+**Android FilePicker** now has more flexibility. Supported builder methods are:
+
+Method     | Use
+-------- | ---
+setMaxCount(int maxCount) | used to specify maximum count of media picks
+setActivityTheme(int theme)    | used to set theme for toolbar (must be an actionbar theme)
+setSelectedFiles(ArrayList<String> selectedPhotos)     | to show already selected items
+addVideoPicker()    | added video picker alongside images
+enableOrientation(boolean status)  | In case, if you want to disable orientation (*disabled by default*)
+showGifs(boolean status)    | to show gifs images in the picker
+showFolderView(boolean status)    | if you want to show folder type pick view, enable this. (*Enabled by default*)
+enableDocSupport(boolean status)    | If you want to enable/disable default document picker, use this method. (*Enabled by default*)
+enableCameraSupport(boolean status)    | to show camera in the picker (*Enabled by default*)
+addFileSupport(String title, String[] extensions, @DrawableRes int drawable)    | If you want to specify custom file type, use this method. (*example below*)
+
+If you want to add custom file type picker, use *addFileSupport()* method like this ( for zip support):
+
+ ```java
+String zipTypes = {".zip",".rar"};
+    addFileSupport("ZIP",zipTypes, R.drawable.ic_zip_icon);
+```
+
  # Credits
   
   Inspired by [PhotoPicker](https://github.com/donglua/PhotoPicker)

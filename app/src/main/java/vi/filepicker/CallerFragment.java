@@ -86,7 +86,7 @@ public class CallerFragment extends BaseFragment {
                 if(resultCode== Activity.RESULT_OK && data!=null)
                 {
                     photoPaths = new ArrayList<>();
-                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS));
+                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
 
                 }
                 break;
@@ -147,7 +147,7 @@ public class CallerFragment extends BaseFragment {
             FilePickerBuilder.getInstance().setMaxCount(maxCount)
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
-                    .pickDocument(this);
+                    .pickFile(this);
     }
 
     @Override

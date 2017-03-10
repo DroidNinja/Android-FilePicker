@@ -3,9 +3,13 @@ package droidninja.filepicker;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import java.util.ArrayList;
+
+import droidninja.filepicker.models.FileType;
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -38,29 +42,77 @@ public class FilePickerBuilder {
 
     public FilePickerBuilder setSelectedFiles(ArrayList<String> selectedPhotos)
     {
-        mPickerOptionsBundle.putStringArrayList(FilePickerConst.KEY_SELECTED_PHOTOS, selectedPhotos);
+        mPickerOptionsBundle.putStringArrayList(FilePickerConst.KEY_SELECTED_MEDIA, selectedPhotos);
+        return this;
+    }
+
+    public FilePickerBuilder addVideoPicker()
+    {
+        PickerManager.getInstance().setShowVideos(true);
+        return this;
+    }
+
+    public FilePickerBuilder showGifs(boolean status)
+    {
+        PickerManager.getInstance().setShowGif(status);
+        return this;
+    }
+
+    public FilePickerBuilder showFolderView(boolean status)
+    {
+        PickerManager.getInstance().setShowFolderView(status);
+        return this;
+    }
+
+    public FilePickerBuilder enableDocSupport(boolean status)
+    {
+        PickerManager.getInstance().setDocSupport(status);
+        return this;
+    }
+
+    public FilePickerBuilder enableCameraSupport(boolean status)
+    {
+        PickerManager.getInstance().setEnableCamera(status);
+        return this;
+    }
+
+    public FilePickerBuilder enableOrientation(boolean status)
+    {
+        PickerManager.getInstance().setEnableOrientation(status);
+        return this;
+    }
+
+    public FilePickerBuilder addFileSupport(String title, String[] extensions, @DrawableRes int drawable)
+    {
+        PickerManager.getInstance().addFileType(new FileType(title,extensions,drawable));
+        return this;
+    }
+
+    public FilePickerBuilder addFileSupport(String title, String[] extensions)
+    {
+        PickerManager.getInstance().addFileType(new FileType(title,extensions,0));
         return this;
     }
 
     public void pickPhoto(Activity context)
     {
-       mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.PHOTO_PICKER);
-        start(context,FilePickerConst.PHOTO_PICKER);
+       mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.MEDIA_PICKER);
+        start(context,FilePickerConst.MEDIA_PICKER);
     }
 
     public void pickPhoto(Fragment context)
     {
-        mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.PHOTO_PICKER);
-        start(context,FilePickerConst.PHOTO_PICKER);
+        mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.MEDIA_PICKER);
+        start(context,FilePickerConst.MEDIA_PICKER);
     }
 
-    public void pickDocument(Activity context)
+    public void pickFile(Activity context)
     {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.DOC_PICKER);
         start(context,FilePickerConst.DOC_PICKER);
     }
 
-    public void pickDocument(Fragment context)
+    public void pickFile(Fragment context)
     {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.DOC_PICKER);
         start(context,FilePickerConst.DOC_PICKER);
@@ -71,7 +123,7 @@ public class FilePickerBuilder {
         Intent intent = new Intent(context, FilePickerActivity.class);
         intent.putExtras(mPickerOptionsBundle);
 
-        if(pickerType==FilePickerConst.PHOTO_PICKER)
+        if(pickerType==FilePickerConst.MEDIA_PICKER)
             context.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_PHOTO);
         else
             context.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_DOC);
@@ -81,7 +133,7 @@ public class FilePickerBuilder {
     {
         Intent intent = new Intent(fragment.getActivity(), FilePickerActivity.class);
         intent.putExtras(mPickerOptionsBundle);
-        if(pickerType==FilePickerConst.PHOTO_PICKER)
+        if(pickerType==FilePickerConst.MEDIA_PICKER)
             fragment.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_PHOTO);
         else
             fragment.startActivityForResult(intent,FilePickerConst.REQUEST_CODE_DOC);

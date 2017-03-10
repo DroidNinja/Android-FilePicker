@@ -32,7 +32,6 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder, T ex
         if(items.get(index).getPath().equals(selectedPaths.get(jindex)))
         {
           selectedPhotos.add(items.get(index));
-          PickerManager.getInstance().add(items.get(index));
         }
       }
     }
@@ -42,7 +41,7 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder, T ex
   /**
    * Indicates if the item at position where is selected
    *
-   * @param photo Photo of the item to check
+   * @param photo Media of the item to check
    * @return true if the item is selected, false otherwise
    */
   @Override
@@ -54,7 +53,7 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder, T ex
   /**
    * Toggle the selection status of the item at a given position
    *
-   * @param photo Photo of the item to toggle the selection status for
+   * @param photo Media of the item to toggle the selection status for
    */
   @Override
   public void toggleSelection(T photo) {

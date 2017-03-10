@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.OrientationHelper;
@@ -15,8 +16,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import droidninja.filepicker.FilePickerConst;
@@ -24,25 +30,28 @@ import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.R;
 import droidninja.filepicker.adapters.PhotoGridAdapter;
 import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback;
-import droidninja.filepicker.models.Photo;
+import droidninja.filepicker.models.Media;
 import droidninja.filepicker.models.PhotoDirectory;
+import droidninja.filepicker.utils.AndroidLifecycleUtils;
 import droidninja.filepicker.utils.ImageCaptureManager;
 import droidninja.filepicker.utils.MediaStoreHelper;
 
 
-public class PhotoPickerFragment extends BaseFragment{
+public class MediaDetailPickerFragment extends BaseFragment{
 
-    private static final String TAG = PhotoPickerFragment.class.getSimpleName();
+    private static final String TAG = MediaDetailPickerFragment.class.getSimpleName();
+    private static final int SCROLL_THRESHOLD = 30;
     RecyclerView recyclerView;
 
     TextView emptyView;
 
     private PhotoPickerFragmentListener mListener;
     private PhotoGridAdapter photoGridAdapter;
-    private ArrayList<String> selectedPaths;
     private ImageCaptureManager imageCaptureManager;
+    private RequestManager mGlideRequestManager;
+    private int fileType;
 
-    public PhotoPickerFragment() {
+    public MediaDetailPickerFragment() {
         // Required empty public constructor
     }
 
@@ -71,57 +80,105 @@ public class PhotoPickerFragment extends BaseFragment{
         mListener = null;
     }
 
-    public static PhotoPickerFragment newInstance(ArrayList<String> selectedPaths) {
-        PhotoPickerFragment photoPickerFragment = new PhotoPickerFragment();
-        photoPickerFragment.selectedPaths = selectedPaths;
-        return  photoPickerFragment;
+    public static MediaDetailPickerFragment newInstance(int fileType) {
+        MediaDetailPickerFragment mediaDetailPickerFragment = new MediaDetailPickerFragment();
+        Bundle bun = new Bundle();
+        bun.putInt(FILE_TYPE, fileType);
+        mediaDetailPickerFragment.setArguments(bun);
+        return mediaDetailPickerFragment;
     }
 
     public interface PhotoPickerFragmentListener {
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mGlideRequestManager = Glide.with(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setViews(view);
-        initView();
+        initView(view);
     }
 
-    private void setViews(View view) {
+    private void initView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         emptyView = (TextView) view.findViewById(R.id.empty_view);
-    }
-
-    private void initView() {
+        fileType = getArguments().getInt(FILE_TYPE);
         imageCaptureManager = new ImageCaptureManager(getActivity());
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL);
         layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                // Log.d(">>> Picker >>>", "dy = " + dy);
+                if (Math.abs(dy) > SCROLL_THRESHOLD) {
+                    mGlideRequestManager.pauseRequests();
+                } else {
+                    resumeRequestsIfNotDestroyed();
+                }
+            }
+            @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    resumeRequestsIfNotDestroyed();
+                }
+            }
+        });
+
         getDataFromMedia();
     }
 
     private void getDataFromMedia() {
         Bundle mediaStoreArgs = new Bundle();
-        mediaStoreArgs.putBoolean(FilePickerConst.EXTRA_SHOW_GIF, false);
 
-        MediaStoreHelper.getPhotoDirs(getActivity(), mediaStoreArgs,
-                new FileResultCallback<PhotoDirectory>() {
-                    @Override
-                    public void onResultCallback(List<PhotoDirectory> dirs) {
-                        updateList(dirs);
-                    }
-                });
+        mediaStoreArgs.putInt(FilePickerConst.EXTRA_FILE_TYPE, fileType);
+
+        if(fileType==FilePickerConst.MEDIA_TYPE_IMAGE) {
+            MediaStoreHelper.getPhotoDirs(getActivity(), mediaStoreArgs,
+                    new FileResultCallback<PhotoDirectory>() {
+                        @Override
+                        public void onResultCallback(List<PhotoDirectory> dirs) {
+                            updateList(dirs);
+                        }
+                    });
+        }
+        else if(fileType==FilePickerConst.MEDIA_TYPE_VIDEO)
+        {
+            MediaStoreHelper.getVideoDirs(getActivity(), mediaStoreArgs,
+                    new FileResultCallback<PhotoDirectory>() {
+                        @Override
+                        public void onResultCallback(List<PhotoDirectory> dirs) {
+                            updateList(dirs);
+                        }
+                    });
+        }
     }
 
     private void updateList(List<PhotoDirectory> dirs) {
-        ArrayList<Photo> photos = new ArrayList<>();
+        ArrayList<Media> medias = new ArrayList<>();
         for (int i = 0; i < dirs.size(); i++) {
-            photos.addAll(dirs.get(i).getPhotos());
+            medias.addAll(dirs.get(i).getMedias());
         }
 
-        if(photos.size()>0) {
+        Collections.sort(medias,new Comparator<Media>() {
+            @Override
+            public int compare(Media a, Media b) {
+                return b.getId() - a.getId();
+            }
+        });
+
+        if(medias.size()>0) {
             emptyView.setVisibility(View.GONE);
         }
         else {
@@ -130,18 +187,18 @@ public class PhotoPickerFragment extends BaseFragment{
 
             if(photoGridAdapter!=null)
             {
-                photoGridAdapter.setData(photos);
+                photoGridAdapter.setData(medias);
                 photoGridAdapter.notifyDataSetChanged();
             }
             else
             {
-                photoGridAdapter = new PhotoGridAdapter(getActivity(), photos,selectedPaths);
+                photoGridAdapter = new PhotoGridAdapter(getActivity(), mGlideRequestManager, (ArrayList<Media>) medias, PickerManager.getInstance().getSelectedPhotos(),(fileType==FilePickerConst.MEDIA_TYPE_IMAGE) && PickerManager.getInstance().isEnableCamera());
                 recyclerView.setAdapter(photoGridAdapter);
                 photoGridAdapter.setCameraListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
-                            Intent intent = imageCaptureManager.dispatchTakePictureIntent();
+                            Intent intent = imageCaptureManager.dispatchTakePictureIntent(getActivity());
                             if(intent!=null)
                                 startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
                             else
@@ -163,10 +220,25 @@ public class PhotoPickerFragment extends BaseFragment{
             case ImageCaptureManager.REQUEST_TAKE_PHOTO:
                 if(resultCode== Activity.RESULT_OK)
                 {
-                    imageCaptureManager.galleryAddPic(getActivity());
-                    getDataFromMedia();
+                    imageCaptureManager.galleryAddPic();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getDataFromMedia();
+
+                        }
+                    },1000);
                 }
                 break;
         }
+    }
+
+    private void resumeRequestsIfNotDestroyed() {
+        if (!AndroidLifecycleUtils.canLoadImage(this)) {
+            return;
+        }
+
+        mGlideRequestManager.resumeRequests();
     }
 }

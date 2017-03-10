@@ -2,11 +2,8 @@ package vi.filepicker;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -53,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 if(resultCode== Activity.RESULT_OK && data!=null)
                 {
                     photoPaths = new ArrayList<>();
-                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS));
+                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
 
                 }
                 break;
@@ -95,26 +92,35 @@ public class MainActivity extends AppCompatActivity {
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickPhoto() {
-        int maxCount = MAX_ATTACHMENT_COUNT-docPaths.size();
+        int maxCount = MAX_ATTACHMENT_COUNT-docPaths.size()-photoPaths.size();
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
             FilePickerBuilder.getInstance().setMaxCount(maxCount)
                     .setSelectedFiles(photoPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
+                    .addVideoPicker()
+            .enableCameraSupport(true)
+            .showGifs(true)
+            .showFolderView(true)
                     .pickPhoto(this);
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickDoc() {
-        int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size();
+        String[] zips = {".zip",".rar"};
+        String[] xmls = {".xml"};
+        int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size()-docPaths.size();
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
             FilePickerBuilder.getInstance().setMaxCount(maxCount)
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
-                    .pickDocument(this);
+                    .addFileSupport("ZIP",zips)
+            .addFileSupport("XML",xmls)
+            .enableDocSupport(true)
+                    .pickFile(this);
     }
 
     @Override

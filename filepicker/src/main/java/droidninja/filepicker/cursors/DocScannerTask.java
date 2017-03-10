@@ -10,8 +10,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback;
 import droidninja.filepicker.models.Document;
+import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.utils.Utils;
 
 import static android.provider.BaseColumns._ID;
@@ -32,8 +34,6 @@ public class DocScannerTask extends AsyncTask<Void,Void,List<Document>> {
     };
     private final FileResultCallback<Document> resultCallback;
 
-    String[] selectionArgs = new String[]{".pdf", ".ppt",".pptx",".xlsx",".xls",".doc",".docx",".txt"};
-
     private final Context context;
 
     public DocScannerTask(Context context, FileResultCallback<Document> fileResultCallback)
@@ -46,9 +46,11 @@ public class DocScannerTask extends AsyncTask<Void,Void,List<Document>> {
     protected List<Document> doInBackground(Void... voids) {
         ArrayList<Document> documents = new ArrayList<>();
         final String[] projection = DOC_PROJECTION;
+        String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                + MediaStore.Files.FileColumns.MEDIA_TYPE_NONE;
         final Cursor cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"),
                 projection,
-                null,
+                selection,
                 null,
                 MediaStore.Files.FileColumns.DATE_ADDED + " DESC");
 
@@ -78,31 +80,39 @@ public class DocScannerTask extends AsyncTask<Void,Void,List<Document>> {
             String path = data.getString(data.getColumnIndexOrThrow(DATA));
             String title = data.getString(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.TITLE));
 
-            if(path!=null && contains(selectionArgs,path)) {
-                Document document = new Document(imageId, title, path);
+            if(path!=null) {
 
-                String mimeType = data.getString(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MIME_TYPE));
-                if (mimeType != null && !TextUtils.isEmpty(mimeType))
-                    document.setMimeType(mimeType);
-                else
-                {
-                    document.setMimeType("");
+                FileType fileType = getFileType(PickerManager.getInstance().getFileTypes(),path);
+                if(fileType!=null) {
+
+                    Document document = new Document(imageId, title, path);
+                    document.setFileType(fileType);
+
+                    String mimeType = data.getString(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MIME_TYPE));
+                    if (mimeType != null && !TextUtils.isEmpty(mimeType))
+                        document.setMimeType(mimeType);
+                    else {
+                        document.setMimeType("");
+                    }
+
+                    document.setSize(data.getString(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.SIZE)));
+
+                    if (!documents.contains(document))
+                        documents.add(document);
                 }
-
-                document.setSize(data.getString(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.SIZE)));
-
-                if (!documents.contains(document))
-                    documents.add(document);
             }
         }
 
         return documents;
     }
 
-    boolean contains(String[] types, String path) {
-        for (String string : types) {
-            if (path.endsWith(string)) return true;
+    private FileType getFileType(ArrayList<FileType> types, String path) {
+        for (int index = 0; index < types.size(); index++) {
+            for (String string : types.get(index).extensions) {
+                if (path.endsWith(string))
+                    return types.get(index);
+            }
         }
-        return false;
+        return null;
     }
 }

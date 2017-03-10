@@ -2,8 +2,12 @@ package droidninja.filepicker.cursors;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
 import android.support.v4.content.CursorLoader;
+
+import droidninja.filepicker.FilePickerConst;
 
 import static android.provider.MediaStore.MediaColumns.MIME_TYPE;
 
@@ -18,22 +22,29 @@ public class PhotoDirectoryLoader extends CursorLoader {
           Media.TITLE
   };
 
-  public PhotoDirectoryLoader(Context context, boolean showGif) {
+  public PhotoDirectoryLoader(Context context, Bundle args) {
     super(context);
+    String bucketId = args.getString(FilePickerConst.EXTRA_BUCKET_ID, null);
+    int mediaType = args.getInt(FilePickerConst.EXTRA_FILE_TYPE, FilePickerConst.MEDIA_TYPE_IMAGE);
 
-    setProjection(IMAGE_PROJECTION);
-    setUri(Media.EXTERNAL_CONTENT_URI);
-    setSortOrder(Media.DATE_ADDED + " DESC");
+    setProjection(null);
+    setUri(MediaStore.Files.getContentUri("external"));
+    setSortOrder(Media._ID + " DESC");
 
-    setSelection(
-        MIME_TYPE + "=? or " + MIME_TYPE + "=? or "+ MIME_TYPE + "=? " + (showGif ? ("or " + MIME_TYPE + "=?") : ""));
-    String[] selectionArgs;
-    if (showGif) {
-      selectionArgs = new String[] { "image/jpeg", "image/png", "image/jpg","image/gif" };
-    } else {
-      selectionArgs = new String[] { "image/jpeg", "image/png", "image/jpg" };
+    String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+            + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+
+    if(mediaType==FilePickerConst.MEDIA_TYPE_VIDEO)
+    {
+        selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+              + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
     }
-    setSelectionArgs(selectionArgs);
+
+    if(bucketId!=null)
+      selection += " AND " + Media.BUCKET_ID + "='" + bucketId + "'";
+
+    setSelection(selection);
+
   }
 
 

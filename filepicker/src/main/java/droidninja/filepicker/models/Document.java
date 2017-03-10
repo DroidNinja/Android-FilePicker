@@ -15,6 +15,7 @@ import droidninja.filepicker.utils.Utils;
 public class Document extends BaseFile {
     private String mimeType;
     private String size;
+    private FileType fileType;
 
     public Document(int id, String title, String path) {
         super(id,title,path);
@@ -79,78 +80,17 @@ public class Document extends BaseFile {
         this.name = title;
     }
 
-    public int getTypeDrawable()
+    public boolean isThisType(String[] types)
     {
-        if(getFileType()== FilePickerConst.FILE_TYPE.EXCEL)
-            return R.drawable.ic_excel;
-        if(getFileType()== FilePickerConst.FILE_TYPE.WORD)
-            return R.drawable.ic_word;
-        if(getFileType()== FilePickerConst.FILE_TYPE.PPT)
-            return R.drawable.ic_ppt;
-        if(getFileType()== FilePickerConst.FILE_TYPE.PDF)
-            return R.drawable.ic_pdf;
-        if(getFileType()== FilePickerConst.FILE_TYPE.TXT)
-            return R.drawable.ic_txt;
-        else
-            return R.drawable.ic_txt;
-    }
-
-    public boolean isThisType(FilePickerConst.FILE_TYPE type)
-    {
-        if(getFileType() == type)
-            return true;
-
-        return false;
-    }
-
-    public FilePickerConst.FILE_TYPE getFileType()
-    {
-        String fileExtension = Utils.getFileExtension(new File(this.path));
-        if(TextUtils.isEmpty(fileExtension))
-            return FilePickerConst.FILE_TYPE.UNKNOWN;
-
-        if(isExcelFile())
-            return FilePickerConst.FILE_TYPE.EXCEL;
-        if(isDocFile())
-            return FilePickerConst.FILE_TYPE.WORD;
-        if(isPPTFile())
-            return FilePickerConst.FILE_TYPE.PPT;
-        if(isPDFFile())
-            return FilePickerConst.FILE_TYPE.PDF;
-        if(isTxtFile())
-            return FilePickerConst.FILE_TYPE.TXT;
-        else
-            return FilePickerConst.FILE_TYPE.UNKNOWN;
-    }
-
-    public boolean isExcelFile()
-    {
-        String[] types = {"xls","xlsx"};
         return Utils.contains(types, this.path);
     }
 
-    public boolean isDocFile()
+    public FileType getFileType()
     {
-        String[] types = {"doc","docx", "dot","dotx"};
-        return Utils.contains(types, this.path);
+        return fileType;
     }
 
-    public boolean isPPTFile()
-    {
-        String[] types = {"ppt","pptx"};
-        return Utils.contains(types, this.path);
+    public void setFileType(FileType fileType) {
+        this.fileType = fileType;
     }
-
-    public boolean isPDFFile()
-    {
-        String[] types = {"pdf"};
-        return Utils.contains(types, this.path);
-    }
-
-    public boolean isTxtFile()
-    {
-        String[] types = {"txt"};
-        return Utils.contains(types, this.path);
-    }
-
 }

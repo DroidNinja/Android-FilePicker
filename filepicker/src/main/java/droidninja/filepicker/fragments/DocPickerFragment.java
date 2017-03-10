@@ -10,16 +10,21 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.android.internal.util.Predicate;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import droidninja.filepicker.FilePickerConst;
+import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.R;
 import droidninja.filepicker.adapters.SectionsPagerAdapter;
 import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback;
 import droidninja.filepicker.models.Document;
+import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.utils.MediaStoreHelper;
+import droidninja.filepicker.utils.TabLayoutHelper;
 import droidninja.filepicker.utils.Utils;
 
 
@@ -67,6 +72,9 @@ public class DocPickerFragment extends BaseFragment {
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     private void setData() {
@@ -84,19 +92,14 @@ public class DocPickerFragment extends BaseFragment {
         if(sectionsPagerAdapter!=null)
         {
             for (int index = 0; index < sectionsPagerAdapter.getCount(); index++) {
-                DocFragment docFragment = (DocFragment) sectionsPagerAdapter.getItem(index);
+                DocFragment docFragment = (DocFragment) getChildFragmentManager()
+                        .findFragmentByTag(
+                                "android:switcher:" + R.id.viewPager + ":"+index);
                 if(docFragment!=null)
                 {
-                    if(index==0)
-                        docFragment.updateList(filterDocuments(FilePickerConst.FILE_TYPE.PDF, files));
-                    else if(index==1)
-                        docFragment.updateList(filterDocuments(FilePickerConst.FILE_TYPE.PPT, files));
-                    else if(index==2)
-                        docFragment.updateList(filterDocuments(FilePickerConst.FILE_TYPE.WORD, files));
-                    else if(index==3)
-                        docFragment.updateList(filterDocuments(FilePickerConst.FILE_TYPE.EXCEL, files));
-                    else if(index==4)
-                        docFragment.updateList(filterDocuments(FilePickerConst.FILE_TYPE.TXT, files));
+                    FileType fileType = docFragment.getFileType();
+                    if(fileType!=null)
+                        docFragment.updateList(filterDocuments(fileType.extensions, files));
                 }
             }
         }
@@ -104,18 +107,20 @@ public class DocPickerFragment extends BaseFragment {
 
     private void setUpViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(DocFragment.newInstance(selectedPaths), getString(R.string.pdf_title));
-        adapter.addFragment(DocFragment.newInstance(selectedPaths), getString(R.string.ppt_title));
-        adapter.addFragment(DocFragment.newInstance(selectedPaths), getString(R.string.word_title));
-        adapter.addFragment(DocFragment.newInstance(selectedPaths), getString(R.string.excel_title));
-        adapter.addFragment(DocFragment.newInstance(selectedPaths), getString(R.string.txt_title));
+        ArrayList<FileType> supportedTypes = PickerManager.getInstance().getFileTypes();
+        for (int index = 0; index < supportedTypes.size(); index++) {
+            adapter.addFragment(DocFragment.newInstance(supportedTypes.get(index)),supportedTypes.get(index).title);
+        }
 
-        viewPager.setOffscreenPageLimit(5);
+        viewPager.setOffscreenPageLimit(supportedTypes.size());
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+        
+        TabLayoutHelper mTabLayoutHelper = new TabLayoutHelper(tabLayout, viewPager);
+        mTabLayoutHelper.setAutoAdjustTabModeEnabled(true);
     }
 
-    private ArrayList<Document> filterDocuments(final FilePickerConst.FILE_TYPE type, List<Document> documents)
+    private ArrayList<Document> filterDocuments(final String[] type, List<Document> documents)
     {
         final Predicate<Document> docType = new Predicate<Document>() {
             public boolean apply(Document document) {

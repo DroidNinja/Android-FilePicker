@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.R;
 import droidninja.filepicker.models.Document;
@@ -41,7 +42,7 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
     public void onBindViewHolder(final FileViewHolder holder, int position) {
         final Document document = getItems().get(position);
 
-        holder.imageView.setImageResource(document.getTypeDrawable());
+        holder.imageView.setImageResource(document.getFileType().getDrawable());
         holder.fileNameTextView.setText(document.getTitle());
         holder.fileSizeTextView.setText(Formatter.formatShortFileSize(context, Long.parseLong(document.getSize())));
 
@@ -49,7 +50,7 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
             @Override
             public void onClick(View v) {
                 if(PickerManager.getInstance().getMaxCount()==1)
-                    PickerManager.getInstance().add(document);
+                    PickerManager.getInstance().add(document.getPath(), FilePickerConst.FILE_TYPE_DOCUMENT);
                 else
                     onItemClicked(document,holder);
             }
@@ -89,12 +90,12 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
         if (holder.checkBox.isChecked())
         {
             holder.checkBox.setVisibility(View.VISIBLE);
-            PickerManager.getInstance().add(document);
+            PickerManager.getInstance().add(document.getPath(), FilePickerConst.FILE_TYPE_DOCUMENT);
         }
         else
         {
             holder.checkBox.setVisibility(View.GONE);
-            PickerManager.getInstance().remove(document);
+            PickerManager.getInstance().remove(document.getPath(),FilePickerConst.FILE_TYPE_DOCUMENT);
         }
     }
 

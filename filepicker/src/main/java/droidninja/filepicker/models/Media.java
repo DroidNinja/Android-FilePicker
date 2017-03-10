@@ -1,24 +1,26 @@
 package droidninja.filepicker.models;
 
+public class Media extends BaseFile {
 
-public class Photo extends BaseFile {
+  public int mediaType;
 
-  public Photo(int id, String name, String path) {
+  public Media(int id, String name, String path, int mediaType) {
     super(id, name, path);
+    this.mediaType = mediaType;
   }
 
-  public Photo() {
+  public Media() {
     super(0,null,null);
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Photo)) return false;
+    if (!(o instanceof Media)) return false;
 
-    Photo photo = (Photo) o;
+    Media media = (Media) o;
 
-    return id == photo.id;
+    return id == media.id;
   }
 
   @Override
@@ -49,4 +51,13 @@ public class Photo extends BaseFile {
   public void setName(String name) {
     this.name = name;
   }
+
+  public int getMediaType() {
+    return mediaType;
+  }
+
+  public void setMediaType(int mediaType) {
+    this.mediaType = mediaType;
+  }
+
 }

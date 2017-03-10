@@ -13,9 +13,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.R;
 import droidninja.filepicker.adapters.FileListAdapter;
 import droidninja.filepicker.models.Document;
+import droidninja.filepicker.models.FileType;
 
 
 public class DocFragment extends BaseFragment {
@@ -27,7 +29,7 @@ public class DocFragment extends BaseFragment {
 
     private PhotoPickerFragmentListener mListener;
     private FileListAdapter fileListAdapter;
-    private ArrayList<String> selectedPaths;
+    private FileType fileType;
 
     public DocFragment() {
         // Required empty public constructor
@@ -59,10 +61,21 @@ public class DocFragment extends BaseFragment {
         mListener = null;
     }
 
-    public static DocFragment newInstance(ArrayList<String> selectedPaths) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    public static DocFragment newInstance(FileType fileType) {
         DocFragment photoPickerFragment = new DocFragment();
-        photoPickerFragment.selectedPaths = selectedPaths;
+        Bundle bun = new Bundle();
+        bun.putParcelable(FILE_TYPE, fileType);
+        photoPickerFragment.setArguments(bun);
         return  photoPickerFragment;
+    }
+
+    public FileType getFileType() {
+        return getArguments().getParcelable(FILE_TYPE);
     }
 
     public interface PhotoPickerFragmentListener {
@@ -73,16 +86,14 @@ public class DocFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setView(view);
-        initView();
+        initView(view);
     }
 
-    private void setView(View view) {
+    private void initView(View view) {
+        fileType =  getArguments().getParcelable(FILE_TYPE);
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         emptyView = (TextView) view.findViewById(R.id.empty_view);
-    }
-
-    private void initView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setVisibility(View.GONE);
     }
@@ -98,7 +109,7 @@ public class DocFragment extends BaseFragment {
 
             FileListAdapter fileListAdapter = (FileListAdapter) recyclerView.getAdapter();
             if(fileListAdapter==null) {
-                fileListAdapter = new FileListAdapter(getActivity(), dirs, selectedPaths);
+                fileListAdapter = new FileListAdapter(getActivity(), dirs, PickerManager.getInstance().getSelectedFiles());
 
                 recyclerView.setAdapter(fileListAdapter);
             }

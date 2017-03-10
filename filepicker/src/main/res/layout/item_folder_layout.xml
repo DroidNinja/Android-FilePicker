@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<droidninja.filepicker.views.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/image_placeholder"
+        android:padding="1dip"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:id="@+id/transparent_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent_black"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/bottomOverlay"
+        android:layout_width="fill_parent"
+        android:layout_height="70.0dip"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/gallery_album_overlay" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        >
+
+        <TextView
+            android:id="@+id/folder_title"
+            android:layout_width="0.0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:ellipsize="marquee"
+            android:gravity="left"
+            tools:text="All Photos"
+            android:singleLine="true"
+            android:textColor="#ffffffff"
+            android:textSize="13.0sp" />
+
+        <TextView
+            android:id="@+id/folder_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            tools:text="123"
+            android:singleLine="true"
+            android:textColor="#ffeeeeee"
+            android:textSize="11.0sp" />
+    </LinearLayout>
+
+</droidninja.filepicker.views.SquareRelativeLayout>

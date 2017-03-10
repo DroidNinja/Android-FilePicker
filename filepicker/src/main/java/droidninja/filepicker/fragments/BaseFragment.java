@@ -14,7 +14,7 @@ import android.view.animation.AnimationUtils;
  */
 public abstract class BaseFragment extends Fragment {
 
-
+    public static final String FILE_TYPE="FILE_TYPE";
     public BaseFragment() {
         // Required empty public constructor
     }
