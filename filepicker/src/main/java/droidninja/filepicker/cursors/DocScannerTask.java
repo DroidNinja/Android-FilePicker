@@ -83,7 +83,7 @@ public class DocScannerTask extends AsyncTask<Void,Void,List<Document>> {
             if(path!=null) {
 
                 FileType fileType = getFileType(PickerManager.getInstance().getFileTypes(),path);
-                if(fileType!=null) {
+                if(fileType!=null && !(new File(path).isDirectory())) {
 
                     Document document = new Document(imageId, title, path);
                     document.setFileType(fileType);

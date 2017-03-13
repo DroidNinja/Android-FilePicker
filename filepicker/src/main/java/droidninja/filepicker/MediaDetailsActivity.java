@@ -32,7 +32,7 @@ import droidninja.filepicker.models.PhotoDirectory;
 import droidninja.filepicker.utils.AndroidLifecycleUtils;
 import droidninja.filepicker.utils.MediaStoreHelper;
 
-public class MediaDetailsActivity extends AppCompatActivity {
+public class MediaDetailsActivity extends AppCompatActivity implements PickerManagerListener {
 
     private static final int SCROLL_THRESHOLD = 30;
     private RecyclerView recyclerView;
@@ -67,6 +67,7 @@ public class MediaDetailsActivity extends AppCompatActivity {
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     getSupportActionBar().setTitle(photoDirectory.getName());
                 }
+                PickerManager.getInstance().setPickerManagerListener(this);
             }
         }
     }
@@ -192,5 +193,16 @@ public class MediaDetailsActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(int currentCount) {
+
+    }
+
+    @Override
+    public void onSingleItemSelected(ArrayList<String> paths) {
+        setResult(RESULT_OK, null);
+        finish();
     }
 }
