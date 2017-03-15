@@ -16,7 +16,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="droidninja.filepicker.provider"
+            android:authorities="${applicationId}.droidninja.filepicker.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

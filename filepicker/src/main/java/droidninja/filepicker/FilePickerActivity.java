@@ -38,9 +38,9 @@ public class FilePickerActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(PickerManager.getInstance().getTheme());
+        setTheme(PickerManager.getInstance(this).getTheme());
         setContentView(R.layout.activity_file_picker);
-        if(!PickerManager.getInstance().isEnableOrientation())
+        if(!PickerManager.getInstance(this).isEnableOrientation())
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         initView();
     }
@@ -57,25 +57,25 @@ public class FilePickerActivity extends AppCompatActivity implements
             setToolbarTitle(0);
 
             if(type == FilePickerConst.MEDIA_PICKER)
-                PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_MEDIA);
+                PickerManager.getInstance(this).add(selectedPaths, FilePickerConst.FILE_TYPE_MEDIA);
             else
-                PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_DOCUMENT);
+                PickerManager.getInstance(this).add(selectedPaths, FilePickerConst.FILE_TYPE_DOCUMENT);
 
-            PickerManager.getInstance().setPickerManagerListener(this);
+            PickerManager.getInstance(this).setPickerManagerListener(this);
             openSpecificFragment(type, selectedPaths);
         }
     }
 
     private void openSpecificFragment(int type, ArrayList<String> selectedPaths) {
-        if (PickerManager.getInstance().getMaxCount() == 1)
+        if (PickerManager.getInstance(this).getMaxCount() == 1)
             selectedPaths.clear();
 
         if (type == FilePickerConst.MEDIA_PICKER) {
             MediaPickerFragment photoFragment = MediaPickerFragment.newInstance();
             FragmentUtil.addFragment(this, R.id.container, photoFragment);
         } else {
-            if(PickerManager.getInstance().isDocSupport())
-                PickerManager.getInstance().addDocTypes();
+            if(PickerManager.getInstance(this).isDocSupport())
+                PickerManager.getInstance(this).addDocTypes();
 
             DocPickerFragment photoFragment = DocPickerFragment.newInstance(selectedPaths);
             FragmentUtil.addFragment(this, R.id.container, photoFragment);
@@ -85,8 +85,8 @@ public class FilePickerActivity extends AppCompatActivity implements
     private void setToolbarTitle(int count) {
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null) {
-            if (PickerManager.getInstance().getMaxCount() > 1)
-                actionBar.setTitle(String.format(getString(R.string.attachments_title_text), count, PickerManager.getInstance().getMaxCount()));
+            if (PickerManager.getInstance(this).getMaxCount() > 1)
+                actionBar.setTitle(String.format(getString(R.string.attachments_title_text), count, PickerManager.getInstance(this).getMaxCount()));
             else {
                 if (type == FilePickerConst.MEDIA_PICKER)
                     actionBar.setTitle(R.string.select_photo_text);
@@ -109,9 +109,9 @@ public class FilePickerActivity extends AppCompatActivity implements
         int i = item.getItemId();
         if (i == R.id.action_done) {
             if (type == FilePickerConst.MEDIA_PICKER)
-                returnData(PickerManager.getInstance().getSelectedPhotos());
+                returnData(PickerManager.getInstance(this).getSelectedPhotos());
             else
-                returnData(PickerManager.getInstance().getSelectedFiles());
+                returnData(PickerManager.getInstance(this).getSelectedFiles());
 
             return true;
         } else if (i == android.R.id.home) {
@@ -147,9 +147,9 @@ public class FilePickerActivity extends AppCompatActivity implements
                 if(resultCode== Activity.RESULT_OK)
                 {
                     if (type == FilePickerConst.MEDIA_PICKER)
-                        returnData(PickerManager.getInstance().getSelectedPhotos());
+                        returnData(PickerManager.getInstance(this).getSelectedPhotos());
                     else
-                        returnData(PickerManager.getInstance().getSelectedFiles());
+                        returnData(PickerManager.getInstance(this).getSelectedFiles());
                 }
                 break;
         }

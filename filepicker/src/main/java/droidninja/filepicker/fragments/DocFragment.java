@@ -109,7 +109,8 @@ public class DocFragment extends BaseFragment {
 
             FileListAdapter fileListAdapter = (FileListAdapter) recyclerView.getAdapter();
             if(fileListAdapter==null) {
-                fileListAdapter = new FileListAdapter(getActivity(), dirs, PickerManager.getInstance().getSelectedFiles());
+                fileListAdapter = new FileListAdapter(getActivity(), dirs, PickerManager
+                        .getInstance(getActivity()).getSelectedFiles());
 
                 recyclerView.setAdapter(fileListAdapter);
             }

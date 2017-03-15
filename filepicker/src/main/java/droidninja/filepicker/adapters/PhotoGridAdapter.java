@@ -80,10 +80,10 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
       holder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          if(PickerManager.getInstance().getMaxCount()==1)
-            PickerManager.getInstance().add(media.getPath(), FilePickerConst.FILE_TYPE_MEDIA);
+          if(PickerManager.getInstance(context).getMaxCount()==1)
+            PickerManager.getInstance(context).add(media.getPath(), FilePickerConst.FILE_TYPE_MEDIA);
           else
-            if (holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
+            if (holder.checkBox.isChecked() || PickerManager.getInstance(context).shouldAdd()) {
             holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
           }
         }
@@ -95,7 +95,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
       holder.checkBox.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          if(holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
+          if(holder.checkBox.isChecked() || PickerManager.getInstance(context).shouldAdd()) {
             holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
           }
         }
@@ -116,12 +116,12 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
           if (isChecked)
           {
             holder.checkBox.setVisibility(View.VISIBLE);
-            PickerManager.getInstance().add(media.getPath(), FilePickerConst.FILE_TYPE_MEDIA);
+            PickerManager.getInstance(context).add(media.getPath(), FilePickerConst.FILE_TYPE_MEDIA);
           }
           else
           {
             holder.checkBox.setVisibility(View.GONE);
-            PickerManager.getInstance().remove(media.getPath(),FilePickerConst.FILE_TYPE_MEDIA);
+            PickerManager.getInstance(context).remove(media.getPath(),FilePickerConst.FILE_TYPE_MEDIA);
           }
         }
       });

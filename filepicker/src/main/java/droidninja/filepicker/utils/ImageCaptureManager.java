@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,9 +14,8 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+
+import droidninja.filepicker.PickerManager;
 
 public class ImageCaptureManager {
 
@@ -66,7 +64,7 @@ public class ImageCaptureManager {
         File newFile = createImageFile();
         takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        Uri photoURI = FileProvider.getUriForFile(context, "droidninja.filepicker.provider", newFile);
+        Uri photoURI = FileProvider.getUriForFile(context, PickerManager.getInstance(context).getProviderAuthorities(), newFile);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
       } else {
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(createImageFile()));

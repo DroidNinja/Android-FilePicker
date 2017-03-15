@@ -140,7 +140,7 @@ public class MediaFolderPickerFragment extends BaseFragment implements FolderGri
 
     private void getDataFromMedia() {
         Bundle mediaStoreArgs = new Bundle();
-        mediaStoreArgs.putBoolean(FilePickerConst.EXTRA_SHOW_GIF, PickerManager.getInstance().isShowGif());
+        mediaStoreArgs.putBoolean(FilePickerConst.EXTRA_SHOW_GIF, PickerManager.getInstance(getActivity()).isShowGif());
         mediaStoreArgs.putInt(FilePickerConst.EXTRA_FILE_TYPE, fileType);
 
         if(fileType==FilePickerConst.MEDIA_TYPE_IMAGE) {
@@ -209,7 +209,8 @@ public class MediaFolderPickerFragment extends BaseFragment implements FolderGri
             }
             else
             {
-                photoGridAdapter = new FolderGridAdapter(getActivity(), mGlideRequestManager, (ArrayList<PhotoDirectory>) dirs, null, (fileType==FilePickerConst.MEDIA_TYPE_IMAGE) && PickerManager.getInstance().isEnableCamera());
+                photoGridAdapter = new FolderGridAdapter(getActivity(), mGlideRequestManager, (ArrayList<PhotoDirectory>) dirs, null,
+                        (fileType==FilePickerConst.MEDIA_TYPE_IMAGE) && PickerManager.getInstance(getActivity()).isEnableCamera());
                 recyclerView.setAdapter(photoGridAdapter);
 
                 photoGridAdapter.setFolderGridAdapterListener(this);

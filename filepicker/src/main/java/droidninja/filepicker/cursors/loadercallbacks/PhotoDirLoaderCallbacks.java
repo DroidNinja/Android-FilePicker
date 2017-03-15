@@ -60,7 +60,7 @@ public class PhotoDirLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cu
 
             if (!directories.contains(photoDirectory)) {
                 photoDirectory.setCoverPath(path);
-                if (PickerManager.getInstance().isShowGif() && path.toLowerCase().endsWith("gif"))
+                if (PickerManager.getInstance(context.get()).isShowGif() && path.toLowerCase().endsWith("gif"))
                     photoDirectory.addPhoto(imageId, fileName, path, mediaType);
                 else
                     photoDirectory.addPhoto(imageId, fileName, path, mediaType);

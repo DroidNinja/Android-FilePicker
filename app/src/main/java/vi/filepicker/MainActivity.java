@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
-            FilePickerBuilder.getInstance().setMaxCount(maxCount)
+            FilePickerBuilder.getInstance(this).setMaxCount(maxCount)
                     .setSelectedFiles(photoPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
                     .addVideoPicker()
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
-            FilePickerBuilder.getInstance().setMaxCount(maxCount)
+            FilePickerBuilder.getInstance(this).setMaxCount(maxCount)
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
                     .addFileSupport("ZIP",zips)
