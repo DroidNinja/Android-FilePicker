@@ -56,10 +56,12 @@ public class FilePickerActivity extends AppCompatActivity implements
 
             setToolbarTitle(0);
 
-            if(type == FilePickerConst.MEDIA_PICKER)
-                PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_MEDIA);
-            else
-                PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_DOCUMENT);
+            if(selectedPaths!=null) {
+                if (type == FilePickerConst.MEDIA_PICKER)
+                    PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_MEDIA);
+                else
+                    PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_DOCUMENT);
+            }
 
             PickerManager.getInstance().setPickerManagerListener(this);
             openSpecificFragment(type, selectedPaths);

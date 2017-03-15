@@ -19,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import droidninja.filepicker.PickerManager;
+
 public class ImageCaptureManager {
 
   private final static String CAPTURED_PHOTO_PATH_KEY = "mCurrentPhotoPath";
@@ -66,7 +68,7 @@ public class ImageCaptureManager {
         File newFile = createImageFile();
         takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        Uri photoURI = FileProvider.getUriForFile(context, "droidninja.filepicker.provider", newFile);
+        Uri photoURI = FileProvider.getUriForFile(context, PickerManager.getInstance().getProviderAuthorities(), newFile);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
       } else {
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(createImageFile()));

@@ -120,6 +120,8 @@ public class FilePickerBuilder {
 
     private void start(Activity context, int pickerType)
     {
+        PickerManager.getInstance().setProviderAuthorities(context.getApplicationContext().getPackageName() + ".droidninja.filepicker.provider");
+
         Intent intent = new Intent(context, FilePickerActivity.class);
         intent.putExtras(mPickerOptionsBundle);
 
@@ -131,6 +133,8 @@ public class FilePickerBuilder {
 
     private void start(Fragment fragment, int pickerType)
     {
+        PickerManager.getInstance().setProviderAuthorities(fragment.getContext().getApplicationContext().getPackageName() + ".droidninja.filepicker.provider");
+
         Intent intent = new Intent(fragment.getActivity(), FilePickerActivity.class);
         intent.putExtras(mPickerOptionsBundle);
         if(pickerType==FilePickerConst.MEDIA_PICKER)

@@ -40,6 +40,8 @@ public class PickerManager {
 
     private boolean showFolderView = true;
 
+    private String providerAuthorities;
+
     private PickerManager() {
         mediaFiles = new ArrayList<>();
         docFiles = new ArrayList<>();
@@ -124,6 +126,7 @@ public class PickerManager {
     public void clearSelections() {
         docFiles.clear();
         mediaFiles.clear();
+        fileTypes.clear();
         currentCount = 0;
         maxCount = 0;
     }
@@ -210,5 +213,13 @@ public class PickerManager {
 
     public void setEnableOrientation(boolean enableOrientation) {
         this.enableOrientation = enableOrientation;
+    }
+
+    public String getProviderAuthorities() {
+        return providerAuthorities;
+    }
+
+    public void setProviderAuthorities(String providerAuthorities) {
+        this.providerAuthorities = providerAuthorities;
     }
 }
