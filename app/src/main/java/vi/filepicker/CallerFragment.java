@@ -132,7 +132,7 @@ public class CallerFragment extends BaseFragment {
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(getActivity(), "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
-            FilePickerBuilder.getInstance().setMaxCount(maxCount)
+            FilePickerBuilder.getInstance(getActivity()).setMaxCount(maxCount)
                     .setSelectedFiles(photoPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
                     .pickPhoto(this);
@@ -144,7 +144,7 @@ public class CallerFragment extends BaseFragment {
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(getActivity(), "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
-            FilePickerBuilder.getInstance().setMaxCount(maxCount)
+            FilePickerBuilder.getInstance(getActivity()).setMaxCount(maxCount)
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
                     .pickFile(this);

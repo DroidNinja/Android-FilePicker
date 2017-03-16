@@ -1,23 +1,31 @@
 package droidninja.filepicker;
 
+import android.content.Context;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import droidninja.filepicker.models.BaseFile;
 import droidninja.filepicker.models.FileType;
-import droidninja.filepicker.utils.Utils;
 
 /**
  * Created by droidNinja on 29/07/16.
  */
 public class PickerManager {
-    private static PickerManager ourInstance = new PickerManager();
+    private static PickerManager ourInstance;
     private int maxCount = FilePickerConst.DEFAULT_MAX_COUNT;
     private int currentCount;
     private PickerManagerListener pickerManagerListener;
     private ArrayList<String> alreadySelectedFiles;
+    private String providerAuthorities;
 
-    public static PickerManager getInstance() {
+    public static PickerManager getInstance(Context context) {
+        if (ourInstance == null) {
+            synchronized (PickerManager.class) {
+                if (ourInstance == null) {
+                    ourInstance = new PickerManager(context);
+                }
+            }
+        }
         return ourInstance;
     }
 
@@ -40,12 +48,11 @@ public class PickerManager {
 
     private boolean showFolderView = true;
 
-    private String providerAuthorities;
-
-    private PickerManager() {
+    private PickerManager(Context context) {
         mediaFiles = new ArrayList<>();
         docFiles = new ArrayList<>();
         fileTypes = new ArrayList<>();
+        providerAuthorities = context.getApplicationContext().getPackageName() + ".droidninja.filepicker.provider";
     }
 
     public void setMaxCount(int count) {
@@ -215,11 +222,11 @@ public class PickerManager {
         this.enableOrientation = enableOrientation;
     }
 
-    public String getProviderAuthorities() {
-        return providerAuthorities;
-    }
-
     public void setProviderAuthorities(String providerAuthorities) {
         this.providerAuthorities = providerAuthorities;
+    }
+
+    public String getProviderAuthorities() {
+        return providerAuthorities;
     }
 }

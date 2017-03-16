@@ -1,10 +1,10 @@
 package droidninja.filepicker;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import java.util.ArrayList;
@@ -17,26 +17,28 @@ import droidninja.filepicker.models.FileType;
 public class FilePickerBuilder {
 
     private final Bundle mPickerOptionsBundle;
+    private final Context context;
 
-    public FilePickerBuilder()
+    public FilePickerBuilder(Context context)
     {
         mPickerOptionsBundle = new Bundle();
+        this.context = context;
     }
 
-    public static FilePickerBuilder getInstance()
+    public static FilePickerBuilder getInstance(Context context)
     {
-        return new FilePickerBuilder();
+        return new FilePickerBuilder(context);
     }
 
     public FilePickerBuilder setMaxCount(int maxCount)
     {
-        PickerManager.getInstance().setMaxCount(maxCount);
+        PickerManager.getInstance(context).setMaxCount(maxCount);
         return this;
     }
 
     public FilePickerBuilder setActivityTheme(int theme)
     {
-        PickerManager.getInstance().setTheme(theme);
+        PickerManager.getInstance(context).setTheme(theme);
         return this;
     }
 
@@ -48,49 +50,49 @@ public class FilePickerBuilder {
 
     public FilePickerBuilder addVideoPicker()
     {
-        PickerManager.getInstance().setShowVideos(true);
+        PickerManager.getInstance(context).setShowVideos(true);
         return this;
     }
 
     public FilePickerBuilder showGifs(boolean status)
     {
-        PickerManager.getInstance().setShowGif(status);
+        PickerManager.getInstance(context).setShowGif(status);
         return this;
     }
 
     public FilePickerBuilder showFolderView(boolean status)
     {
-        PickerManager.getInstance().setShowFolderView(status);
+        PickerManager.getInstance(context).setShowFolderView(status);
         return this;
     }
 
     public FilePickerBuilder enableDocSupport(boolean status)
     {
-        PickerManager.getInstance().setDocSupport(status);
+        PickerManager.getInstance(context).setDocSupport(status);
         return this;
     }
 
     public FilePickerBuilder enableCameraSupport(boolean status)
     {
-        PickerManager.getInstance().setEnableCamera(status);
+        PickerManager.getInstance(context).setEnableCamera(status);
         return this;
     }
 
     public FilePickerBuilder enableOrientation(boolean status)
     {
-        PickerManager.getInstance().setEnableOrientation(status);
+        PickerManager.getInstance(context).setEnableOrientation(status);
         return this;
     }
 
     public FilePickerBuilder addFileSupport(String title, String[] extensions, @DrawableRes int drawable)
     {
-        PickerManager.getInstance().addFileType(new FileType(title,extensions,drawable));
+        PickerManager.getInstance(context).addFileType(new FileType(title,extensions,drawable));
         return this;
     }
 
     public FilePickerBuilder addFileSupport(String title, String[] extensions)
     {
-        PickerManager.getInstance().addFileType(new FileType(title,extensions,0));
+        PickerManager.getInstance(context).addFileType(new FileType(title,extensions,0));
         return this;
     }
 
@@ -120,8 +122,6 @@ public class FilePickerBuilder {
 
     private void start(Activity context, int pickerType)
     {
-        PickerManager.getInstance().setProviderAuthorities(context.getApplicationContext().getPackageName() + ".droidninja.filepicker.provider");
-
         Intent intent = new Intent(context, FilePickerActivity.class);
         intent.putExtras(mPickerOptionsBundle);
 
@@ -133,8 +133,6 @@ public class FilePickerBuilder {
 
     private void start(Fragment fragment, int pickerType)
     {
-        PickerManager.getInstance().setProviderAuthorities(fragment.getContext().getApplicationContext().getPackageName() + ".droidninja.filepicker.provider");
-
         Intent intent = new Intent(fragment.getActivity(), FilePickerActivity.class);
         intent.putExtras(mPickerOptionsBundle);
         if(pickerType==FilePickerConst.MEDIA_PICKER)

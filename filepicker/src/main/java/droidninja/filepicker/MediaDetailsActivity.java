@@ -44,9 +44,9 @@ public class MediaDetailsActivity extends AppCompatActivity implements PickerMan
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(PickerManager.getInstance().getTheme());
+        setTheme(PickerManager.getInstance(this).getTheme());
         setContentView(R.layout.activity_media_details);
-        if(!PickerManager.getInstance().isEnableOrientation())
+        if(!PickerManager.getInstance(this).isEnableOrientation())
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         initView();
@@ -67,7 +67,7 @@ public class MediaDetailsActivity extends AppCompatActivity implements PickerMan
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     getSupportActionBar().setTitle(photoDirectory.getName());
                 }
-                PickerManager.getInstance().setPickerManagerListener(this);
+                PickerManager.getInstance(this).setPickerManagerListener(this);
             }
         }
     }
@@ -159,7 +159,7 @@ public class MediaDetailsActivity extends AppCompatActivity implements PickerMan
         }
         else
         {
-            photoGridAdapter = new PhotoGridAdapter(this, mGlideRequestManager, (ArrayList<Media>) medias,PickerManager.getInstance().getSelectedPhotos(),false);
+            photoGridAdapter = new PhotoGridAdapter(this, mGlideRequestManager, (ArrayList<Media>) medias,PickerManager.getInstance(this).getSelectedPhotos(),false);
             recyclerView.setAdapter(photoGridAdapter);
         }
 

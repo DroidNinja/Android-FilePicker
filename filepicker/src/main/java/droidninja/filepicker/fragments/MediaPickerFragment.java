@@ -80,15 +80,15 @@ public class MediaPickerFragment extends BaseFragment{
 
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getChildFragmentManager());
 
-        if(PickerManager.getInstance().isShowFolderView())
+        if(PickerManager.getInstance(getActivity()).isShowFolderView())
             adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE), getString(R.string.images));
         else
             adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE), getString(R.string.images));
 
 
-        if(PickerManager.getInstance().showVideo())
+        if(PickerManager.getInstance(getActivity()).showVideo())
         {
-            if(PickerManager.getInstance().isShowFolderView())
+            if(PickerManager.getInstance(getActivity()).isShowFolderView())
                 adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO), getString(R.string.videos));
             else
                 adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO), getString(R.string.videos));

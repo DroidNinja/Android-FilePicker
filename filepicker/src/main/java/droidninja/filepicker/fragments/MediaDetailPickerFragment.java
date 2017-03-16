@@ -192,7 +192,9 @@ public class MediaDetailPickerFragment extends BaseFragment{
             }
             else
             {
-                photoGridAdapter = new PhotoGridAdapter(getActivity(), mGlideRequestManager, (ArrayList<Media>) medias, PickerManager.getInstance().getSelectedPhotos(),(fileType==FilePickerConst.MEDIA_TYPE_IMAGE) && PickerManager.getInstance().isEnableCamera());
+                photoGridAdapter = new PhotoGridAdapter(getActivity(), mGlideRequestManager, (ArrayList<Media>) medias,
+                        PickerManager.getInstance(getActivity()).getSelectedPhotos(),(fileType==FilePickerConst.MEDIA_TYPE_IMAGE)
+                        && PickerManager.getInstance(getActivity()).isEnableCamera());
                 recyclerView.setAdapter(photoGridAdapter);
                 photoGridAdapter.setCameraListener(new View.OnClickListener() {
                     @Override
