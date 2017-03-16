@@ -133,6 +133,7 @@ public class PickerManager {
     public void clearSelections() {
         docFiles.clear();
         mediaFiles.clear();
+        fileTypes.clear();
         currentCount = 0;
         maxCount = 0;
     }
