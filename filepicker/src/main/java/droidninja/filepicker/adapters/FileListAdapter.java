@@ -83,19 +83,16 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
 
     private void onItemClicked(Document document, FileViewHolder holder)
     {
-        if(holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
+        if(holder.checkBox.isChecked()) {
             holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
-        }
-
-        if (holder.checkBox.isChecked())
-        {
-            holder.checkBox.setVisibility(View.VISIBLE);
-            PickerManager.getInstance().add(document.getPath(), FilePickerConst.FILE_TYPE_DOCUMENT);
-        }
-        else
-        {
             holder.checkBox.setVisibility(View.GONE);
             PickerManager.getInstance().remove(document.getPath(),FilePickerConst.FILE_TYPE_DOCUMENT);
+        }
+        else if(PickerManager.getInstance().shouldAdd())
+        {
+            holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
+            holder.checkBox.setVisibility(View.VISIBLE);
+            PickerManager.getInstance().add(document.getPath(), FilePickerConst.FILE_TYPE_DOCUMENT);
         }
     }
 

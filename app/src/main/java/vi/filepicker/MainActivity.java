@@ -23,7 +23,7 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class MainActivity extends AppCompatActivity {
 
-    private int MAX_ATTACHMENT_COUNT = 10;
+    private int MAX_ATTACHMENT_COUNT = 5;
     private ArrayList<String> photoPaths = new ArrayList<>();
     private ArrayList<String> docPaths = new ArrayList<>();
 
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     .setActivityTheme(R.style.FilePickerTheme)
                     .addFileSupport("ZIP",zips)
             .addFileSupport("XML",xmls)
-            .enableDocSupport(true)
+            .enableDocSupport(false)
                     .pickFile(this);
     }
 
