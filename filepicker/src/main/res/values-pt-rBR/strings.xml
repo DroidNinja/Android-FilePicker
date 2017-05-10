@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_settings">Configurações</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="all_images">Todas as imagens</string>
+    <string name="done">Pronto</string>
+
+    <string name="permission_camera_rationale">Para mostrar o preview da câmera é necessário uma permissão.</string>
+    <string name="permission_contacts_rationale">Para mostrar os contatos é ncessário uma permissão.</string>
+    <string name="permission_camera_denied">Permissão para uso da câmera foi negada. Por favor considere
+        permitir o acesso à para utilizá-la!</string>
+    <string name="permission_camera_never_askagain">Permissão de uso de câmera foi negada com por favor nunca
+        pergunte novamente.</string>
+    <string name="no_files_found">Nenhum arquivo encontrado</string>
+    <string name="attachments_title_text" formatted="false">Anexos (%d/%d)</string>
+    <string name="select_photo_text">Selecione um arquivo de mídia</string>
+    <string name="select_doc_text">Selecione um documento</string>
+    <string name="no_camera_exists">Nenhum aplicativo de câmera foi detectado!</string>
+    <string name="pdf_title">PDF</string>
+    <string name="ppt_title">PPT</string>
+    <string name="word_title">DOC</string>
+    <string name="excel_title">XLS</string>
+    <string name="txt_title">TXT</string>
+    <string name="videos">Vídeos</string>
+    <string name="images">Imagens</string>
+    <string name="all_photos">Todas as fotos</string>
+    <string name="all_videos">Todos os vídeos</string>
+    <string name="all_files">Todos os arquivos</string>
+
+</resources>
