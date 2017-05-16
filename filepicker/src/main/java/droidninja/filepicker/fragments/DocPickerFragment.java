@@ -81,6 +81,7 @@ public class DocPickerFragment extends BaseFragment {
         MediaStoreHelper.getDocs(getActivity(), new FileResultCallback<Document>() {
             @Override
             public void onResultCallback(List<Document> files) {
+                if(!isAdded()) return;
                 progressBar.setVisibility(View.GONE);
                 setDataOnFragments(files);
             }
