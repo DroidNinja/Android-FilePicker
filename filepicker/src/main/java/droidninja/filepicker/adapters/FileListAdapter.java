@@ -25,10 +25,12 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
 
 
     private final Context context;
+    private final FileAdapterListener mListener;
 
-    public FileListAdapter(Context context, List<Document> items, List<String> selectedPaths) {
+    public FileListAdapter(Context context, List<Document> items, List<String> selectedPaths, FileAdapterListener fileAdapterListener) {
         super(items, selectedPaths);
         this.context = context;
+        this.mListener = fileAdapterListener;
     }
 
     @Override
@@ -49,10 +51,7 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(PickerManager.getInstance().getMaxCount()==1)
-                    PickerManager.getInstance().add(document.getPath(), FilePickerConst.FILE_TYPE_DOCUMENT);
-                else
-                    onItemClicked(document,holder);
+                onItemClicked(document,holder);
             }
         });
 
@@ -77,22 +76,30 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
                 toggleSelection(document);
                 holder.itemView.setBackgroundResource(isChecked?R.color.bg_gray:android.R.color.white);
 
+                if(mListener!=null)
+                    mListener.onItemSelected();
             }
         });
     }
 
     private void onItemClicked(Document document, FileViewHolder holder)
     {
-        if(holder.checkBox.isChecked()) {
-            holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
-            holder.checkBox.setVisibility(View.GONE);
-            PickerManager.getInstance().remove(document.getPath(),FilePickerConst.FILE_TYPE_DOCUMENT);
-        }
-        else if(PickerManager.getInstance().shouldAdd())
+        if(PickerManager.getInstance().getMaxCount()==1)
         {
-            holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
-            holder.checkBox.setVisibility(View.VISIBLE);
             PickerManager.getInstance().add(document.getPath(), FilePickerConst.FILE_TYPE_DOCUMENT);
+            if(mListener!=null)
+                mListener.onItemSelected();
+        }
+        else {
+            if (holder.checkBox.isChecked()) {
+                PickerManager.getInstance().remove(document.getPath(), FilePickerConst.FILE_TYPE_DOCUMENT);
+                holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
+                holder.checkBox.setVisibility(View.GONE);
+            } else if (PickerManager.getInstance().shouldAdd()) {
+                PickerManager.getInstance().add(document.getPath(), FilePickerConst.FILE_TYPE_DOCUMENT);
+                holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
+                holder.checkBox.setVisibility(View.VISIBLE);
+            }
         }
     }
 

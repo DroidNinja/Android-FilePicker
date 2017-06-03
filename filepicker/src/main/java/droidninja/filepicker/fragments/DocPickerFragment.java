@@ -1,5 +1,6 @@
 package droidninja.filepicker.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -37,9 +38,13 @@ public class DocPickerFragment extends BaseFragment {
     ViewPager viewPager;
     private ArrayList<String> selectedPaths;
     private ProgressBar progressBar;
+    private DocPickerFragmentListener mListener;
 
     public DocPickerFragment() {
         // Required empty public constructor
+    }
+
+    public interface DocPickerFragmentListener{
     }
 
 
@@ -54,6 +59,23 @@ public class DocPickerFragment extends BaseFragment {
         DocPickerFragment docPickerFragment = new DocPickerFragment();
         docPickerFragment.selectedPaths = selectedPaths;
         return  docPickerFragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof DocPickerFragmentListener) {
+            mListener = (DocPickerFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement DocPickerFragmentListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     @Override

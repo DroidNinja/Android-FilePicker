@@ -15,19 +15,20 @@ import java.util.List;
 
 import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.R;
+import droidninja.filepicker.adapters.FileAdapterListener;
 import droidninja.filepicker.adapters.FileListAdapter;
 import droidninja.filepicker.models.Document;
 import droidninja.filepicker.models.FileType;
 
 
-public class DocFragment extends BaseFragment {
+public class DocFragment extends BaseFragment implements FileAdapterListener {
 
     private static final String TAG = DocFragment.class.getSimpleName();
     RecyclerView recyclerView;
 
     TextView emptyView;
 
-    private PhotoPickerFragmentListener mListener;
+    private DocFragmentListener mListener;
     private FileListAdapter fileListAdapter;
     private FileType fileType;
 
@@ -47,8 +48,8 @@ public class DocFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof PhotoPickerFragmentListener) {
-            mListener = (PhotoPickerFragmentListener) context;
+        if (context instanceof DocFragmentListener) {
+            mListener = (DocFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement PhotoPickerFragmentListener");
@@ -78,9 +79,13 @@ public class DocFragment extends BaseFragment {
         return getArguments().getParcelable(FILE_TYPE);
     }
 
-    public interface PhotoPickerFragmentListener {
-        // TODO: Update argument type and name
+    @Override
+    public void onItemSelected() {
+        mListener.onItemSelected();
+    }
 
+    public interface DocFragmentListener {
+        void onItemSelected();
     }
 
     @Override
@@ -109,7 +114,7 @@ public class DocFragment extends BaseFragment {
 
             FileListAdapter fileListAdapter = (FileListAdapter) recyclerView.getAdapter();
             if(fileListAdapter==null) {
-                fileListAdapter = new FileListAdapter(getActivity(), dirs, PickerManager.getInstance().getSelectedFiles());
+                fileListAdapter = new FileListAdapter(getActivity(), dirs, PickerManager.getInstance().getSelectedFiles(), this);
 
                 recyclerView.setAdapter(fileListAdapter);
             }

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 
+import droidninja.filepicker.adapters.PhotoGridAdapter;
 import droidninja.filepicker.fragments.DocFragment;
 import droidninja.filepicker.fragments.DocPickerFragment;
 import droidninja.filepicker.fragments.MediaFolderPickerFragment;
@@ -27,10 +28,10 @@ import droidninja.filepicker.utils.ImageCaptureManager;
 
 public class FilePickerActivity extends AppCompatActivity implements
         MediaDetailPickerFragment.PhotoPickerFragmentListener,
-        DocFragment.PhotoPickerFragmentListener,
+        DocFragment.DocFragmentListener,
+        DocPickerFragment.DocPickerFragmentListener,
         MediaFolderPickerFragment.PhotoPickerFragmentListener,
-        MediaPickerFragment.MediaPickerFragmentListener,
-        PickerManagerListener {
+        MediaPickerFragment.MediaPickerFragmentListener{
 
     private static final String TAG = FilePickerActivity.class.getSimpleName();
     private int type;
@@ -54,8 +55,6 @@ public class FilePickerActivity extends AppCompatActivity implements
             ArrayList<String> selectedPaths = intent.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
             type = intent.getIntExtra(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER);
 
-            setToolbarTitle(0);
-
             if(selectedPaths!=null) {
                 if (type == FilePickerConst.MEDIA_PICKER)
                     PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_MEDIA);
@@ -63,7 +62,7 @@ public class FilePickerActivity extends AppCompatActivity implements
                     PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_DOCUMENT);
             }
 
-            PickerManager.getInstance().setPickerManagerListener(this);
+            setToolbarTitle(PickerManager.getInstance().getCurrentCount());
             openSpecificFragment(type, selectedPaths);
         }
     }
@@ -124,16 +123,6 @@ public class FilePickerActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onItemSelected(int currentCount) {
-        setToolbarTitle(currentCount);
-    }
-
-    @Override
-    public void onSingleItemSelected(ArrayList<String> paths) {
-        returnData(paths);
-    }
-
-    @Override
     public void onBackPressed() {
         super.onBackPressed();
         setResult(RESULT_CANCELED);
@@ -166,5 +155,13 @@ public class FilePickerActivity extends AppCompatActivity implements
             intent.putStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS, paths);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void onItemSelected() {
+        setToolbarTitle(PickerManager.getInstance().getCurrentCount());
+
+        if(PickerManager.getInstance().getMaxCount()==1)
+            returnData(type == FilePickerConst.FILE_TYPE_MEDIA ? PickerManager.getInstance().getSelectedPhotos() : PickerManager.getInstance().getSelectedFiles());
     }
 }

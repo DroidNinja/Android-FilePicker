@@ -92,25 +92,26 @@ public class MainActivity extends AppCompatActivity {
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickPhoto() {
-        int maxCount = MAX_ATTACHMENT_COUNT-docPaths.size()-photoPaths.size();
+        int maxCount = MAX_ATTACHMENT_COUNT-docPaths.size();
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
             FilePickerBuilder.getInstance().setMaxCount(maxCount)
                     .setSelectedFiles(photoPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
-                    .addVideoPicker()
+                    .enableVideoPicker(true)
             .enableCameraSupport(true)
-            .showGifs(true)
+            .showGifs(false)
             .showFolderView(true)
+            .enableOrientation(true)
                     .pickPhoto(this);
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickDoc() {
         String[] zips = {".zip",".rar"};
-        String[] xmls = {".xml"};
-        int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size()-docPaths.size();
+        String[] pdfs = {".pdf"};
+        int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size();
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
                     .addFileSupport("ZIP",zips)
-            .addFileSupport("XML",xmls)
+            .addFileSupport("PDF",pdfs,R.drawable.pdf_blue)
             .enableDocSupport(false)
                     .pickFile(this);
     }

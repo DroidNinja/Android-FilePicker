@@ -68,7 +68,7 @@ Method     | Use
 setMaxCount(int maxCount) | used to specify maximum count of media picks
 setActivityTheme(int theme)    | used to set theme for toolbar (must be an actionbar theme)
 setSelectedFiles(ArrayList<String> selectedPhotos)     | to show already selected items
-addVideoPicker()    | added video picker alongside images
+enableVideoPicker(boolean status)    | added video picker alongside images
 enableOrientation(boolean status)  | In case, if you want to disable orientation (*disabled by default*)
 showGifs(boolean status)    | to show gifs images in the picker
 showFolderView(boolean status)    | if you want to show folder type pick view, enable this. (*Enabled by default*)

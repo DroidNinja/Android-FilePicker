@@ -87,6 +87,8 @@ public class PhotoDirectory extends BaseFile implements Parcelable{
   }
 
   public String getCoverPath() {
+    if(medias!=null && medias.size()>0)
+      return medias.get(0).getPath();
     return coverPath;
   }
 

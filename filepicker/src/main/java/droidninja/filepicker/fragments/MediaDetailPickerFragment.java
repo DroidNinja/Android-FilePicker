@@ -28,6 +28,7 @@ import java.util.List;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.R;
+import droidninja.filepicker.adapters.FileAdapterListener;
 import droidninja.filepicker.adapters.PhotoGridAdapter;
 import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback;
 import droidninja.filepicker.models.Media;
@@ -37,7 +38,7 @@ import droidninja.filepicker.utils.ImageCaptureManager;
 import droidninja.filepicker.utils.MediaStoreHelper;
 
 
-public class MediaDetailPickerFragment extends BaseFragment{
+public class MediaDetailPickerFragment extends BaseFragment implements FileAdapterListener{
 
     private static final String TAG = MediaDetailPickerFragment.class.getSimpleName();
     private static final int SCROLL_THRESHOLD = 30;
@@ -88,7 +89,13 @@ public class MediaDetailPickerFragment extends BaseFragment{
         return mediaDetailPickerFragment;
     }
 
+    @Override
+    public void onItemSelected() {
+        mListener.onItemSelected();
+    }
+
     public interface PhotoPickerFragmentListener {
+        void onItemSelected();
     }
 
 
@@ -192,7 +199,7 @@ public class MediaDetailPickerFragment extends BaseFragment{
             }
             else
             {
-                photoGridAdapter = new PhotoGridAdapter(getActivity(), mGlideRequestManager, (ArrayList<Media>) medias, PickerManager.getInstance().getSelectedPhotos(),(fileType==FilePickerConst.MEDIA_TYPE_IMAGE) && PickerManager.getInstance().isEnableCamera());
+                photoGridAdapter = new PhotoGridAdapter(getActivity(), mGlideRequestManager, (ArrayList<Media>) medias, PickerManager.getInstance().getSelectedPhotos(),(fileType==FilePickerConst.MEDIA_TYPE_IMAGE) && PickerManager.getInstance().isEnableCamera(), this);
                 recyclerView.setAdapter(photoGridAdapter);
                 photoGridAdapter.setCameraListener(new View.OnClickListener() {
                     @Override

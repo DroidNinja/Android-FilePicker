@@ -59,11 +59,16 @@ public class PhotoDirLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cu
             photoDirectory.setName(name);
 
             if (!directories.contains(photoDirectory)) {
-                photoDirectory.setCoverPath(path);
-                if (PickerManager.getInstance().isShowGif() && path.toLowerCase().endsWith("gif"))
-                    photoDirectory.addPhoto(imageId, fileName, path, mediaType);
+                if(path.toLowerCase().endsWith("gif")) {
+                    if (PickerManager.getInstance().isShowGif())
+                    {
+                        photoDirectory.addPhoto(imageId, fileName, path, mediaType);
+                    }
+                }
                 else
+                {
                     photoDirectory.addPhoto(imageId, fileName, path, mediaType);
+                }
 
                 photoDirectory.setDateAdded(data.getLong(data.getColumnIndexOrThrow(DATE_ADDED)));
                 directories.add(photoDirectory);

@@ -14,8 +14,6 @@ public class PickerManager {
     private static PickerManager ourInstance = new PickerManager();
     private int maxCount = FilePickerConst.DEFAULT_MAX_COUNT;
     private int currentCount;
-    private PickerManagerListener pickerManagerListener;
-    private ArrayList<String> alreadySelectedFiles;
 
     public static PickerManager getInstance() {
         return ourInstance;
@@ -57,8 +55,8 @@ public class PickerManager {
         return maxCount;
     }
 
-    public void setPickerManagerListener(PickerManagerListener pickerManagerListener) {
-        this.pickerManagerListener = pickerManagerListener;
+    public int getCurrentCount() {
+        return currentCount;
     }
 
     public void add(String path, int type) {
@@ -71,13 +69,6 @@ public class PickerManager {
                 return;
 
             currentCount++;
-
-            if (pickerManagerListener != null) {
-                pickerManagerListener.onItemSelected(currentCount);
-
-                if (maxCount == 1)
-                    pickerManagerListener.onSingleItemSelected(type == FilePickerConst.FILE_TYPE_MEDIA ? getSelectedPhotos() : getSelectedFiles());
-            }
         }
     }
 
@@ -96,10 +87,6 @@ public class PickerManager {
             docFiles.remove(path);
 
             currentCount--;
-        }
-
-        if (pickerManagerListener != null) {
-            pickerManagerListener.onItemSelected(currentCount);
         }
     }
 

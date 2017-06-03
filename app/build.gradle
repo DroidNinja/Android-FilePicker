@@ -29,4 +29,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.github.hotchemi:permissionsdispatcher:2.1.3'
     compile 'com.android.support:support-v4:25.1.0'
+
+//    compile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
 }

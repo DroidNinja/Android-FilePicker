@@ -46,9 +46,9 @@ public class FilePickerBuilder {
         return this;
     }
 
-    public FilePickerBuilder addVideoPicker()
+    public FilePickerBuilder enableVideoPicker(boolean status)
     {
-        PickerManager.getInstance().setShowVideos(true);
+        PickerManager.getInstance().setShowVideos(status);
         return this;
     }
 

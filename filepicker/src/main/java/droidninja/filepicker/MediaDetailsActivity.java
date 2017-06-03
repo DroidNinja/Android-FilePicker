@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import droidninja.filepicker.adapters.FileAdapterListener;
 import droidninja.filepicker.adapters.PhotoGridAdapter;
 import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback;
 import droidninja.filepicker.models.Media;
@@ -32,7 +33,7 @@ import droidninja.filepicker.models.PhotoDirectory;
 import droidninja.filepicker.utils.AndroidLifecycleUtils;
 import droidninja.filepicker.utils.MediaStoreHelper;
 
-public class MediaDetailsActivity extends AppCompatActivity implements PickerManagerListener {
+public class MediaDetailsActivity extends AppCompatActivity implements FileAdapterListener {
 
     private static final int SCROLL_THRESHOLD = 30;
     private RecyclerView recyclerView;
@@ -67,7 +68,6 @@ public class MediaDetailsActivity extends AppCompatActivity implements PickerMan
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     getSupportActionBar().setTitle(photoDirectory.getName());
                 }
-                PickerManager.getInstance().setPickerManagerListener(this);
             }
         }
     }
@@ -159,7 +159,7 @@ public class MediaDetailsActivity extends AppCompatActivity implements PickerMan
         }
         else
         {
-            photoGridAdapter = new PhotoGridAdapter(this, mGlideRequestManager, (ArrayList<Media>) medias,PickerManager.getInstance().getSelectedPhotos(),false);
+            photoGridAdapter = new PhotoGridAdapter(this, mGlideRequestManager, (ArrayList<Media>) medias,PickerManager.getInstance().getSelectedPhotos(),false, this);
             recyclerView.setAdapter(photoGridAdapter);
         }
 
@@ -196,13 +196,21 @@ public class MediaDetailsActivity extends AppCompatActivity implements PickerMan
     }
 
     @Override
-    public void onItemSelected(int currentCount) {
-
+    public void onItemSelected() {
+        if(PickerManager.getInstance().getMaxCount()==1) {
+            setResult(RESULT_OK, null);
+            finish();
+        }
     }
 
-    @Override
-    public void onSingleItemSelected(ArrayList<String> paths) {
-        setResult(RESULT_OK, null);
-        finish();
-    }
+//    @Override
+//    public void onItemSelected(int currentCount) {
+//
+//    }
+//
+//    @Override
+//    public void onSingleItemSelected(ArrayList<String> paths) {
+//        setResult(RESULT_OK, null);
+//        finish();
+//    }
 }

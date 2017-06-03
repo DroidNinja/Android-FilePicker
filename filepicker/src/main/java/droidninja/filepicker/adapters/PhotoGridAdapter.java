@@ -25,18 +25,25 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
   private final Context context;
   private final RequestManager glide;
   private final boolean showCamera;
+  private final FileAdapterListener mListener;
   private int imageSize;
 
   public final static int ITEM_TYPE_CAMERA = 100;
   public final static int ITEM_TYPE_PHOTO  = 101;
   private View.OnClickListener cameraOnClickListener;
 
-  public PhotoGridAdapter(Context context, RequestManager requestManager, ArrayList<Media> medias, ArrayList<String> selectedPaths, boolean showCamera)
+  public PhotoGridAdapter(Context context,
+                          RequestManager requestManager,
+                          ArrayList<Media> medias,
+                          ArrayList<String> selectedPaths,
+                          boolean showCamera,
+                          FileAdapterListener photoGridAdapterListener)
   {
     super(medias, selectedPaths);
     this.context = context;
     this.glide = requestManager;
     this.showCamera = showCamera;
+    this.mListener = photoGridAdapterListener;
     setColumnNumber(context,3);
   }
 
@@ -80,12 +87,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
       holder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          if(PickerManager.getInstance().getMaxCount()==1)
-            PickerManager.getInstance().add(media.getPath(), FilePickerConst.FILE_TYPE_MEDIA);
-          else
-            if (holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
-            holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
-          }
+          onItemClicked(holder,media);
         }
       });
 
@@ -95,9 +97,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
       holder.checkBox.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          if(holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
-            holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
-          }
+          onItemClicked(holder,media);
         }
       });
 
@@ -123,6 +123,9 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
             holder.checkBox.setVisibility(View.GONE);
             PickerManager.getInstance().remove(media.getPath(),FilePickerConst.FILE_TYPE_MEDIA);
           }
+
+          if(mListener!=null)
+            mListener.onItemSelected();
         }
       });
 
@@ -133,6 +136,18 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
       holder.checkBox.setVisibility(View.GONE);
       holder.itemView.setOnClickListener(cameraOnClickListener);
       holder.videoIcon.setVisibility(View.GONE);
+    }
+  }
+
+  private void onItemClicked(PhotoViewHolder holder, Media media) {
+    if(PickerManager.getInstance().getMaxCount()==1)
+    {
+      PickerManager.getInstance().add(media.getPath(), FilePickerConst.FILE_TYPE_MEDIA);
+      if(mListener!=null)
+        mListener.onItemSelected();
+    }
+    else if (holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
+      holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
     }
   }
 
