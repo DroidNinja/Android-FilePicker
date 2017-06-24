@@ -83,7 +83,7 @@ String zipTypes = {".zip",".rar"};
     addFileSupport("ZIP",zipTypes, R.drawable.ic_zip_icon);
 ```
 
-#Proguard
+# Proguard
 ```
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
