@@ -12,7 +12,7 @@ A filepicker which allows to select images and videos with flexibility. It also 
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    compile 'com.droidninja:filepicker:2.0.4'
+    compile 'com.droidninja:filepicker:2.0.5'
 ```
   
  # Usage
@@ -44,7 +44,7 @@ A filepicker which allows to select images and videos with flexibility. It also 
                     if(resultCode== Activity.RESULT_OK && data!=null)
                     {
                         photoPaths = new ArrayList<>();
-                        photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS));
+                        photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
                     }
                     break;
                 case FilePickerConst.REQUEST_CODE_DOC:
@@ -82,6 +82,45 @@ If you want to add custom file type picker, use *addFileSupport()* method like t
 String zipTypes = {".zip",".rar"};
     addFileSupport("ZIP",zipTypes, R.drawable.ic_zip_icon);
 ```
+
+#Proguard
+```
+# Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+    **[] $VALUES;
+    public *;
+}
+# support-v7-appcompat
+-keep public class android.support.v7.widget.** { *; }
+-keep public class android.support.v7.internal.widget.** { *; }
+-keep public class android.support.v7.internal.view.menu.** { *; }
+-keep public class * extends android.support.v4.view.ActionProvider {
+    public <init>(android.content.Context);
+}
+# support-design
+-dontwarn android.support.design.**
+-keep class android.support.design.** { *; }
+-keep interface android.support.design.** { *; }
+-keep public class android.support.design.R$* { *; }
+```
+
+# Donate
+
+You guys are doing great job by filing bugs and sending pull requests. I am doing everything to maintain this project. If you want to support, your donation is highly appreciated (and I love food, coffee and beer). Thank you!
+
+**PayPal**
+
+* **[Donate $5](https://www.paypal.me/droidninja/5)**: Thank's for creating this project, here's a coffee (or some beer) for you!
+* **[Donate $10](https://www.paypal.me/droidninja/10)**: Wow, I am stunned. Let me take you to the movies!
+* **[Donate $15](https://www.paypal.me/droidninja/15)**: I really appreciate your work, let's grab some lunch!
+* **[Donate $25](https://www.paypal.me/droidninja/25)**: That's some awesome stuff you did right there, dinner is on me!
+* **[Donate $50](https://www.paypal.me/droidninja/50)**: I really really want to support this project, great job!
+* **[Donate $100](https://www.paypal.me/droidninja/100)**: You are the man! This project saved me hours (if not days) of struggle and hard work, simply awesome!
+* **[Donate $2799](https://www.paypal.me/droidninja/2799)**: Go buddy, buy Macbook Pro for yourself!
+Of course, you can also choose what you want to donate, all donations are awesome!
+
+
 
  # Credits
   

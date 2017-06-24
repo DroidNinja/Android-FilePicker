@@ -15,7 +15,7 @@
             android:configChanges="orientation|keyboardHidden"></activity>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name=".utils.FilePickerProvider"
             android:authorities="${applicationId}.droidninja.filepicker.provider"
             android:exported="false"
             android:grantUriPermissions="true">
