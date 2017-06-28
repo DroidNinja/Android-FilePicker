@@ -203,14 +203,9 @@ public class MediaDetailsActivity extends AppCompatActivity implements FileAdapt
         }
     }
 
-//    @Override
-//    public void onItemSelected(int currentCount) {
-//
-//    }
-//
-//    @Override
-//    public void onSingleItemSelected(ArrayList<String> paths) {
-//        setResult(RESULT_OK, null);
-//        finish();
-//    }
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED, null);
+        finish();
+    }
 }

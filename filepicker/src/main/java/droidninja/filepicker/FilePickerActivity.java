@@ -139,6 +139,10 @@ public class FilePickerActivity extends AppCompatActivity implements
                     else
                         returnData(PickerManager.getInstance().getSelectedFiles());
                 }
+                else
+                {
+                    setToolbarTitle(PickerManager.getInstance().getCurrentCount());
+                }
                 break;
         }
     }
