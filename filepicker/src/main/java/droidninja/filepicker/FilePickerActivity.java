@@ -9,20 +9,22 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
+
 import droidninja.filepicker.fragments.DocFragment;
 import droidninja.filepicker.fragments.DocPickerFragment;
 import droidninja.filepicker.fragments.MediaDetailPickerFragment;
 import droidninja.filepicker.fragments.MediaFolderPickerFragment;
 import droidninja.filepicker.fragments.MediaPickerFragment;
 import droidninja.filepicker.utils.FragmentUtil;
-import java.util.ArrayList;
 
 public class FilePickerActivity extends AppCompatActivity implements
         MediaDetailPickerFragment.PhotoPickerFragmentListener,
         DocFragment.DocFragmentListener,
         DocPickerFragment.DocPickerFragmentListener,
         MediaFolderPickerFragment.PhotoPickerFragmentListener,
-        MediaPickerFragment.MediaPickerFragmentListener{
+        MediaPickerFragment.MediaPickerFragmentListener {
 
     private static final String TAG = FilePickerActivity.class.getSimpleName();
     private int type;
@@ -32,21 +34,34 @@ public class FilePickerActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setTheme(PickerManager.getInstance().getTheme());
         setContentView(R.layout.activity_file_picker);
-        if(!PickerManager.getInstance().isEnableOrientation())
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setOrientation();
         initView();
+    }
+
+    private void setOrientation() {
+        switch (PickerManager.getInstance().getOrientation()) {
+            case ONLY_PORTRAIT:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //default
+                break;
+            case ONLY_LANDSCAPE:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                break;
+            case PORTRAIT_AND_LASCAPE:
+                //do nothing
+                break;
+        }
     }
 
     private void initView() {
         Intent intent = getIntent();
         if (intent != null) {
-            if(getSupportActionBar()!=null)
+            if (getSupportActionBar() != null)
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             ArrayList<String> selectedPaths = intent.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
             type = intent.getIntExtra(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER);
 
-            if(selectedPaths!=null) {
+            if (selectedPaths != null) {
                 if (type == FilePickerConst.MEDIA_PICKER) {
                     PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_MEDIA);
                 } else {
@@ -72,7 +87,7 @@ public class FilePickerActivity extends AppCompatActivity implements
             MediaPickerFragment photoFragment = MediaPickerFragment.newInstance();
             FragmentUtil.addFragment(this, R.id.container, photoFragment);
         } else {
-            if(PickerManager.getInstance().isDocSupport())
+            if (PickerManager.getInstance().isDocSupport())
                 PickerManager.getInstance().addDocTypes();
 
             DocPickerFragment photoFragment = DocPickerFragment.newInstance(selectedPaths);
@@ -82,7 +97,7 @@ public class FilePickerActivity extends AppCompatActivity implements
 
     private void setToolbarTitle(int count) {
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null) {
+        if (actionBar != null) {
             if (PickerManager.getInstance().getMaxCount() > 1)
                 actionBar.setTitle(String.format(getString(R.string.attachments_title_text), count, PickerManager.getInstance().getMaxCount()));
             else {
@@ -129,18 +144,14 @@ public class FilePickerActivity extends AppCompatActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode)
-        {
+        switch (requestCode) {
             case FilePickerConst.REQUEST_CODE_MEDIA_DETAIL:
-                if(resultCode== Activity.RESULT_OK)
-                {
+                if (resultCode == Activity.RESULT_OK) {
                     if (type == FilePickerConst.MEDIA_PICKER)
                         returnData(PickerManager.getInstance().getSelectedPhotos());
                     else
                         returnData(PickerManager.getInstance().getSelectedFiles());
-                }
-                else
-                {
+                } else {
                     setToolbarTitle(PickerManager.getInstance().getCurrentCount());
                 }
                 break;
@@ -161,7 +172,7 @@ public class FilePickerActivity extends AppCompatActivity implements
     public void onItemSelected() {
         setToolbarTitle(PickerManager.getInstance().getCurrentCount());
 
-        if(PickerManager.getInstance().getMaxCount()==1)
+        if (PickerManager.getInstance().getMaxCount() == 1)
             returnData(type == FilePickerConst.FILE_TYPE_MEDIA ? PickerManager.getInstance().getSelectedPhotos() : PickerManager.getInstance().getSelectedFiles());
     }
 }

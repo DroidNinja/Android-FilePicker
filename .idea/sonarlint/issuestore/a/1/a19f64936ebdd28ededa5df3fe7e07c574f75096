@@ -1,0 +1,9 @@
+
+Šsquid:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(•ª€›şÿÿÿÿ
+Qsquid:S1133"5Do not forget to remove this deprecated code someday.(Î‘üË8øóÏÉÏ+
+…squid:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(ÚÎß
+Šsquid:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(ÿÃ„Úúÿÿÿÿ
+Vsquid:S1133"5Do not forget to remove this deprecated code someday.(‚íÆšşÿÿÿÿ8øóÏÉÏ+
+…squid:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(–­æ¾
+Šsquid:S1319"pThe type of the "files" object should be an interface such as "List" rather than the implementation "ArrayList".(ÿÃ„Úúÿÿÿÿ
+…squid:S1319"pThe type of the "paths" object should be an interface such as "List" rather than the implementation "ArrayList".(È­˜

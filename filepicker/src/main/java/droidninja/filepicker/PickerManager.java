@@ -1,11 +1,10 @@
 package droidninja.filepicker;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import droidninja.filepicker.models.BaseFile;
 import droidninja.filepicker.models.FileType;
-import droidninja.filepicker.utils.Utils;
+import droidninja.filepicker.utils.Orientation;
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -14,6 +13,8 @@ public class PickerManager {
     private static PickerManager ourInstance = new PickerManager();
     private int maxCount = FilePickerConst.DEFAULT_MAX_COUNT;
     private int currentCount;
+
+    private Orientation orientation=Orientation.ONLY_PORTRAIT;
 
     public static PickerManager getInstance() {
         return ourInstance;
@@ -150,31 +151,28 @@ public class PickerManager {
         this.showFolderView = showFolderView;
     }
 
-    public void addFileType(FileType fileType)
-    {
+    public void addFileType(FileType fileType) {
         fileTypes.add(fileType);
     }
 
-    public void addDocTypes()
-    {
+    public void addDocTypes() {
         String[] pdfs = {"pdf"};
-        fileTypes.add(new FileType(FilePickerConst.PDF,pdfs,R.drawable.ic_pdf));
+        fileTypes.add(new FileType(FilePickerConst.PDF, pdfs, R.drawable.ic_pdf));
 
-        String[] docs = {"doc","docx", "dot","dotx"};
-        fileTypes.add(new FileType(FilePickerConst.DOC,docs,R.drawable.ic_word));
+        String[] docs = {"doc", "docx", "dot", "dotx"};
+        fileTypes.add(new FileType(FilePickerConst.DOC, docs, R.drawable.ic_word));
 
-        String[] ppts = {"ppt","pptx"};
-        fileTypes.add(new FileType(FilePickerConst.PPT,ppts,R.drawable.ic_ppt));
+        String[] ppts = {"ppt", "pptx"};
+        fileTypes.add(new FileType(FilePickerConst.PPT, ppts, R.drawable.ic_ppt));
 
-        String[] xlss = {"xls","xlsx"};
-        fileTypes.add(new FileType(FilePickerConst.XLS,xlss,R.drawable.ic_excel));
+        String[] xlss = {"xls", "xlsx"};
+        fileTypes.add(new FileType(FilePickerConst.XLS, xlss, R.drawable.ic_excel));
 
         String[] txts = {"txt"};
-        fileTypes.add(new FileType(FilePickerConst.TXT,txts,R.drawable.ic_txt));
+        fileTypes.add(new FileType(FilePickerConst.TXT, txts, R.drawable.ic_txt));
     }
 
-    public ArrayList<FileType> getFileTypes()
-    {
+    public ArrayList<FileType> getFileTypes() {
         return fileTypes;
     }
 
@@ -194,12 +192,23 @@ public class PickerManager {
         this.enableCamera = enableCamera;
     }
 
+    @Deprecated
     public boolean isEnableOrientation() {
         return enableOrientation;
     }
 
+
+    @Deprecated
     public void setEnableOrientation(boolean enableOrientation) {
         this.enableOrientation = enableOrientation;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
     }
 
     public String getProviderAuthorities() {
