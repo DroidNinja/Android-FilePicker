@@ -1,0 +1,4 @@
+
+Csquid:S1068"'Remove this unused "TAG" private field.(µÔ²º8¾ÆßÉÏ+
+lsquid:S1301"KReplace this "switch" statement by "if" statements to increase readability.(×ö³–úÿÿÿÿ8¾ÆßÉÏ+
+fsquid:S1226"JIntroduce a new variable instead of reusing the parameter "selectedPaths".(–™øµ8¾ÆßÉÏ+

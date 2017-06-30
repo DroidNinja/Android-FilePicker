@@ -1,0 +1,5 @@
+
+dsquid:S3027"JPut single-quotes around '.' to use the faster "lastIndexOf(char)" method.(áèıÈúÿÿÿÿ
+ssquid:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(®æøÿÿÿÿ
+Osquid:S1118":Add a private constructor to hide the implicit public one.(¼Øûì
+:squid:S1166"%Either log or rethrow this exception.(”ı¾
