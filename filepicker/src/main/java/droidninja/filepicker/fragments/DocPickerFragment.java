@@ -138,7 +138,7 @@ public class DocPickerFragment extends BaseFragment {
         viewPager.setOffscreenPageLimit(supportedTypes.size());
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
-        
+
         TabLayoutHelper mTabLayoutHelper = new TabLayoutHelper(tabLayout, viewPager);
         mTabLayoutHelper.setAutoAdjustTabModeEnabled(true);
     }

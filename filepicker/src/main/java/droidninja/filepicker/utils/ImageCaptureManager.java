@@ -79,11 +79,11 @@ public class ImageCaptureManager {
   }
 
 
-  public void galleryAddPic() {
+  public String galleryAddPic() {
     Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 
     if (TextUtils.isEmpty(mCurrentPhotoPath)) {
-      return;
+      return null;
     }
 
     File f = new File(mCurrentPhotoPath);
@@ -91,7 +91,7 @@ public class ImageCaptureManager {
     mediaScanIntent.setData(contentUri);
     mContext.sendBroadcast(mediaScanIntent);
 
-//    notifyMediaStoreScanner(context, f);
+    return mCurrentPhotoPath;
   }
 
   public final void notifyMediaStoreScanner(Context mContext, final File file) {

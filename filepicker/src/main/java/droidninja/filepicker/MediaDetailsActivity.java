@@ -33,7 +33,7 @@ import droidninja.filepicker.models.PhotoDirectory;
 import droidninja.filepicker.utils.AndroidLifecycleUtils;
 import droidninja.filepicker.utils.MediaStoreHelper;
 
-public class MediaDetailsActivity extends AppCompatActivity implements FileAdapterListener {
+public class MediaDetailsActivity extends BaseFilePickerActivity implements FileAdapterListener {
 
     private static final int SCROLL_THRESHOLD = 30;
     private RecyclerView recyclerView;
@@ -44,16 +44,12 @@ public class MediaDetailsActivity extends AppCompatActivity implements FileAdapt
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setTheme(PickerManager.getInstance().getTheme());
-        setContentView(R.layout.activity_media_details);
-        if(!PickerManager.getInstance().isEnableOrientation())
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        super.onCreate(savedInstanceState,R.layout.activity_media_details);
 
-        initView();
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         mGlideRequestManager = Glide.with(this);
         Intent intent = getIntent();
         if (intent != null) {

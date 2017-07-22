@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
+import droidninja.filepicker.utils.Orientation;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -103,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
             .enableCameraSupport(true)
             .showGifs(false)
             .showFolderView(true)
-            .enableOrientation(true)
+            .enableImagePicker(true)
+            .withOrientation(Orientation.UNSPECIFIED)
                     .pickPhoto(this);
     }
 
@@ -121,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                     .addFileSupport("ZIP",zips)
             .addFileSupport("PDF",pdfs,R.drawable.pdf_blue)
             .enableDocSupport(false)
+            .withOrientation(Orientation.UNSPECIFIED)
                     .pickFile(this);
     }
 

@@ -9,9 +9,7 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabTextColor="@android:color/darker_gray"
-        app:tabSelectedTextColor="@color/colorAccent"
-        >
+        style="@style/PickerTabLayout">
 
     </android.support.design.widget.TabLayout>
 

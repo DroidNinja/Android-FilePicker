@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import droidninja.filepicker.models.BaseFile;
 import droidninja.filepicker.models.FileType;
+import droidninja.filepicker.utils.Orientation;
 import droidninja.filepicker.utils.Utils;
 
 /**
@@ -14,6 +15,7 @@ public class PickerManager {
     private static PickerManager ourInstance = new PickerManager();
     private int maxCount = FilePickerConst.DEFAULT_MAX_COUNT;
     private int currentCount;
+    private boolean showImages = true;
 
     public static PickerManager getInstance() {
         return ourInstance;
@@ -34,7 +36,7 @@ public class PickerManager {
 
     private boolean enableCamera = true;
 
-    private boolean enableOrientation = false;
+    private Orientation orientation = Orientation.UNSPECIFIED;
 
     private boolean showFolderView = true;
 
@@ -134,6 +136,14 @@ public class PickerManager {
         this.showVideos = showVideos;
     }
 
+    public boolean showImages() {
+        return showImages;
+    }
+
+    public void setShowImages(boolean showImages) {
+        this.showImages = showImages;
+    }
+
     public boolean isShowGif() {
         return showGif;
     }
@@ -194,12 +204,12 @@ public class PickerManager {
         this.enableCamera = enableCamera;
     }
 
-    public boolean isEnableOrientation() {
-        return enableOrientation;
+    public Orientation getOrientation() {
+        return orientation;
     }
 
-    public void setEnableOrientation(boolean enableOrientation) {
-        this.enableOrientation = enableOrientation;
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
     }
 
     public String getProviderAuthorities() {

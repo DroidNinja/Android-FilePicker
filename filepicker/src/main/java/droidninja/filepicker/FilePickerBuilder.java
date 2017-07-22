@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import java.util.ArrayList;
 
 import droidninja.filepicker.models.FileType;
+import droidninja.filepicker.utils.Orientation;
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -52,6 +52,12 @@ public class FilePickerBuilder {
         return this;
     }
 
+    public FilePickerBuilder enableImagePicker(boolean status)
+    {
+        PickerManager.getInstance().setShowImages(status);
+        return this;
+    }
+
     public FilePickerBuilder showGifs(boolean status)
     {
         PickerManager.getInstance().setShowGif(status);
@@ -76,9 +82,9 @@ public class FilePickerBuilder {
         return this;
     }
 
-    public FilePickerBuilder enableOrientation(boolean status)
+    public FilePickerBuilder withOrientation(Orientation orientation)
     {
-        PickerManager.getInstance().setEnableOrientation(status);
+        PickerManager.getInstance().setOrientation(orientation);
         return this;
     }
 
