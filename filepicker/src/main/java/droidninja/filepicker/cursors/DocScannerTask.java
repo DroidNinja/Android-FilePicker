@@ -46,8 +46,10 @@ public class DocScannerTask extends AsyncTask<Void,Void,List<Document>> {
     protected List<Document> doInBackground(Void... voids) {
         ArrayList<Document> documents = new ArrayList<>();
         final String[] projection = DOC_PROJECTION;
-        String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                + MediaStore.Files.FileColumns.MEDIA_TYPE_NONE;
+        String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "!="
+                + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE + " AND "
+                + MediaStore.Files.FileColumns.MEDIA_TYPE + "!="
+                + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO ;
         final Cursor cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"),
                 projection,
                 selection,

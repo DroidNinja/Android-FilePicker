@@ -58,6 +58,12 @@ public class FilePickerBuilder {
         return this;
     }
 
+    public FilePickerBuilder setCameraPlaceholder(@DrawableRes int drawable)
+    {
+        PickerManager.getInstance().setCameraDrawable(drawable);
+        return this;
+    }
+
     public FilePickerBuilder showGifs(boolean status)
     {
         PickerManager.getInstance().setShowGif(status);

@@ -74,7 +74,6 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
         glide.load(new File(media.getPath()))
                 .apply(RequestOptions
                         .centerCropTransform()
-                        .dontAnimate()
                         .override(imageSize, imageSize)
                         .placeholder(R.drawable.image_placeholder))
                 .thumbnail(0.5f)
@@ -135,7 +134,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
     }
     else
     {
-      holder.imageView.setImageResource(R.drawable.ic_camera);
+      holder.imageView.setImageResource(PickerManager.getInstance().getCameraDrawable());
       holder.checkBox.setVisibility(View.GONE);
       holder.itemView.setOnClickListener(cameraOnClickListener);
       holder.videoIcon.setVisibility(View.GONE);

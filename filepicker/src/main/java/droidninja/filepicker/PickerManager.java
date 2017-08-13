@@ -16,6 +16,7 @@ public class PickerManager {
     private int maxCount = FilePickerConst.DEFAULT_MAX_COUNT;
     private int currentCount;
     private boolean showImages = true;
+    private int cameraDrawable = R.drawable.ic_camera;
 
     public static PickerManager getInstance() {
         return ourInstance;
@@ -218,5 +219,14 @@ public class PickerManager {
 
     public void setProviderAuthorities(String providerAuthorities) {
         this.providerAuthorities = providerAuthorities;
+    }
+
+    public void setCameraDrawable(int drawable) {
+        this.cameraDrawable = drawable;
+    }
+
+    public int getCameraDrawable()
+    {
+        return cameraDrawable;
     }
 }

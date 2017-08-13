@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             .showGifs(false)
             .showFolderView(true)
             .enableImagePicker(true)
+            .setCameraPlaceholder(R.drawable.custom_camera)
             .withOrientation(Orientation.UNSPECIFIED)
                     .pickPhoto(this);
     }
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickDoc() {
         String[] zips = {".zip",".rar"};
-        String[] pdfs = {".pdf"};
+        String[] pdfs = {".mp3"};
         int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size();
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
