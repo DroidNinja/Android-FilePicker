@@ -38,24 +38,20 @@ A filepicker which allows to select images and videos with flexibility. It also 
  ```java
  @Override
      public void onActivityResult(int requestCode, int resultCode, Intent data) {
+          if(resultCode== Activity.RESULT_OK && data!=null)
             switch (requestCode)
             {
                 case FilePickerConst.REQUEST_CODE_PHOTO:
-                    if(resultCode== Activity.RESULT_OK && data!=null)
-                    {
                         photoPaths = new ArrayList<>();
                         photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
-                    }
-                    break;
+                   break;
                 case FilePickerConst.REQUEST_CODE_DOC:
-                    if(resultCode== Activity.RESULT_OK && data!=null)
-                    {
                         docPaths = new ArrayList<>();
                         docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
-                    }
                     break;
             }
             addThemToView(photoPaths,docPaths);
+          }
         }
  ```
 
