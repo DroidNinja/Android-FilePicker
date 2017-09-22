@@ -10,9 +10,9 @@
         android:supportsRtl="true">
         <activity
             android:name=".FilePickerActivity"
-            android:configChanges="orientation|keyboardHidden"></activity>
+            android:configChanges="orientation|screenSize"/>
         <activity android:name=".MediaDetailsActivity"
-            android:configChanges="orientation|keyboardHidden"></activity>
+            android:configChanges="orientation|screenSize"/>
 
         <provider
             android:name=".utils.FilePickerProvider"

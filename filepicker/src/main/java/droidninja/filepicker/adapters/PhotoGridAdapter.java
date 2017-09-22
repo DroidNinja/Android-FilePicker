@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -22,14 +24,13 @@ import droidninja.filepicker.views.SmoothCheckBox;
 
 public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoViewHolder, Media>{
 
+  public final static int ITEM_TYPE_CAMERA = 100;
+  public final static int ITEM_TYPE_PHOTO = 101;
   private final Context context;
   private final RequestManager glide;
   private final boolean showCamera;
   private final FileAdapterListener mListener;
   private int imageSize;
-
-  public final static int ITEM_TYPE_CAMERA = 100;
-  public final static int ITEM_TYPE_PHOTO  = 101;
   private View.OnClickListener cameraOnClickListener;
 
   public PhotoGridAdapter(Context context,
@@ -70,11 +71,11 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
 
       if(AndroidLifecycleUtils.canLoadImage(holder.imageView.getContext())) {
         glide.load(new File(media.getPath()))
-                .centerCrop()
-                .dontAnimate()
+                .apply(RequestOptions
+                        .centerCropTransform()
+                        .override(imageSize, imageSize)
+                        .placeholder(R.drawable.image_placeholder))
                 .thumbnail(0.5f)
-                .override(imageSize, imageSize)
-                .placeholder(R.drawable.image_placeholder)
                 .into(holder.imageView);
       }
 
@@ -132,7 +133,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
     }
     else
     {
-      holder.imageView.setImageResource(R.drawable.ic_camera);
+      holder.imageView.setImageResource(PickerManager.getInstance().getCameraDrawable());
       holder.checkBox.setVisibility(View.GONE);
       holder.itemView.setOnClickListener(cameraOnClickListener);
       holder.videoIcon.setVisibility(View.GONE);
@@ -140,16 +141,16 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
   }
 
   private void onItemClicked(PhotoViewHolder holder, Media media) {
-    if(PickerManager.getInstance().getMaxCount()==1)
-    {
+    if (PickerManager.getInstance().getMaxCount() == 1) {
       PickerManager.getInstance().add(media.getPath(), FilePickerConst.FILE_TYPE_MEDIA);
-      if(mListener!=null)
+      if (mListener != null)
         mListener.onItemSelected();
+    } else if (holder.checkBox.isChecked() && PickerManager.getInstance().shouldDelete()) {
+      holder.checkBox.setChecked(false);
+    } else if (!holder.checkBox.isChecked() && PickerManager.getInstance().shouldAdd()) {
+      holder.checkBox.setChecked(true);
     }
-    else if (holder.checkBox.isChecked() || PickerManager.getInstance().shouldAdd()) {
-      holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
     }
-  }
 
   private void setColumnNumber(Context context, int columnNum) {
     WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

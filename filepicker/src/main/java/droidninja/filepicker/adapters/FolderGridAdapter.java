@@ -11,10 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.ArrayList;
 
+import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.R;
 import droidninja.filepicker.models.PhotoDirectory;
 import droidninja.filepicker.utils.AndroidLifecycleUtils;
@@ -67,11 +69,11 @@ public class FolderGridAdapter extends SelectableAdapter<FolderGridAdapter.Photo
 
       if(AndroidLifecycleUtils.canLoadImage(holder.imageView.getContext())) {
         glide.load(new File(photoDirectory.getCoverPath()))
-                .centerCrop()
-                .dontAnimate()
+                .apply(RequestOptions
+                        .centerCropTransform()
+                        .override(imageSize, imageSize)
+                        .placeholder(R.drawable.image_placeholder))
                 .thumbnail(0.5f)
-                .override(imageSize, imageSize)
-                .placeholder(R.drawable.image_placeholder)
                 .into(holder.imageView);
       }
 
@@ -89,7 +91,7 @@ public class FolderGridAdapter extends SelectableAdapter<FolderGridAdapter.Photo
     }
     else
     {
-      holder.imageView.setImageResource(R.drawable.ic_camera);
+      holder.imageView.setImageResource(PickerManager.getInstance().getCameraDrawable());
       holder.itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {

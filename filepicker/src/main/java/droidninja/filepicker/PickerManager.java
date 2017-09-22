@@ -1,43 +1,31 @@
 package droidninja.filepicker;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import droidninja.filepicker.models.BaseFile;
 import droidninja.filepicker.models.FileType;
-import droidninja.filepicker.utils.Utils;
+import droidninja.filepicker.utils.Orientation;
 
 /**
  * Created by droidNinja on 29/07/16.
  */
 public class PickerManager {
     private static PickerManager ourInstance = new PickerManager();
+    private int minCount = FilePickerConst.DEFAULT_MIN_COUNT;
     private int maxCount = FilePickerConst.DEFAULT_MAX_COUNT;
     private int currentCount;
-
-    public static PickerManager getInstance() {
-        return ourInstance;
-    }
-
+    private boolean showImages = true;
+    private int cameraDrawable = R.drawable.ic_camera;
     private ArrayList<String> mediaFiles;
     private ArrayList<String> docFiles;
-
     private ArrayList<FileType> fileTypes;
-
     private int theme = R.style.LibAppTheme;
-
     private boolean showVideos;
-
     private boolean showGif;
-
     private boolean docSupport = true;
-
     private boolean enableCamera = true;
-
-    private boolean enableOrientation = false;
-
+    private Orientation orientation = Orientation.UNSPECIFIED;
     private boolean showFolderView = true;
-
     private String providerAuthorities;
 
     private PickerManager() {
@@ -46,13 +34,26 @@ public class PickerManager {
         fileTypes = new ArrayList<>();
     }
 
-    public void setMaxCount(int count) {
-        clearSelections();
-        this.maxCount = count;
+    public static PickerManager getInstance() {
+        return ourInstance;
+    }
+
+    public int getMinCount() {
+        return minCount;
+    }
+
+    public void setMinCount(int count) {
+        clearMinSelections();
+        this.minCount = count;
     }
 
     public int getMaxCount() {
         return maxCount;
+    }
+
+    public void setMaxCount(int count) {
+        clearMaxSelections();
+        this.maxCount = count;
     }
 
     public int getCurrentCount() {
@@ -94,6 +95,10 @@ public class PickerManager {
         return currentCount < maxCount;
     }
 
+    public boolean shouldDelete() {
+        return currentCount > minCount;
+    }
+
     public ArrayList<String> getSelectedPhotos() {
         return mediaFiles;
     }
@@ -110,7 +115,15 @@ public class PickerManager {
         return paths;
     }
 
-    public void clearSelections() {
+    public void clearMinSelections() {
+        docFiles.clear();
+        mediaFiles.clear();
+        fileTypes.clear();
+        currentCount = 0;
+        minCount = 0;
+    }
+
+    public void clearMaxSelections() {
         docFiles.clear();
         mediaFiles.clear();
         fileTypes.clear();
@@ -132,6 +145,14 @@ public class PickerManager {
 
     public void setShowVideos(boolean showVideos) {
         this.showVideos = showVideos;
+    }
+
+    public boolean showImages() {
+        return showImages;
+    }
+
+    public void setShowImages(boolean showImages) {
+        this.showImages = showImages;
     }
 
     public boolean isShowGif() {
@@ -194,12 +215,12 @@ public class PickerManager {
         this.enableCamera = enableCamera;
     }
 
-    public boolean isEnableOrientation() {
-        return enableOrientation;
+    public Orientation getOrientation() {
+        return orientation;
     }
 
-    public void setEnableOrientation(boolean enableOrientation) {
-        this.enableOrientation = enableOrientation;
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
     }
 
     public String getProviderAuthorities() {
@@ -208,5 +229,14 @@ public class PickerManager {
 
     public void setProviderAuthorities(String providerAuthorities) {
         this.providerAuthorities = providerAuthorities;
+    }
+
+    public int getCameraDrawable()
+    {
+        return cameraDrawable;
+    }
+
+    public void setCameraDrawable(int drawable) {
+        this.cameraDrawable = drawable;
     }
 }

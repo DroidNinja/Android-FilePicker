@@ -9,6 +9,7 @@ public class FilePickerConst {
 
     public static final int REQUEST_CODE_MEDIA_DETAIL = 235;
 
+    public final static int DEFAULT_MIN_COUNT = 0;
     public final static int DEFAULT_MAX_COUNT        = 9;
     public final static int DEFAULT_COLUMN_NUMBER    = 3;
 
@@ -30,7 +31,11 @@ public class FilePickerConst {
 
     public final static int MEDIA_TYPE_IMAGE=1;
     public final static int MEDIA_TYPE_VIDEO=3;
-
+    public final static String PDF = "PDF";
+    public final static String PPT = "PPT";
+    public final static String DOC = "DOC";
+    public final static String XLS = "XLS";
+    public final static String TXT = "TXT";
     public enum FILE_TYPE{
         PDF,
         WORD,
@@ -39,10 +44,4 @@ public class FilePickerConst {
         TXT,
         UNKNOWN
     }
-
-    public final static String PDF = "PDF";
-    public final static String PPT = "PPT";
-    public final static String DOC = "DOC";
-    public final static String XLS = "XLS";
-    public final static String TXT = "TXT";
 }

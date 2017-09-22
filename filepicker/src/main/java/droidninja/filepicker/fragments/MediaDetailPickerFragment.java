@@ -94,11 +94,6 @@ public class MediaDetailPickerFragment extends BaseFragment implements FileAdapt
         mListener.onItemSelected();
     }
 
-    public interface PhotoPickerFragmentListener {
-        void onItemSelected();
-    }
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -227,15 +222,21 @@ public class MediaDetailPickerFragment extends BaseFragment implements FileAdapt
             case ImageCaptureManager.REQUEST_TAKE_PHOTO:
                 if(resultCode== Activity.RESULT_OK)
                 {
-                    imageCaptureManager.galleryAddPic();
+                    String imagePath = imageCaptureManager.galleryAddPic();
+                    if(imagePath!=null && PickerManager.getInstance().getMaxCount()==1)
+                    {
+                        PickerManager.getInstance().add(imagePath, FilePickerConst.FILE_TYPE_MEDIA);
+                        mListener.onItemSelected();
+                    }
+                    else {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                getDataFromMedia();
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            getDataFromMedia();
-
-                        }
-                    },1000);
+                            }
+                        }, 1000);
+                    }
                 }
                 break;
         }

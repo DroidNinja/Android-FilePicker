@@ -29,6 +29,7 @@ import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.R;
 import droidninja.filepicker.adapters.FolderGridAdapter;
 import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback;
+import droidninja.filepicker.models.Media;
 import droidninja.filepicker.models.PhotoDirectory;
 import droidninja.filepicker.utils.AndroidLifecycleUtils;
 import droidninja.filepicker.utils.GridSpacingItemDecoration;
@@ -86,10 +87,6 @@ public class MediaFolderPickerFragment extends BaseFragment implements FolderGri
         photoPickerFragment.setArguments(bun);
         return  photoPickerFragment;
     }
-
-    public interface PhotoPickerFragmentListener {
-    }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -246,15 +243,21 @@ public class MediaFolderPickerFragment extends BaseFragment implements FolderGri
             case ImageCaptureManager.REQUEST_TAKE_PHOTO:
                 if(resultCode== Activity.RESULT_OK)
                 {
-                    imageCaptureManager.galleryAddPic();
+                    String imagePath = imageCaptureManager.galleryAddPic();
+                    if(imagePath!=null && PickerManager.getInstance().getMaxCount()==1)
+                    {
+                        PickerManager.getInstance().add(imagePath, FilePickerConst.FILE_TYPE_MEDIA);
+                        mListener.onItemSelected();
+                    }
+                    else {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                getDataFromMedia();
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            getDataFromMedia();
-
-                        }
-                    },1000);
+                            }
+                        }, 1000);
+                    }
                 }
                 break;
         }

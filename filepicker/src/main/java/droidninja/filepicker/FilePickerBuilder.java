@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import droidninja.filepicker.models.FileType;
+import droidninja.filepicker.utils.Orientation;
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -26,6 +27,11 @@ public class FilePickerBuilder {
     public static FilePickerBuilder getInstance()
     {
         return new FilePickerBuilder();
+    }
+
+    public FilePickerBuilder setMinCount(int minCount) {
+        PickerManager.getInstance().setMinCount(minCount);
+        return this;
     }
 
     public FilePickerBuilder setMaxCount(int maxCount)
@@ -49,6 +55,18 @@ public class FilePickerBuilder {
     public FilePickerBuilder enableVideoPicker(boolean status)
     {
         PickerManager.getInstance().setShowVideos(status);
+        return this;
+    }
+
+    public FilePickerBuilder enableImagePicker(boolean status)
+    {
+        PickerManager.getInstance().setShowImages(status);
+        return this;
+    }
+
+    public FilePickerBuilder setCameraPlaceholder(@DrawableRes int drawable)
+    {
+        PickerManager.getInstance().setCameraDrawable(drawable);
         return this;
     }
 
@@ -76,9 +94,9 @@ public class FilePickerBuilder {
         return this;
     }
 
-    public FilePickerBuilder enableOrientation(boolean status)
+    public FilePickerBuilder withOrientation(Orientation orientation)
     {
-        PickerManager.getInstance().setEnableOrientation(status);
+        PickerManager.getInstance().setOrientation(orientation);
         return this;
     }
 
@@ -96,8 +114,19 @@ public class FilePickerBuilder {
 
     public void pickPhoto(Activity context)
     {
-       mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE,FilePickerConst.MEDIA_PICKER);
-        start(context,FilePickerConst.MEDIA_PICKER);
+        PickerManager pickerManager = PickerManager.getInstance();
+        if (pickerManager.getMaxCount() >= pickerManager.getMinCount()) {
+            mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER);
+            start(context, FilePickerConst.MEDIA_PICKER);
+        } else {
+            if (pickerManager.getMinCount() > 0) {
+                Toast.makeText(context, "setMaxCount should be greater than setMinCount", Toast.LENGTH_LONG).show();
+            } else if (pickerManager.getMinCount() > 0) {
+                Toast.makeText(context, "setMinCount should be positive", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(context, "setMaxCount should be positive", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     public void pickPhoto(Fragment context)

@@ -80,11 +80,14 @@ public class MediaPickerFragment extends BaseFragment{
 
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getChildFragmentManager());
 
-        if(PickerManager.getInstance().isShowFolderView())
-            adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE), getString(R.string.images));
+        if(PickerManager.getInstance().showImages()) {
+            if (PickerManager.getInstance().isShowFolderView())
+                adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE), getString(R.string.images));
+            else
+                adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE), getString(R.string.images));
+        }
         else
-            adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE), getString(R.string.images));
-
+            tabLayout.setVisibility(View.GONE);
 
         if(PickerManager.getInstance().showVideo())
         {
