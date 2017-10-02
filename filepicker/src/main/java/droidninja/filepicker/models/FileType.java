@@ -49,6 +49,16 @@ public class FileType implements Parcelable{
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof FileType && ((FileType) obj).title.equals(title);
+    }
+
+    @Override
+    public int hashCode() {
+        return title.hashCode();
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

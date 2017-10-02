@@ -6,12 +6,18 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import com.android.internal.util.Predicate;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import droidninja.filepicker.PickerManager;
-import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback;
+import droidninja.filepicker.cursors.loadercallbacks.FileMapResultCallback;
 import droidninja.filepicker.models.Document;
 import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.utils.Utils;
@@ -22,7 +28,7 @@ import static android.provider.MediaStore.MediaColumns.DATA;
 /**
  * Created by droidNinja on 01/08/16.
  */
-public class DocScannerTask extends AsyncTask<Void,Void,List<Document>> {
+public class DocScannerTask extends AsyncTask<Void,Void, Map<FileType, List<Document>>> {
 
     final String[] DOC_PROJECTION = {
             MediaStore.Images.Media._ID,
@@ -32,19 +38,48 @@ public class DocScannerTask extends AsyncTask<Void,Void,List<Document>> {
             MediaStore.Images.Media.DATE_ADDED,
             MediaStore.Files.FileColumns.TITLE
     };
-    private final FileResultCallback<Document> resultCallback;
+    private final FileMapResultCallback resultCallback;
+    private final Comparator<Document> comparator;
+    private final List<FileType> fileTypes;
 
     private final Context context;
 
-    public DocScannerTask(Context context, FileResultCallback<Document> fileResultCallback)
+    public DocScannerTask(Context context,
+                          List<FileType> fileTypes,
+                          Comparator<Document> comparator,
+                          FileMapResultCallback fileResultCallback)
     {
         this.context = context;
+        this.fileTypes = fileTypes;
+        this.comparator = comparator;
         this.resultCallback = fileResultCallback;
     }
 
+    private HashMap<FileType, List<Document>> createDocumentType(ArrayList<Document> documents) {
+        HashMap<FileType, List<Document>> documentMap = new HashMap<>();
+
+        for (final FileType fileType : fileTypes) {
+            Predicate<Document> docContainsTypeExtension = new Predicate<Document>() {
+                public boolean apply(Document document) {
+                    return document.isThisType(fileType.extensions);
+                }
+            };
+            ArrayList<Document> documentListFilteredByType =
+                    (ArrayList<Document>) Utils.filter(documents, docContainsTypeExtension);
+
+            if (comparator != null)
+                Collections.sort(documentListFilteredByType, comparator);
+
+            documentMap.put(fileType, documentListFilteredByType);
+        }
+
+        return documentMap;
+    }
+
     @Override
-    protected List<Document> doInBackground(Void... voids) {
+    protected Map<FileType, List<Document>> doInBackground(Void... voids) {
         ArrayList<Document> documents = new ArrayList<>();
+
         final String[] projection = DOC_PROJECTION;
         String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "!="
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE + " AND "
@@ -62,12 +97,11 @@ public class DocScannerTask extends AsyncTask<Void,Void,List<Document>> {
         }
 
 
-        return documents;
+        return createDocumentType(documents);
     }
 
     @Override
-    protected void onPostExecute(List<Document> documents) {
-        super.onPostExecute(documents);
+    protected void onPostExecute(Map<FileType, List<Document>> documents) {
         if (resultCallback != null) {
             resultCallback.onResultCallback(documents);
         }

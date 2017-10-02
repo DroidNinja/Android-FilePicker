@@ -10,23 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.android.internal.util.Predicate;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
-import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.PickerManager;
 import droidninja.filepicker.R;
 import droidninja.filepicker.adapters.SectionsPagerAdapter;
-import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback;
+import droidninja.filepicker.cursors.loadercallbacks.FileMapResultCallback;
 import droidninja.filepicker.models.Document;
 import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.utils.MediaStoreHelper;
 import droidninja.filepicker.utils.TabLayoutHelper;
-import droidninja.filepicker.utils.Utils;
 
 
 public class DocPickerFragment extends BaseFragment {
@@ -100,17 +95,21 @@ public class DocPickerFragment extends BaseFragment {
     }
 
     private void setData() {
-        MediaStoreHelper.getDocs(getActivity(), new FileResultCallback<Document>() {
-            @Override
-            public void onResultCallback(List<Document> files) {
-                if(!isAdded()) return;
-                progressBar.setVisibility(View.GONE);
-                setDataOnFragments(files);
+        MediaStoreHelper.getDocs(getActivity(),
+            PickerManager.getInstance().getFileTypes(),
+            PickerManager.getInstance().getSortingType().getComparator(),
+            new FileMapResultCallback() {
+                @Override
+                public void onResultCallback(Map<FileType, List<Document>> files) {
+                    if(!isAdded()) return;
+                    progressBar.setVisibility(View.GONE);
+                    setDataOnFragments(files);
+                }
             }
-        });
+        );
     }
 
-    private void setDataOnFragments(List<Document> files) {
+    private void setDataOnFragments(Map<FileType, List<Document>> filesMap) {
         SectionsPagerAdapter sectionsPagerAdapter = (SectionsPagerAdapter) viewPager.getAdapter();
         if(sectionsPagerAdapter!=null)
         {
@@ -121,8 +120,11 @@ public class DocPickerFragment extends BaseFragment {
                 if(docFragment!=null)
                 {
                     FileType fileType = docFragment.getFileType();
-                    if(fileType!=null)
-                        docFragment.updateList(filterDocuments(fileType.extensions, files));
+                    if(fileType != null) {
+                        List<Document> filesFilteredByType = filesMap.get(fileType);
+                        if (filesFilteredByType != null)
+                            docFragment.updateList(filesFilteredByType);
+                    }
                 }
             }
         }
@@ -141,16 +143,5 @@ public class DocPickerFragment extends BaseFragment {
 
         TabLayoutHelper mTabLayoutHelper = new TabLayoutHelper(tabLayout, viewPager);
         mTabLayoutHelper.setAutoAdjustTabModeEnabled(true);
-    }
-
-    private ArrayList<Document> filterDocuments(final String[] type, List<Document> documents)
-    {
-        final Predicate<Document> docType = new Predicate<Document>() {
-            public boolean apply(Document document) {
-                return document.isThisType(type);
-            }
-        };
-
-        return new ArrayList<>(Utils.filter(new HashSet<>(documents),docType));
     }
 }

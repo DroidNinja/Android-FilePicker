@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import java.util.ArrayList;
 
 import droidninja.filepicker.models.FileType;
+import droidninja.filepicker.models.sort.SortingTypes;
 import droidninja.filepicker.utils.Orientation;
 
 /**
@@ -103,6 +104,12 @@ public class FilePickerBuilder {
     public FilePickerBuilder addFileSupport(String title, String[] extensions)
     {
         PickerManager.getInstance().addFileType(new FileType(title,extensions,0));
+        return this;
+    }
+
+    public FilePickerBuilder sortDocumentsBy(SortingTypes type)
+    {
+        PickerManager.getInstance().setSortingType(type);
         return this;
     }
 

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
+import droidninja.filepicker.models.sort.SortingTypes;
 import droidninja.filepicker.utils.Orientation;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickDoc() {
         String[] zips = {".zip",".rar"};
-        String[] pdfs = {".mp3"};
+        String[] pdfs = {".pdf"};
         int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size();
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     .addFileSupport("ZIP",zips)
             .addFileSupport("PDF",pdfs,R.drawable.pdf_blue)
             .enableDocSupport(false)
+            .sortDocumentsBy(SortingTypes.name)
             .withOrientation(Orientation.UNSPECIFIED)
                     .pickFile(this);
     }
