@@ -111,14 +111,17 @@ public class MainActivity extends AppCompatActivity {
         String[] zips = {".zip",".rar"};
         String[] pdfs = {".mp3"};
         int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size();
-        FilePickerBuilder.getInstance().setMinCount(1).setMaxCount(maxCount)
-                .setSelectedFiles(docPaths)
-                .setActivityTheme(R.style.FilePickerTheme)
-                .addFileSupport("ZIP", zips)
-                .addFileSupport("PDF", pdfs, R.drawable.pdf_blue)
-                .enableDocSupport(false)
-                .withOrientation(Orientation.UNSPECIFIED)
-                .pickFile(this);
+        if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
+            Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
+        else
+            FilePickerBuilder.getInstance().setMaxCount(maxCount)
+                    .setSelectedFiles(docPaths)
+                    .setActivityTheme(R.style.FilePickerTheme)
+                    .addFileSupport("ZIP",zips)
+            .addFileSupport("PDF",pdfs,R.drawable.pdf_blue)
+            .enableDocSupport(false)
+            .withOrientation(Orientation.UNSPECIFIED)
+                    .pickFile(this);
     }
 
     @Override

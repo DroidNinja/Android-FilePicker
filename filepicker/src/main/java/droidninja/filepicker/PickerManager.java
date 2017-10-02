@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import droidninja.filepicker.models.BaseFile;
 import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.utils.Orientation;
+import droidninja.filepicker.utils.Utils;
 
 /**
  * Created by droidNinja on 29/07/16.
