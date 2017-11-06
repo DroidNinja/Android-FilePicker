@@ -29,7 +29,7 @@ public class Media extends BaseFile {
   }
 
   public String getPath() {
-    return path;
+    return (path!=null)?path:"";
   }
 
   public void setPath(String path) {

@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
-
-import java.util.ArrayList;
-
 import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.utils.Orientation;
+import java.util.ArrayList;
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -55,6 +53,12 @@ public class FilePickerBuilder {
     public FilePickerBuilder enableImagePicker(boolean status)
     {
         PickerManager.getInstance().setShowImages(status);
+        return this;
+    }
+
+    public FilePickerBuilder enableSelectAll(boolean status)
+    {
+        PickerManager.getInstance().enableSelectAll(status);
         return this;
     }
 

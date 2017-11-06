@@ -1,7 +1,6 @@
 package vi.filepicker;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -9,15 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import java.io.File;
 import java.util.ArrayList;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -70,7 +66,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.FileViewHold
 
     public static class FileViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.iv_photo)
+        @BindView(R.id.iv_photo)
         ImageView imageView;
 
         public FileViewHolder(View itemView) {

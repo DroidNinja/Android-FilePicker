@@ -1,12 +1,10 @@
 package droidninja.filepicker;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import droidninja.filepicker.models.BaseFile;
 import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.utils.Orientation;
-import droidninja.filepicker.utils.Utils;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -14,7 +12,6 @@ import droidninja.filepicker.utils.Utils;
 public class PickerManager {
     private static PickerManager ourInstance = new PickerManager();
     private int maxCount = FilePickerConst.DEFAULT_MAX_COUNT;
-    private int currentCount;
     private boolean showImages = true;
     private int cameraDrawable = R.drawable.ic_camera;
 
@@ -25,13 +22,15 @@ public class PickerManager {
     private ArrayList<String> mediaFiles;
     private ArrayList<String> docFiles;
 
-    private ArrayList<FileType> fileTypes;
+    private LinkedHashSet<FileType> fileTypes;
 
     private int theme = R.style.LibAppTheme;
 
     private boolean showVideos;
 
     private boolean showGif;
+
+    private boolean showSelectAll;
 
     private boolean docSupport = true;
 
@@ -46,11 +45,11 @@ public class PickerManager {
     private PickerManager() {
         mediaFiles = new ArrayList<>();
         docFiles = new ArrayList<>();
-        fileTypes = new ArrayList<>();
+        fileTypes = new LinkedHashSet<>();
     }
 
     public void setMaxCount(int count) {
-        clearSelections();
+        reset();
         this.maxCount = count;
     }
 
@@ -59,19 +58,17 @@ public class PickerManager {
     }
 
     public int getCurrentCount() {
-        return currentCount;
+        return mediaFiles.size()+docFiles.size();
     }
 
     public void add(String path, int type) {
         if (path != null && shouldAdd()) {
             if (!mediaFiles.contains(path) && type == FilePickerConst.FILE_TYPE_MEDIA)
                 mediaFiles.add(path);
-            else if (type == FilePickerConst.FILE_TYPE_DOCUMENT)
+            else if (!docFiles.contains(path) && type == FilePickerConst.FILE_TYPE_DOCUMENT)
                 docFiles.add(path);
             else
                 return;
-
-            currentCount++;
         }
     }
 
@@ -84,17 +81,16 @@ public class PickerManager {
     public void remove(String path, int type) {
         if ((type == FilePickerConst.FILE_TYPE_MEDIA) && mediaFiles.contains(path)) {
             mediaFiles.remove(path);
-            currentCount--;
 
         } else if (type == FilePickerConst.FILE_TYPE_DOCUMENT) {
             docFiles.remove(path);
-
-            currentCount--;
         }
     }
 
     public boolean shouldAdd() {
-        return currentCount < maxCount;
+        if(maxCount==-1)
+            return true;
+        return getCurrentCount() < maxCount;
     }
 
     public ArrayList<String> getSelectedPhotos() {
@@ -113,12 +109,20 @@ public class PickerManager {
         return paths;
     }
 
-    public void clearSelections() {
+    public void reset() {
         docFiles.clear();
         mediaFiles.clear();
         fileTypes.clear();
-        currentCount = 0;
-        maxCount = 0;
+        maxCount = -1;
+    }
+
+    public void clearSelections(){
+        mediaFiles.clear();
+        docFiles.clear();
+    }
+
+    public void deleteMedia(ArrayList<String> paths) {
+        mediaFiles.removeAll(paths);
     }
 
     public int getTheme() {
@@ -186,7 +190,7 @@ public class PickerManager {
 
     public ArrayList<FileType> getFileTypes()
     {
-        return fileTypes;
+        return new ArrayList<>(fileTypes);
     }
 
     public boolean isDocSupport() {
@@ -228,5 +232,13 @@ public class PickerManager {
     public int getCameraDrawable()
     {
         return cameraDrawable;
+    }
+
+    public boolean hasSelectAll() {
+        return maxCount==-1 && showSelectAll;
+    }
+
+    public void enableSelectAll(boolean showSelectAll) {
+        this.showSelectAll = showSelectAll;
     }
 }

@@ -13,7 +13,8 @@
     <string name="permission_camera_denied">Camera permission was denied. Please consider granting it in order to access the camera!</string>
     <string name="permission_camera_never_askagain">Camera permission was denied with never ask again.</string>
     <string name="no_files_found">No Files Found</string>
-    <string name="attachments_title_text" formatted="false">Attachments (%d/%d)</string>
+    <string name="attachments_title_text" formatted="false">(%d/%d)</string>
+    <string name="attachments_num" formatted="false">%d</string>
     <string name="select_photo_text">Select a media</string>
     <string name="select_doc_text">Select a document</string>
     <string name="no_camera_exists">No Application exists for camera!</string>

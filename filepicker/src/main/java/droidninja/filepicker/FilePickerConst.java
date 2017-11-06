@@ -9,7 +9,7 @@ public class FilePickerConst {
 
     public static final int REQUEST_CODE_MEDIA_DETAIL = 235;
 
-    public final static int DEFAULT_MAX_COUNT        = 9;
+    public final static int DEFAULT_MAX_COUNT        = -1;
     public final static int DEFAULT_COLUMN_NUMBER    = 3;
 
     public final static int MEDIA_PICKER = 0x11;

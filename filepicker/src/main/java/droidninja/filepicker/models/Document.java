@@ -1,13 +1,7 @@
 package droidninja.filepicker.models;
 
-import android.text.TextUtils;
-import android.webkit.MimeTypeMap;
-
-import java.io.File;
-
-import droidninja.filepicker.FilePickerConst;
-import droidninja.filepicker.R;
 import droidninja.filepicker.utils.Utils;
+import java.io.File;
 
 /**
  * Created by droidNinja on 29/07/16.
