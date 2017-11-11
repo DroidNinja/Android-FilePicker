@@ -12,7 +12,7 @@ A filepicker which allows to select images and videos with flexibility. It also 
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    compile 'com.droidninja:filepicker:2.0.9'
+    compile 'com.droidninja:filepicker:2.1.0'
 ```
   
  # Usage

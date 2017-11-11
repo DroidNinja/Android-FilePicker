@@ -157,9 +157,10 @@ public class FilePickerActivity extends BaseFilePickerActivity implements
 
     @Override
     public void onItemSelected() {
-        setToolbarTitle(PickerManager.getInstance().getCurrentCount());
+        int currentCount = PickerManager.getInstance().getCurrentCount();
+        setToolbarTitle(currentCount);
 
-        if(PickerManager.getInstance().getMaxCount()==1)
+        if(PickerManager.getInstance().getMaxCount()==1 && currentCount==1)
             returnData(type == FilePickerConst.MEDIA_PICKER ? PickerManager.getInstance().getSelectedPhotos() : PickerManager.getInstance().getSelectedFiles());
     }
 }
