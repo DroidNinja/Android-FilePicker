@@ -30,7 +30,7 @@ public class PickerManager {
 
     private boolean showGif;
 
-    private boolean showSelectAll;
+    private boolean showSelectAll = false;
 
     private boolean docSupport = true;
 

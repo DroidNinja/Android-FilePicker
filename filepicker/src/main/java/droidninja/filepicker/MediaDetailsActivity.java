@@ -63,7 +63,7 @@ public class MediaDetailsActivity extends BaseFilePickerActivity implements File
             if(photoDirectory!=null) {
 
                 setUpView(photoDirectory);
-                setTitle(photoDirectory.getName());
+                setTitle(0);
             }
         }
     }
@@ -173,7 +173,16 @@ public class MediaDetailsActivity extends BaseFilePickerActivity implements File
             photoGridAdapter = new PhotoGridAdapter(this, mGlideRequestManager, (ArrayList<Media>) medias,PickerManager.getInstance().getSelectedPhotos(),false, this);
             recyclerView.setAdapter(photoGridAdapter);
         }
-        onItemSelected();
+
+        if(PickerManager.getInstance().getMaxCount()==-1){
+            if(photoGridAdapter!=null && selectAllItem!=null) {
+                if (photoGridAdapter.getItemCount() == photoGridAdapter.getSelectedItemCount()) {
+                    selectAllItem.setIcon(R.drawable.ic_select_all);
+                    selectAllItem.setChecked(true);
+                }
+            }
+            setTitle(PickerManager.getInstance().getCurrentCount());
+        }
     }
 
     private void resumeRequestsIfNotDestroyed() {
@@ -189,7 +198,6 @@ public class MediaDetailsActivity extends BaseFilePickerActivity implements File
         getMenuInflater().inflate(R.menu.media_detail_menu, menu);
         selectAllItem = menu.findItem(R.id.action_select);
         selectAllItem.setVisible(PickerManager.getInstance().hasSelectAll());
-        onItemSelected();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -233,15 +241,7 @@ public class MediaDetailsActivity extends BaseFilePickerActivity implements File
             setResult(RESULT_OK, null);
             finish();
         }
-        else if(maxCount==-1){
-            if(photoGridAdapter!=null && selectAllItem!=null) {
-                if (photoGridAdapter.getItemCount() == photoGridAdapter.getSelectedItemCount()) {
-                    selectAllItem.setIcon(R.drawable.ic_select_all);
-                    selectAllItem.setChecked(true);
-                }
-            }
-            setTitle(PickerManager.getInstance().getCurrentCount());
-        }
+        setTitle(PickerManager.getInstance().getCurrentCount());
     }
 
     @Override
