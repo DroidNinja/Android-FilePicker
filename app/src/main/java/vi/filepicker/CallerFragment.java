@@ -18,22 +18,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import butterknife.BindView;
 import java.util.ArrayList;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.fragments.BaseFragment;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.RuntimePermissions;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-@RuntimePermissions
 public class CallerFragment extends BaseFragment {
     private int MAX_ATTACHMENT_COUNT = 10;
     private ArrayList<String> photoPaths = new ArrayList<>();
@@ -43,7 +40,7 @@ public class CallerFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    @Bind(R.id.open_fragment)
+    @BindView(R.id.open_fragment)
     Button openFragmentBtn;
 
 
@@ -70,12 +67,12 @@ public class CallerFragment extends BaseFragment {
 
     @OnClick(R.id.pick_photo)
     public void pickPhotoClicked(View view) {
-        CallerFragmentPermissionsDispatcher.onPickPhotoWithCheck(this);
+        onPickPhoto();
     }
 
     @OnClick(R.id.pick_doc)
     public void pickDocClicked(View view) {
-        CallerFragmentPermissionsDispatcher.onPickDocWithCheck(this);
+        onPickDoc();
     }
 
     @Override
@@ -126,7 +123,6 @@ public class CallerFragment extends BaseFragment {
         Toast.makeText(getActivity(), "Num of files selected: "+ filePaths.size(), Toast.LENGTH_SHORT).show();
     }
 
-    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickPhoto() {
         int maxCount = MAX_ATTACHMENT_COUNT-docPaths.size();
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
@@ -138,7 +134,6 @@ public class CallerFragment extends BaseFragment {
                     .pickPhoto(this);
     }
 
-    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickDoc() {
         int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size();
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
@@ -153,7 +148,6 @@ public class CallerFragment extends BaseFragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        CallerFragmentPermissionsDispatcher.onRequestPermissionsResult(this,requestCode,grantResults);
     }
 
 }

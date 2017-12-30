@@ -19,10 +19,7 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.models.sort.SortingTypes;
 import droidninja.filepicker.utils.Orientation;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.RuntimePermissions;
 
-@RuntimePermissions
 public class MainActivity extends AppCompatActivity {
 
     private int MAX_ATTACHMENT_COUNT = 5;
@@ -36,11 +33,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pickPhotoClicked(View view) {
-        MainActivityPermissionsDispatcher.onPickPhotoWithCheck(this);
+        onPickPhoto();
     }
 
     public void pickDocClicked(View view) {
-        MainActivityPermissionsDispatcher.onPickDocWithCheck(this);
+        onPickDoc();
     }
 
     @Override
@@ -92,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Num of files selected: "+ filePaths.size(), Toast.LENGTH_SHORT).show();
     }
 
-    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickPhoto() {
         int maxCount = MAX_ATTACHMENT_COUNT-docPaths.size();
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
@@ -111,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                     .pickPhoto(this);
     }
 
-    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickDoc() {
         String[] zips = {".zip",".rar"};
         String[] pdfs = {".pdf"};
@@ -133,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this,requestCode,grantResults);
     }
 
     public void onOpenFragmentClicked(View view) {
