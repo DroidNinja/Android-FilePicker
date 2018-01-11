@@ -1,6 +1,5 @@
 package vi.filepicker;
 
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -17,8 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
 import butterknife.BindView;
+
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
@@ -26,44 +25,39 @@ import butterknife.OnClick;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.fragments.BaseFragment;
-
-
+import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CallerFragment extends BaseFragment {
-    private int MAX_ATTACHMENT_COUNT = 10;
-    private ArrayList<String> photoPaths = new ArrayList<>();
-    private ArrayList<String> docPaths = new ArrayList<>();
+  private int MAX_ATTACHMENT_COUNT = 10;
+  private ArrayList<String> photoPaths = new ArrayList<>();
+  private ArrayList<String> docPaths = new ArrayList<>();
 
-    public CallerFragment() {
-        // Required empty public constructor
-    }
+  public CallerFragment() {
+    // Required empty public constructor
+  }
 
-    @BindView(R.id.open_fragment)
-    Button openFragmentBtn;
+  @BindView(R.id.open_fragment) Button openFragmentBtn;
 
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    // Inflate the layout for this fragment
+    View view = inflater.inflate(R.layout.activity_main, container, false);
+    ButterKnife.bind(this, view);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.activity_main, container, false);
-        ButterKnife.bind(this, view);
+    return view;
+  }
 
-        return view;
-    }
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    initView();
+  }
 
-        initView();
-    }
-
-    private void initView() {
-        openFragmentBtn.setVisibility(View.GONE);
-    }
+  private void initView() {
+    openFragmentBtn.setVisibility(View.GONE);
+  }
 
     @OnClick(R.id.pick_photo)
     public void pickPhotoClicked(View view) {
@@ -75,53 +69,49 @@ public class CallerFragment extends BaseFragment {
         onPickDoc();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode)
-        {
-            case FilePickerConst.REQUEST_CODE_PHOTO:
-                if(resultCode== Activity.RESULT_OK && data!=null)
-                {
-                    photoPaths = new ArrayList<>();
-                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
-
-                }
-                break;
-
-            case FilePickerConst.REQUEST_CODE_DOC:
-                if(resultCode== Activity.RESULT_OK && data!=null)
-                {
-                    docPaths = new ArrayList<>();
-                    docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
-                }
-                break;
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    switch (requestCode) {
+      case FilePickerConst.REQUEST_CODE_PHOTO:
+        if (resultCode == Activity.RESULT_OK && data != null) {
+          photoPaths = new ArrayList<>();
+          photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
         }
+        break;
 
-        addThemToView(photoPaths,docPaths);
+      case FilePickerConst.REQUEST_CODE_DOC:
+        if (resultCode == Activity.RESULT_OK && data != null) {
+          docPaths = new ArrayList<>();
+          docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
+        }
+        break;
     }
 
-    private void addThemToView(ArrayList<String> imagePaths, ArrayList<String> docPaths) {
-        ArrayList<String> filePaths = new ArrayList<>();
-        if(imagePaths!=null)
-            filePaths.addAll(imagePaths);
+    addThemToView(photoPaths, docPaths);
+  }
 
-        if(docPaths!=null)
-            filePaths.addAll(docPaths);
+  private void addThemToView(ArrayList<String> imagePaths, ArrayList<String> docPaths) {
+    ArrayList<String> filePaths = new ArrayList<>();
+    if (imagePaths != null) filePaths.addAll(imagePaths);
 
-        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerview);
-        if(recyclerView!=null) {
-            StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL);
-            layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-            recyclerView.setLayoutManager(layoutManager);
+    if (docPaths != null) filePaths.addAll(docPaths);
 
-            ImageAdapter imageAdapter = new ImageAdapter(getActivity(), filePaths);
+    RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerview);
+    if (recyclerView != null) {
+      StaggeredGridLayoutManager layoutManager =
+          new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL);
+      layoutManager.setGapStrategy(
+          StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+      recyclerView.setLayoutManager(layoutManager);
 
-            recyclerView.setAdapter(imageAdapter);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-        }
+      ImageAdapter imageAdapter = new ImageAdapter(getActivity(), filePaths);
 
-        Toast.makeText(getActivity(), "Num of files selected: "+ filePaths.size(), Toast.LENGTH_SHORT).show();
+      recyclerView.setAdapter(imageAdapter);
+      recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
+
+    Toast.makeText(getActivity(), "Num of files selected: " + filePaths.size(), Toast.LENGTH_SHORT)
+        .show();
+  }
 
     public void onPickPhoto() {
         int maxCount = MAX_ATTACHMENT_COUNT-docPaths.size();
@@ -144,6 +134,7 @@ public class CallerFragment extends BaseFragment {
                     .setActivityTheme(R.style.FilePickerTheme)
                     .pickFile(this);
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

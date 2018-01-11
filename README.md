@@ -12,7 +12,7 @@ A filepicker which allows to select images and videos with flexibility. It also 
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    compile 'com.droidninja:filepicker:2.0.8'
+    compile 'com.droidninja:filepicker:2.1.1'
 ```
   
  # Usage
@@ -65,11 +65,12 @@ A filepicker which allows to select images and videos with flexibility. It also 
 
 Method     | Use
 -------- | ---
-setMaxCount(int maxCount) | used to specify maximum count of media picks
+setMaxCount(int maxCount) | used to specify maximum count of media picks (dont use if you want no limit)
 setActivityTheme(int theme)    | used to set theme for toolbar (must be an actionbar theme)
 setSelectedFiles(ArrayList<String> selectedPhotos)     | to show already selected items
 enableVideoPicker(boolean status)    | added video picker alongside images
 enableImagePicker(boolean status)    | added option to disable image picker
+enableSelectAll(boolean status)    | added option to enable/disable select all feature(it will only work with no limit option)
 setCameraPlaceholder(int drawable)    | set custom camera drawable
 withOrientation(Orientation type)  | In case, if you want to set orientation. (*default=Orientation.UNSPECIFIED*)
 showGifs(boolean status)    | to show gifs images in the picker

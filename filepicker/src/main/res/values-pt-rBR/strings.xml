@@ -15,7 +15,8 @@
     <string name="permission_camera_never_askagain">Permissão de uso de câmera foi negada com por favor nunca
         pergunte novamente.</string>
     <string name="no_files_found">Nenhum arquivo encontrado</string>
-    <string name="attachments_title_text" formatted="false">Anexos (%d/%d)</string>
+    <string name="attachments_title_text" formatted="false">(%d/%d)</string>
+    <string name="attachments_num" formatted="false">%d</string>
     <string name="select_photo_text">Selecione um arquivo de mídia</string>
     <string name="select_doc_text">Selecione um documento</string>
     <string name="no_camera_exists">Nenhum aplicativo de câmera foi detectado!</string>

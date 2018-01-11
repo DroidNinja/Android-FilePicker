@@ -11,6 +11,9 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -51,6 +54,7 @@ public class MediaDetailPickerFragment extends BaseFragment implements FileAdapt
     private ImageCaptureManager imageCaptureManager;
     private RequestManager mGlideRequestManager;
     private int fileType;
+    private MenuItem selectAllItem;
 
     public MediaDetailPickerFragment() {
         // Required empty public constructor
@@ -92,11 +96,18 @@ public class MediaDetailPickerFragment extends BaseFragment implements FileAdapt
     @Override
     public void onItemSelected() {
         mListener.onItemSelected();
+        if(photoGridAdapter!=null && selectAllItem!=null) {
+            if (photoGridAdapter.getItemCount() == photoGridAdapter.getSelectedItemCount()) {
+                selectAllItem.setIcon(R.drawable.ic_select_all);
+                selectAllItem.setChecked(true);
+            }
+        }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(PickerManager.getInstance().hasSelectAll());
         mGlideRequestManager = Glide.with(this);
     }
 
@@ -112,8 +123,8 @@ public class MediaDetailPickerFragment extends BaseFragment implements FileAdapt
     }
 
     private void initView(View view) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
-        emptyView = (TextView) view.findViewById(R.id.empty_view);
+        recyclerView =  view.findViewById(R.id.recyclerview);
+        emptyView =  view.findViewById(R.id.empty_view);
         fileType = getArguments().getInt(FILE_TYPE);
         imageCaptureManager = new ImageCaptureManager(getActivity());
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL);
@@ -248,5 +259,38 @@ public class MediaDetailPickerFragment extends BaseFragment implements FileAdapt
         }
 
         mGlideRequestManager.resumeRequests();
+    }
+
+    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.select_menu, menu);
+        selectAllItem = menu.findItem(R.id.action_select);
+        onItemSelected();
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_select) {
+            if (photoGridAdapter != null) {
+                photoGridAdapter.selectAll();
+                if(selectAllItem!=null)
+                    if(selectAllItem.isChecked()) {
+                        PickerManager.getInstance().clearSelections();
+                        photoGridAdapter.clearSelection();
+
+                        selectAllItem.setIcon(R.drawable.ic_deselect_all);
+                    }
+                    else {
+                        photoGridAdapter.selectAll();
+                        PickerManager.getInstance().add(photoGridAdapter.getSelectedPaths(), FilePickerConst.FILE_TYPE_MEDIA);
+                        selectAllItem.setIcon(R.drawable.ic_select_all);
+                    }
+                selectAllItem.setChecked(!selectAllItem.isChecked());
+                mListener.onItemSelected();
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }

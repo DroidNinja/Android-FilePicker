@@ -24,19 +24,16 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder, T ex
   }
 
   private void addPathsToSelections(List<String> selectedPaths) {
-    if(selectedPaths==null)
-      return;
+    if (selectedPaths == null) return;
 
     for (int index = 0; index < items.size(); index++) {
       for (int jindex = 0; jindex < selectedPaths.size(); jindex++) {
-        if(items.get(index).getPath().equals(selectedPaths.get(jindex)))
-        {
+        if (items.get(index).getPath().equals(selectedPaths.get(jindex))) {
           selectedPhotos.add(items.get(index));
         }
       }
     }
   }
-
 
   /**
    * Indicates if the item at position where is selected
@@ -44,19 +41,16 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder, T ex
    * @param photo Media of the item to check
    * @return true if the item is selected, false otherwise
    */
-  @Override
-  public boolean isSelected(T photo) {
+  @Override public boolean isSelected(T photo) {
     return selectedPhotos.contains(photo);
   }
-
 
   /**
    * Toggle the selection status of the item at a given position
    *
    * @param photo Media of the item to toggle the selection status for
    */
-  @Override
-  public void toggleSelection(T photo) {
+  @Override public void toggleSelection(T photo) {
     if (selectedPhotos.contains(photo)) {
       selectedPhotos.remove(photo);
     } else {
@@ -64,17 +58,21 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder, T ex
     }
   }
 
-
   /**
    * Clear the selection status for all items
    */
-  @Override
-  public void clearSelection() {
+  @Override public void clearSelection() {
     selectedPhotos.clear();
+    notifyDataSetChanged();
   }
 
-  @Override
-  public int getSelectedItemCount() {
+  public void selectAll() {
+    selectedPhotos.clear();
+    selectedPhotos.addAll(items);
+    notifyDataSetChanged();
+  }
+
+  @Override public int getSelectedItemCount() {
     return selectedPhotos.size();
   }
 
@@ -82,9 +80,15 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder, T ex
     this.items = items;
   }
 
-  public List<T> getItems()
-  {
+  public List<T> getItems() {
     return items;
   }
 
+  public ArrayList<String> getSelectedPaths(){
+    ArrayList<String> paths = new ArrayList<>();
+    for (int index = 0; index < selectedPhotos.size(); index++) {
+      paths.add(selectedPhotos.get(index).getPath());
+    }
+    return paths;
+  }
 }

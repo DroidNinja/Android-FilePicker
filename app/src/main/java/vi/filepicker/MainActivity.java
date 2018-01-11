@@ -22,7 +22,7 @@ import droidninja.filepicker.utils.Orientation;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int MAX_ATTACHMENT_COUNT = 5;
+    private int MAX_ATTACHMENT_COUNT = 10;
     private ArrayList<String> photoPaths = new ArrayList<>();
     private ArrayList<String> docPaths = new ArrayList<>();
 
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         if(docPaths!=null)
             filePaths.addAll(docPaths);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        RecyclerView recyclerView =  findViewById(R.id.recyclerview);
         if(recyclerView!=null) {
             StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL);
             layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
@@ -94,13 +94,15 @@ public class MainActivity extends AppCompatActivity {
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
-            FilePickerBuilder.getInstance().setMaxCount(maxCount)
+            FilePickerBuilder.getInstance()
+                    .setMaxCount(maxCount)
                     .setSelectedFiles(photoPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
                     .enableVideoPicker(true)
             .enableCameraSupport(true)
             .showGifs(false)
             .showFolderView(true)
+            .enableSelectAll(true)
             .enableImagePicker(true)
             .setCameraPlaceholder(R.drawable.custom_camera)
             .withOrientation(Orientation.UNSPECIFIED)
@@ -114,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
         if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
-            FilePickerBuilder.getInstance().setMaxCount(maxCount)
+            FilePickerBuilder.getInstance()
+            .setMaxCount(maxCount)
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
                     .addFileSupport("ZIP",zips)

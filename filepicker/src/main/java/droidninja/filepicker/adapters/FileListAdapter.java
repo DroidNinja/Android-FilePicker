@@ -75,9 +75,6 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
             public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {
                 toggleSelection(document);
                 holder.itemView.setBackgroundResource(isChecked?R.color.bg_gray:android.R.color.white);
-
-                if(mListener!=null)
-                    mListener.onItemSelected();
             }
         });
     }
@@ -87,8 +84,6 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
         if(PickerManager.getInstance().getMaxCount()==1)
         {
             PickerManager.getInstance().add(document.getPath(), FilePickerConst.FILE_TYPE_DOCUMENT);
-            if(mListener!=null)
-                mListener.onItemSelected();
         }
         else {
             if (holder.checkBox.isChecked()) {
@@ -101,6 +96,9 @@ public class FileListAdapter extends SelectableAdapter<FileListAdapter.FileViewH
                 holder.checkBox.setVisibility(View.VISIBLE);
             }
         }
+
+        if(mListener!=null)
+            mListener.onItemSelected();
     }
 
     @Override

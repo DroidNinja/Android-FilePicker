@@ -3,7 +3,6 @@ package droidninja.filepicker.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
-
 import droidninja.filepicker.R;
 
 /**
@@ -68,5 +67,18 @@ public class FileType implements Parcelable{
         parcel.writeString(title);
         parcel.writeInt(drawable);
         parcel.writeStringArray(extensions);
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FileType fileType = (FileType) o;
+
+        return title != null ? title.equals(fileType.title) : fileType.title == null;
+    }
+
+    @Override public int hashCode() {
+        return title != null ? title.hashCode() : 0;
     }
 }

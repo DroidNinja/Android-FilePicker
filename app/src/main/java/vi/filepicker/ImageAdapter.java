@@ -1,7 +1,6 @@
 package vi.filepicker;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -9,11 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import butterknife.BindView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import java.io.File;
 import java.util.ArrayList;
 

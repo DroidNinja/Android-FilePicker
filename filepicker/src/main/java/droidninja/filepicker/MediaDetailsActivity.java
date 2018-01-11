@@ -5,6 +5,8 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -41,6 +43,8 @@ public class MediaDetailsActivity extends BaseFilePickerActivity implements File
     private RequestManager mGlideRequestManager;
     private PhotoGridAdapter photoGridAdapter;
     private int fileType;
+    private MenuItem selectAllItem;
+    private PhotoDirectory photoDirectory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,22 +59,33 @@ public class MediaDetailsActivity extends BaseFilePickerActivity implements File
         if (intent != null) {
 
             fileType = intent.getIntExtra(FilePickerConst.EXTRA_FILE_TYPE,FilePickerConst.MEDIA_TYPE_IMAGE);
-            PhotoDirectory photoDirectory = intent.getParcelableExtra(PhotoDirectory.class.getSimpleName());
+            photoDirectory = intent.getParcelableExtra(PhotoDirectory.class.getSimpleName());
             if(photoDirectory!=null) {
 
                 setUpView(photoDirectory);
-                if(getSupportActionBar()!=null)
-                {
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    getSupportActionBar().setTitle(photoDirectory.getName());
-                }
+                setTitle(0);
             }
         }
     }
 
+    public void setTitle(int count){
+            ActionBar actionBar = getSupportActionBar();
+            if(actionBar!=null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                int maxCount = PickerManager.getInstance().getMaxCount();
+                if(maxCount == -1 && count>0)
+                    actionBar.setTitle(String.format(getString(R.string.attachments_num), count));
+                else if (maxCount > 0 && count>0)
+                    actionBar.setTitle(String.format(getString(R.string.attachments_title_text), count, maxCount));
+                else {
+                        actionBar.setTitle(photoDirectory.getName());
+                }
+            }
+    }
+
     private void setUpView(PhotoDirectory photoDirectory) {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        emptyView = (TextView) findViewById(R.id.empty_view);
+        recyclerView =  findViewById(R.id.recyclerview);
+        emptyView =  findViewById(R.id.empty_view);
 
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL);
         layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
@@ -159,6 +174,15 @@ public class MediaDetailsActivity extends BaseFilePickerActivity implements File
             recyclerView.setAdapter(photoGridAdapter);
         }
 
+        if(PickerManager.getInstance().getMaxCount()==-1){
+            if(photoGridAdapter!=null && selectAllItem!=null) {
+                if (photoGridAdapter.getItemCount() == photoGridAdapter.getSelectedItemCount()) {
+                    selectAllItem.setIcon(R.drawable.ic_select_all);
+                    selectAllItem.setChecked(true);
+                }
+            }
+            setTitle(PickerManager.getInstance().getCurrentCount());
+        }
     }
 
     private void resumeRequestsIfNotDestroyed() {
@@ -171,20 +195,39 @@ public class MediaDetailsActivity extends BaseFilePickerActivity implements File
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.picker_menu, menu);
-
+        getMenuInflater().inflate(R.menu.media_detail_menu, menu);
+        selectAllItem = menu.findItem(R.id.action_select);
+        selectAllItem.setVisible(PickerManager.getInstance().hasSelectAll());
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == R.id.action_done) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_done) {
             setResult(RESULT_OK, null);
             finish();
 
             return true;
-        } else if (i == android.R.id.home) {
+        } else if (itemId == R.id.action_select) {
+            if (photoGridAdapter != null && selectAllItem!=null) {
+                    if(selectAllItem.isChecked()) {
+                        PickerManager.getInstance().deleteMedia(photoGridAdapter.getSelectedPaths());
+                        photoGridAdapter.clearSelection();
+
+                        selectAllItem.setIcon(R.drawable.ic_deselect_all);
+                    }
+                    else {
+                        photoGridAdapter.selectAll();
+                        PickerManager.getInstance().add(photoGridAdapter.getSelectedPaths(), FilePickerConst.FILE_TYPE_MEDIA);
+                        selectAllItem.setIcon(R.drawable.ic_select_all);
+                    }
+                selectAllItem.setChecked(!selectAllItem.isChecked());
+                setTitle(PickerManager.getInstance().getCurrentCount());
+            }
+            return true;
+        }
+        else if (itemId == android.R.id.home) {
             onBackPressed();
             return true;
         }
@@ -193,10 +236,12 @@ public class MediaDetailsActivity extends BaseFilePickerActivity implements File
 
     @Override
     public void onItemSelected() {
-        if(PickerManager.getInstance().getMaxCount()==1) {
+        int maxCount = PickerManager.getInstance().getMaxCount();
+        if(maxCount==1) {
             setResult(RESULT_OK, null);
             finish();
         }
+        setTitle(PickerManager.getInstance().getCurrentCount());
     }
 
     @Override

@@ -8,7 +8,8 @@
     <string name="permission_camera_denied">El permiso de la cámara se ha denegado. Considera aceptarlo para poder acceder a la cámara.</string>
     <string name="permission_camera_never_askagain">El permiso de la cámara fue denegado para no preguntar nunca más.</string>
     <string name="no_files_found">No hay ficheros</string>
-    <string name="attachments_title_text" formatted="false">Adjuntos (%d/%d)</string>
+    <string name="attachments_title_text" formatted="false">(%d/%d)</string>
+    <string name="attachments_num" formatted="false">%d</string>
     <string name="select_photo_text">Selecciona un archivo multimedia</string>
     <string name="select_doc_text">Selecciona un documento</string>
     <string name="no_camera_exists">No hay aplicación para abrir la cámara!</string>

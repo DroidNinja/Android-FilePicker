@@ -101,8 +101,8 @@ public class MediaFolderPickerFragment extends BaseFragment implements FolderGri
     }
 
     private void initView(View view) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
-        emptyView = (TextView) view.findViewById(R.id.empty_view);
+        recyclerView =  view.findViewById(R.id.recyclerview);
+        emptyView =  view.findViewById(R.id.empty_view);
         fileType = getArguments().getInt(FILE_TYPE);
 
         imageCaptureManager = new ImageCaptureManager(getActivity());

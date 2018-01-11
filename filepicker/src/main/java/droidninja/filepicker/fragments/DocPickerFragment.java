@@ -6,9 +6,13 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import com.android.internal.util.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,11 @@ import droidninja.filepicker.models.Document;
 import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.utils.MediaStoreHelper;
 import droidninja.filepicker.utils.TabLayoutHelper;
+import droidninja.filepicker.utils.Utils;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 
 public class DocPickerFragment extends BaseFragment {
@@ -31,7 +40,6 @@ public class DocPickerFragment extends BaseFragment {
     TabLayout tabLayout;
 
     ViewPager viewPager;
-    private ArrayList<String> selectedPaths;
     private ProgressBar progressBar;
     private DocPickerFragmentListener mListener;
 
@@ -42,6 +50,10 @@ public class DocPickerFragment extends BaseFragment {
     public interface DocPickerFragmentListener{
     }
 
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,9 +62,8 @@ public class DocPickerFragment extends BaseFragment {
         return inflater.inflate(R.layout.fragment_doc_picker, container, false);
     }
 
-    public static DocPickerFragment newInstance(ArrayList<String> selectedPaths) {
+    public static DocPickerFragment newInstance() {
         DocPickerFragment docPickerFragment = new DocPickerFragment();
-        docPickerFragment.selectedPaths = selectedPaths;
         return  docPickerFragment;
     }
 
@@ -86,9 +97,9 @@ public class DocPickerFragment extends BaseFragment {
     }
 
     private void setViews(View view) {
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
-        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        tabLayout = view.findViewById(R.id.tabs);
+        viewPager =  view.findViewById(R.id.viewPager);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);

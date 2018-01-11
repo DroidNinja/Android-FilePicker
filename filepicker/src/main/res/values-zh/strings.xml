@@ -13,7 +13,8 @@
     <string name="permission_camera_denied">相机权限被拒绝。请考虑授予它，以访问相机！</string>
     <string name="permission_camera_never_askagain">相机权限被拒绝，从不再询问。</string>
     <string name="no_files_found">找不到文件</string>
-    <string name="attachments_title_text" formatted="false">附件 (%d/%d)</string>
+    <string name="attachments_title_text" formatted="false">(%d/%d)</string>
+    <string name="attachments_num" formatted="false">%d</string>
     <string name="select_photo_text">选择照片</string>
     <string name="select_doc_text">选择文档</string>
     <string name="no_camera_exists">没有相机的应用程序！</string>
