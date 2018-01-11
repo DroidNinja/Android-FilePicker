@@ -8,10 +8,7 @@
     <string name="all_images">All Images</string>
     <string name="done">Done</string>
 
-    <string name="permission_camera_rationale">Camera permission is needed to show the camera preview.</string>
-    <string name="permission_contacts_rationale">Contacts permissions are needed to demonstrate access to the contacts database.</string>
-    <string name="permission_camera_denied">Camera permission was denied. Please consider granting it in order to access the camera!</string>
-    <string name="permission_camera_never_askagain">Camera permission was denied with never ask again.</string>
+    <string name="permission_filepicker_rationale">Storage permission is needed to access files.</string>
     <string name="no_files_found">No Files Found</string>
     <string name="attachments_title_text" formatted="false">(%d/%d)</string>
     <string name="attachments_num" formatted="false">%d</string>

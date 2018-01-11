@@ -2,7 +2,7 @@ package droidninja.filepicker.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import droidninja.filepicker.utils.Utils;
+import droidninja.filepicker.utils.FilePickerUtils;
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -40,7 +40,7 @@ public class BaseFile implements Parcelable {
 
   public boolean isImage() {
     String[] types = { "jpg", "jpeg", "png", "gif" };
-    return Utils.contains(types, this.path);
+    return FilePickerUtils.contains(types, this.path);
   }
 
   @Override public boolean equals(Object o) {

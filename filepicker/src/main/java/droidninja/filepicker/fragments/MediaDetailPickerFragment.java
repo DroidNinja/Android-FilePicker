@@ -233,7 +233,7 @@ public class MediaDetailPickerFragment extends BaseFragment implements FileAdapt
             case ImageCaptureManager.REQUEST_TAKE_PHOTO:
                 if(resultCode== Activity.RESULT_OK)
                 {
-                    String imagePath = imageCaptureManager.galleryAddPic();
+                    String imagePath = imageCaptureManager.notifyMediaStoreDatabase();
                     if(imagePath!=null && PickerManager.getInstance().getMaxCount()==1)
                     {
                         PickerManager.getInstance().add(imagePath, FilePickerConst.FILE_TYPE_MEDIA);

@@ -31,7 +31,7 @@ public class FileUtils {
 
     public static FilePickerConst.FILE_TYPE getFileType(String path)
     {
-        String fileExtension = Utils.getFileExtension(new File(path));
+        String fileExtension = FilePickerUtils.getFileExtension(new File(path));
         if(TextUtils.isEmpty(fileExtension))
             return FilePickerConst.FILE_TYPE.UNKNOWN;
 
@@ -52,31 +52,31 @@ public class FileUtils {
     public static boolean isExcelFile(String path)
     {
         String[] types = {"xls","xlsx"};
-        return Utils.contains(types, path);
+        return FilePickerUtils.contains(types, path);
     }
 
     public static boolean isDocFile(String path)
     {
         String[] types = {"doc","docx", "dot","dotx"};
-        return Utils.contains(types, path);
+        return FilePickerUtils.contains(types, path);
     }
 
     public static boolean isPPTFile(String path)
     {
         String[] types = {"ppt","pptx"};
-        return Utils.contains(types, path);
+        return FilePickerUtils.contains(types, path);
     }
 
     public static boolean isPDFFile(String path)
     {
         String[] types = {"pdf"};
-        return Utils.contains(types, path);
+        return FilePickerUtils.contains(types, path);
     }
 
     public static boolean isTxtFile(String path)
     {
         String[] types = {"txt"};
-        return Utils.contains(types, path);
+        return FilePickerUtils.contains(types, path);
     }
 
 }

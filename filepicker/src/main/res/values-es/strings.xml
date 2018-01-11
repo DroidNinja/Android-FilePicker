@@ -3,10 +3,7 @@
 
     <string name="action_settings">Ajustes</string>
 
-    <string name="permission_camera_rationale">El permiso de la cámara es necesario para mostrar la preview de la cámara.</string>
-    <string name="permission_contacts_rationale">El permiso de contactos es necesario para acceder a su listado de contactos.</string>
-    <string name="permission_camera_denied">El permiso de la cámara se ha denegado. Considera aceptarlo para poder acceder a la cámara.</string>
-    <string name="permission_camera_never_askagain">El permiso de la cámara fue denegado para no preguntar nunca más.</string>
+    <string name="permission_filepicker_rationale">Permiso de almacenamiento es necesario para acceder a los archivos.</string>
     <string name="no_files_found">No hay ficheros</string>
     <string name="attachments_title_text" formatted="false">(%d/%d)</string>
     <string name="attachments_num" formatted="false">%d</string>

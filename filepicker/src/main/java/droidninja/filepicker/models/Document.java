@@ -1,6 +1,6 @@
 package droidninja.filepicker.models;
 
-import droidninja.filepicker.utils.Utils;
+import droidninja.filepicker.utils.FilePickerUtils;
 import java.io.File;
 
 /**
@@ -76,7 +76,7 @@ public class Document extends BaseFile {
 
     public boolean isThisType(String[] types)
     {
-        return Utils.contains(types, this.path);
+        return FilePickerUtils.contains(types, this.path);
     }
 
     public FileType getFileType()

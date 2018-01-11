@@ -79,7 +79,7 @@ public class ImageCaptureManager {
   }
 
 
-  public String galleryAddPic() {
+  public String notifyMediaStoreDatabase() {
     Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 
     if (TextUtils.isEmpty(mCurrentPhotoPath)) {
@@ -92,17 +92,6 @@ public class ImageCaptureManager {
     mContext.sendBroadcast(mediaScanIntent);
 
     return mCurrentPhotoPath;
-  }
-
-  public final void notifyMediaStoreScanner(Context mContext, final File file) {
-    try {
-      MediaStore.Images.Media.insertImage(mContext.getContentResolver(),
-              file.getAbsolutePath(), file.getName(), null);
-      mContext.sendBroadcast(new Intent(
-              Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
   }
 
 

@@ -6,13 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import com.android.internal.util.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +22,6 @@ import droidninja.filepicker.models.Document;
 import droidninja.filepicker.models.FileType;
 import droidninja.filepicker.utils.MediaStoreHelper;
 import droidninja.filepicker.utils.TabLayoutHelper;
-import droidninja.filepicker.utils.Utils;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-
 
 public class DocPickerFragment extends BaseFragment {
 

@@ -1,6 +1,5 @@
 package vi.filepicker;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -19,9 +18,15 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.models.sort.SortingTypes;
 import droidninja.filepicker.utils.Orientation;
+import java.util.List;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
+    private static final int RC_PHOTO_PICKER_PERM = 123;
+    private static final int RC_FILE_PICKER_PERM = 321;
     private int MAX_ATTACHMENT_COUNT = 10;
     private ArrayList<String> photoPaths = new ArrayList<>();
     private ArrayList<String> docPaths = new ArrayList<>();
@@ -32,12 +37,32 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    @AfterPermissionGranted(RC_PHOTO_PICKER_PERM)
     public void pickPhotoClicked(View view) {
-        onPickPhoto();
+        if (EasyPermissions.hasPermissions(this,FilePickerConst.PERMISSIONS_FILE_PICKER)) {
+            onPickPhoto();
+        } else {
+            // Ask for one permission
+            EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.rationale_photo_picker),
+                RC_PHOTO_PICKER_PERM,
+                FilePickerConst.PERMISSIONS_FILE_PICKER);
+        }
     }
 
+    @AfterPermissionGranted(RC_FILE_PICKER_PERM)
     public void pickDocClicked(View view) {
-        onPickDoc();
+        if (EasyPermissions.hasPermissions(this,FilePickerConst.PERMISSIONS_FILE_PICKER)) {
+            onPickDoc();
+        } else {
+            // Ask for one permission
+            EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.rationale_doc_picker),
+                RC_FILE_PICKER_PERM,
+                FilePickerConst.PERMISSIONS_FILE_PICKER);
+        }
     }
 
     @Override
@@ -95,18 +120,19 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
             FilePickerBuilder.getInstance()
-                    .setMaxCount(maxCount)
-                    .setSelectedFiles(photoPaths)
-                    .setActivityTheme(R.style.FilePickerTheme)
-                    .enableVideoPicker(true)
-            .enableCameraSupport(true)
-            .showGifs(false)
-            .showFolderView(true)
-            .enableSelectAll(true)
-            .enableImagePicker(true)
-            .setCameraPlaceholder(R.drawable.custom_camera)
-            .withOrientation(Orientation.UNSPECIFIED)
-                    .pickPhoto(this);
+                .setMaxCount(maxCount)
+                .setSelectedFiles(photoPaths)
+                .setActivityTheme(R.style.FilePickerTheme)
+                .enableVideoPicker(true)
+                .enableCameraSupport(true)
+                .showGifs(false)
+                .showFolderView(true)
+                .enableSelectAll(true)
+                .enableImagePicker(true)
+                .setCameraPlaceholder(R.drawable.custom_camera)
+                .withOrientation(Orientation.UNSPECIFIED)
+                .pickPhoto(this);
+
     }
 
     public void onPickDoc() {
@@ -131,10 +157,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     public void onOpenFragmentClicked(View view) {
         Intent intent = new Intent(this, FragmentActivity.class);
         startActivity(intent);
+    }
+
+    @Override public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        if(requestCode == RC_PHOTO_PICKER_PERM){
+            onPickPhoto();
+        }
+        else if(requestCode == RC_FILE_PICKER_PERM){
+            onPickDoc();
+        }
+    }
+
+    @Override public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
     }
 }
