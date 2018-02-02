@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import droidninja.filepicker.fragments.DocFragment;
@@ -68,6 +69,8 @@ public class FilePickerActivity extends BaseFilePickerActivity implements
                 actionBar.setTitle(String.format(getString(R.string.attachments_num), count));
             else if (maxCount > 0 && count>0)
                 actionBar.setTitle(String.format(getString(R.string.attachments_title_text), count, maxCount));
+            else if (!TextUtils.isEmpty(PickerManager.getInstance().getTitle()))
+                actionBar.setTitle(PickerManager.getInstance().getTitle());
             else {
                 if (type == FilePickerConst.MEDIA_PICKER)
                     actionBar.setTitle(R.string.select_photo_text);
