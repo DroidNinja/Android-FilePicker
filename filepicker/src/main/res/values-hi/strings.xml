@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_settings">सेटिंग्स</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="all_images">सभी तस्वीरें</string>
+    <string name="done">हो गया</string>
+
+    <string name="permission_filepicker_rationale">फ़ाइलों को एक्सेस करने के लिए Storage अनुमति की आवश्यकता है।</string>
+    <string name="no_files_found">कोई फाइल नहीं मिली</string>
+    <string name="attachments_title_text" formatted="false">(%d/%d)</string>
+    <string name="attachments_num" formatted="false">%d</string>
+    <string name="select_photo_text">एक मीडिया का चयन करें</string>
+    <string name="select_doc_text">एक दस्तावेज़ का चयन करें</string>
+    <string name="no_camera_exists">कैमरा के लिए कोई एप्लीकेशन मौजूद नहीं है!</string>
+    <string name="pdf_title">PDF</string>
+    <string name="ppt_title">PPT</string>
+    <string name="word_title">DOC</string>
+    <string name="excel_title">XLS</string>
+    <string name="txt_title">TXT</string>
+    <string name="videos">वीडियो</string>
+    <string name="images">तस्वीरें</string>
+    <string name="all_photos">सभी तस्वीरें</string>
+    <string name="all_videos">सभी वीडियो</string>
+    <string name="all_files">सभी फाइलें</string>
+
+</resources>
