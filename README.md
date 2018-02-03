@@ -7,7 +7,7 @@ A filepicker which allows to select images and videos with flexibility. It also 
   ![demo](https://image.ibb.co/iRpztv/device_2017_03_10_164003.png)
   ![demo](https://image.ibb.co/m75uRF/device_2017_03_10_163900.png)
   ![demo](https://image.ibb.co/ct4A0a/device_2017_03_10_163835.png)
-  ![demo](http://image.ibb.co/d5iuym/device_2018_02_03_111337.png)
+  ![demo](https://image.ibb.co/egJrTm/device_2018_02_03_111337.png)
 # Installation
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
