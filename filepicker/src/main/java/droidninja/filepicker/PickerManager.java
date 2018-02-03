@@ -30,6 +30,8 @@ public class PickerManager {
 
   private int theme = R.style.LibAppTheme;
 
+  private String title = null;
+
   private boolean showVideos;
 
   private boolean showGif;
@@ -134,6 +136,14 @@ public class PickerManager {
 
   public void setTheme(int theme) {
     this.theme = theme;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public boolean showVideo() {
