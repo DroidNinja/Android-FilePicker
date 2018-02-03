@@ -25,6 +25,7 @@ public class PickerManager {
 
   private ArrayList<String> mediaFiles;
   private ArrayList<String> docFiles;
+  private ArrayList<String> folderFiles;
 
   private LinkedHashSet<FileType> fileTypes;
 
@@ -43,12 +44,14 @@ public class PickerManager {
   private Orientation orientation = Orientation.UNSPECIFIED;
 
   private boolean showFolderView = true;
+  private boolean pickFolder = false;
 
   private String providerAuthorities;
 
   private PickerManager() {
     mediaFiles = new ArrayList<>();
     docFiles = new ArrayList<>();
+    folderFiles = new ArrayList<>();
     fileTypes = new LinkedHashSet<>();
   }
 
@@ -62,7 +65,7 @@ public class PickerManager {
   }
 
   public int getCurrentCount() {
-    return mediaFiles.size() + docFiles.size();
+    return mediaFiles.size() + docFiles.size() + folderFiles.size();
   }
 
   public void add(String path, int type) {
@@ -71,6 +74,8 @@ public class PickerManager {
         mediaFiles.add(path);
       } else if (!docFiles.contains(path) && type == FilePickerConst.FILE_TYPE_DOCUMENT) {
         docFiles.add(path);
+      } else if (!docFiles.contains(path) && type == FilePickerConst.FILE_TYPE_FOLDER) {
+        folderFiles.add(path);
       } else {
         return;
       }
@@ -88,6 +93,8 @@ public class PickerManager {
       mediaFiles.remove(path);
     } else if (type == FilePickerConst.FILE_TYPE_DOCUMENT) {
       docFiles.remove(path);
+    } else if (type == FilePickerConst.FILE_TYPE_FOLDER) {
+      folderFiles.remove(path);
     }
   }
 
@@ -104,6 +111,10 @@ public class PickerManager {
     return docFiles;
   }
 
+  public ArrayList<String> getSelectedFolder() {
+    return folderFiles;
+  }
+
   public ArrayList<String> getSelectedFilePaths(ArrayList<BaseFile> files) {
     ArrayList<String> paths = new ArrayList<>();
     for (int index = 0; index < files.size(); index++) {
@@ -115,6 +126,7 @@ public class PickerManager {
   public void reset() {
     docFiles.clear();
     mediaFiles.clear();
+    folderFiles.clear();
     fileTypes.clear();
     maxCount = -1;
   }
@@ -122,6 +134,7 @@ public class PickerManager {
   public void clearSelections() {
     mediaFiles.clear();
     docFiles.clear();
+    folderFiles.clear();
   }
 
   public void deleteMedia(ArrayList<String> paths) {

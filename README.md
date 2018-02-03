@@ -1,13 +1,13 @@
 # Android-FilePicker
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android--FilePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4044)
  [ ![Latest Version](https://api.bintray.com/packages/droidninja/maven/com.droidninja.filepicker/images/download.svg) ](https://bintray.com/droidninja/maven/com.droidninja.filepicker/_latestVersion)
- 
+
 A filepicker which allows to select images and videos with flexibility. It also supports selection of files by specifying its file type. Check out app module for example.
 
   ![demo](https://image.ibb.co/iRpztv/device_2017_03_10_164003.png)
   ![demo](https://image.ibb.co/m75uRF/device_2017_03_10_163900.png)
   ![demo](https://image.ibb.co/ct4A0a/device_2017_03_10_163835.png)
-
+  ![demo](http://image.ibb.co/d5iuym/device_2018_02_03_111337.png)
 # Installation
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
@@ -17,9 +17,9 @@ A filepicker which allows to select images and videos with flexibility. It also 
 
 # Note
 This Filepicker is based on the MediaStore api provided by android. It checks MediaStore database for a file entry. If your file is not showing in the picker, it means that it is not inserted into MediaStore database yet. There is method in `FilePickerUtils` class named `notifyMediaStore(Context context, String path)` through which you can notify the MediaStore database.
-  
+
  # Usage
-  
+
   Just include this in your onclick function:
   * For **photopicker**:
  ```java
@@ -28,7 +28,7 @@ This Filepicker is based on the MediaStore api provided by android. It checks Me
                 .setActivityTheme(R.style.AppTheme)
                 .pickPhoto(this);
  ```
- 
+
   * For **document picker**:
  ```java
   FilePickerBuilder.getInstance().setMaxCount(10)
@@ -36,7 +36,14 @@ This Filepicker is based on the MediaStore api provided by android. It checks Me
                 .setActivityTheme(R.style.AppTheme)
                 .pickFile(this);
  ```
- 
+ * For **folder picker**:
+ ```java
+  FilePickerBuilder.getInstance().setMaxCount(maxCount)
+                    .setSelectedFiles(folderPaths)
+                    .setMaxCount(3)
+                    .setActivityTheme(R.style.FilePickerTheme)
+                    .pickFolder(this);
+ ```
  After this, you will get list of file paths in activity result:
  ```java
  @Override
@@ -57,6 +64,11 @@ This Filepicker is based on the MediaStore api provided by android. It checks Me
                         docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
                     }
                     break;
+                case FilePickerConst.REQUEST_CODE_FOLDER:
+                    if (resultCode == Activity.RESULT_OK && data != null) {
+                        folderPaths = new ArrayList<>();
+                        folderPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_FOLDER));
+                }
             }
             addThemToView(photoPaths,docPaths);
         }
@@ -129,11 +141,11 @@ Of course, you can also choose what you want to donate, all donations are awesom
 
 
  # Credits
-  
+
   Inspired by [PhotoPicker](https://github.com/donglua/PhotoPicker)
-  
+
   [SmoothCheckbox](https://github.com/andyxialm/SmoothCheckBox)
-  
+
 # Youtube Demo
 
   [![Demo](https://img.youtube.com/vi/r3u2uKjN4Ks/0.jpg)](https://www.youtube.com/watch?v=r3u2uKjN4Ks)

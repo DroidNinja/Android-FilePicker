@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import droidninja.filepicker.fragments.DocFragment;
 import droidninja.filepicker.fragments.DocPickerFragment;
+import droidninja.filepicker.fragments.FolderPickerFragment;
 import droidninja.filepicker.fragments.MediaPickerFragment;
 import droidninja.filepicker.fragments.PhotoPickerFragmentListener;
 import droidninja.filepicker.utils.FragmentUtil;
@@ -19,7 +20,8 @@ public class FilePickerActivity extends BaseFilePickerActivity implements
         PhotoPickerFragmentListener,
         DocFragment.DocFragmentListener,
         DocPickerFragment.DocPickerFragmentListener,
-        MediaPickerFragment.MediaPickerFragmentListener{
+        MediaPickerFragment.MediaPickerFragmentListener,
+        FolderPickerFragment.FolderPickerFragmentListener {
 
     private static final String TAG = FilePickerActivity.class.getSimpleName();
     private int type;
@@ -48,8 +50,10 @@ public class FilePickerActivity extends BaseFilePickerActivity implements
                 PickerManager.getInstance().clearSelections();
                 if (type == FilePickerConst.MEDIA_PICKER) {
                     PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_MEDIA);
-                } else {
+                } else if (type == FilePickerConst.DOC_PICKER) {
                     PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_DOCUMENT);
+                } else {
+                    PickerManager.getInstance().add(selectedPaths, FilePickerConst.FILE_TYPE_FOLDER);
                 }
             }
             else
@@ -71,8 +75,10 @@ public class FilePickerActivity extends BaseFilePickerActivity implements
             else {
                 if (type == FilePickerConst.MEDIA_PICKER)
                     actionBar.setTitle(R.string.select_photo_text);
-                else
+                else if (type == FilePickerConst.DOC_PICKER)
                     actionBar.setTitle(R.string.select_doc_text);
+                else
+                    actionBar.setTitle(R.string.select_folder);
             }
         }
 
@@ -82,12 +88,16 @@ public class FilePickerActivity extends BaseFilePickerActivity implements
         if (type == FilePickerConst.MEDIA_PICKER) {
             MediaPickerFragment photoFragment = MediaPickerFragment.newInstance();
             FragmentUtil.addFragment(this, R.id.container, photoFragment);
-        } else {
-            if(PickerManager.getInstance().isDocSupport())
+        } else if (type == FilePickerConst.DOC_PICKER) {
+            if (PickerManager.getInstance().isDocSupport())
                 PickerManager.getInstance().addDocTypes();
 
             DocPickerFragment photoFragment = DocPickerFragment.newInstance();
             FragmentUtil.addFragment(this, R.id.container, photoFragment);
+        } else {
+            FolderPickerFragment folderPickerFragment = new FolderPickerFragment();
+            folderPickerFragment.setArguments(new Bundle());
+            FragmentUtil.addFragment(this, R.id.container, folderPickerFragment);
         }
     }
 
@@ -102,10 +112,13 @@ public class FilePickerActivity extends BaseFilePickerActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_done) {
-            if (type == FilePickerConst.MEDIA_PICKER)
+            if (type == FilePickerConst.MEDIA_PICKER) {
                 returnData(PickerManager.getInstance().getSelectedPhotos());
-            else
+            } else if (type == FilePickerConst.DOC_PICKER) {
                 returnData(PickerManager.getInstance().getSelectedFiles());
+            } else {
+                returnData(PickerManager.getInstance().getSelectedFolder());
+            }
 
             return true;
         } else if (i == android.R.id.home) {
@@ -146,10 +159,13 @@ public class FilePickerActivity extends BaseFilePickerActivity implements
 
     private void returnData(ArrayList<String> paths) {
         Intent intent = new Intent();
-        if (type == FilePickerConst.MEDIA_PICKER)
+        if (type == FilePickerConst.MEDIA_PICKER) {
             intent.putStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA, paths);
-        else
+        } else if (type == FilePickerConst.DOC_PICKER) {
             intent.putStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS, paths);
+        } else {
+            intent.putStringArrayListExtra(FilePickerConst.KEY_SELECTED_FOLDER, paths);
+        }
 
         setResult(RESULT_OK, intent);
         finish();
@@ -160,7 +176,9 @@ public class FilePickerActivity extends BaseFilePickerActivity implements
         int currentCount = PickerManager.getInstance().getCurrentCount();
         setToolbarTitle(currentCount);
 
-        if(PickerManager.getInstance().getMaxCount()==1 && currentCount==1)
-            returnData(type == FilePickerConst.MEDIA_PICKER ? PickerManager.getInstance().getSelectedPhotos() : PickerManager.getInstance().getSelectedFiles());
+        if (PickerManager.getInstance().getMaxCount() == 1 && currentCount == 1)
+            returnData(type == FilePickerConst.MEDIA_PICKER ? PickerManager.getInstance().getSelectedPhotos()
+                    : type == FilePickerConst.DOC_PICKER ? PickerManager.getInstance().getSelectedFiles()
+                    : PickerManager.getInstance().getSelectedFolder());
     }
 }

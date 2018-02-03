@@ -33,6 +33,7 @@ public class CallerFragment extends BaseFragment {
   private int MAX_ATTACHMENT_COUNT = 10;
   private ArrayList<String> photoPaths = new ArrayList<>();
   private ArrayList<String> docPaths = new ArrayList<>();
+  private ArrayList<String> folderPaths = new ArrayList<>();
 
   public CallerFragment() {
     // Required empty public constructor
@@ -69,6 +70,11 @@ public class CallerFragment extends BaseFragment {
         onPickDoc();
     }
 
+    @OnClick(R.id.pick_folder)
+    public void pickFolderClicked(View view) {
+      onPickFolder();
+    }
+
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     switch (requestCode) {
       case FilePickerConst.REQUEST_CODE_PHOTO:
@@ -83,17 +89,28 @@ public class CallerFragment extends BaseFragment {
           docPaths = new ArrayList<>();
           docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
         }
+
+      case FilePickerConst.REQUEST_CODE_FOLDER:
+        if (resultCode == Activity.RESULT_OK && data != null) {
+          folderPaths = new ArrayList<>();
+          folderPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_FOLDER));
+        }
         break;
     }
 
-    addThemToView(photoPaths, docPaths);
+    addThemToView(photoPaths,docPaths, folderPaths);
   }
 
-  private void addThemToView(ArrayList<String> imagePaths, ArrayList<String> docPaths) {
+  private void addThemToView(ArrayList<String> imagePaths, ArrayList<String> docPaths, ArrayList<String> folderPaths) {
     ArrayList<String> filePaths = new ArrayList<>();
-    if (imagePaths != null) filePaths.addAll(imagePaths);
+    if(imagePaths!=null)
+      filePaths.addAll(imagePaths);
 
-    if (docPaths != null) filePaths.addAll(docPaths);
+    if(docPaths!=null)
+      filePaths.addAll(docPaths);
+
+    if(folderPaths!=null)
+      filePaths.addAll(folderPaths);
 
     RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerview);
     if (recyclerView != null) {
@@ -135,6 +152,17 @@ public class CallerFragment extends BaseFragment {
                     .pickFile(this);
     }
 
+    public void onPickFolder() {
+      int maxCount = MAX_ATTACHMENT_COUNT - photoPaths.size();
+      if ((docPaths.size() + photoPaths.size()) == MAX_ATTACHMENT_COUNT)
+        Toast.makeText(getActivity(), "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
+      else
+        FilePickerBuilder.getInstance().setMaxCount(maxCount)
+                .setSelectedFiles(folderPaths)
+                .setMaxCount(3)
+                .setActivityTheme(R.style.FilePickerTheme)
+                .pickFolder(this);
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
