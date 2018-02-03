@@ -83,6 +83,13 @@ public class FolderPickerFragment extends BaseFragment implements View.OnClickLi
             File[] files = folder.listFiles();
 
             List<Folder> folders = new ArrayList<>();
+
+            for (File currentFile : files) {
+                if (currentFile.isDirectory()) {
+                    folders.add(new Folder(currentFile.getName(), currentFile.getPath()));
+                }
+            }
+
             Collections.sort(folders, new Comparator<Folder>() {
                 @Override
                 public int compare(Folder folder, Folder folder1) {
@@ -90,11 +97,6 @@ public class FolderPickerFragment extends BaseFragment implements View.OnClickLi
                 }
             });
 
-            for (File currentFile : files) {
-                if (currentFile.isDirectory()) {
-                    folders.add(new Folder(currentFile.getName(), currentFile.getPath()));
-                }
-            }
             foldersList.clear();
             foldersList.addAll(folders);
 
