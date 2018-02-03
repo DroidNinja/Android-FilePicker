@@ -14,6 +14,7 @@
     <string name="attachments_num" formatted="false">%d</string>
     <string name="select_photo_text">Select a media</string>
     <string name="select_doc_text">Select a document</string>
+    <string name="select_folder">Select a folder</string>
     <string name="no_camera_exists">No Application exists for camera!</string>
     <string name="pdf_title">PDF</string>
     <string name="ppt_title">PPT</string>
@@ -26,4 +27,9 @@
     <string name="all_videos">All Videos</string>
     <string name="all_files">All Files</string>
 
+    <!--Folder picker-->
+    <string name="common_error">Error</string>
+    <string name="create_folder_title">Enter new folder name</string>
+    <string name="create_folder_ok">Create folder</string>
+    <string name="create_folder_cancel">Cancel</string>
 </resources>

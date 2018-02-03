@@ -33,6 +33,13 @@
             />
 
         <Button
+            android:id="@+id/pick_folder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pick Folder"
+            android:onClick="pickFolderClicked"
+            />
+        <Button
             android:id="@+id/open_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

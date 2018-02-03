@@ -8,6 +8,7 @@ import android.Manifest;
 public class FilePickerConst {
   public static final int REQUEST_CODE_PHOTO = 233;
   public static final int REQUEST_CODE_DOC = 234;
+  public static final int REQUEST_CODE_FOLDER = 235;
 
   public static final int REQUEST_CODE_MEDIA_DETAIL = 235;
   public static final int REQUEST_CODE_PERMISSION = 988;
@@ -17,9 +18,11 @@ public class FilePickerConst {
 
   public final static int MEDIA_PICKER = 0x11;
   public final static int DOC_PICKER = 0x12;
+  public final static int FOLDER_PICKER = 0x13;
 
   public final static String KEY_SELECTED_MEDIA = "SELECTED_PHOTOS";
   public final static String KEY_SELECTED_DOCS = "SELECTED_DOCS";
+  public final static String KEY_SELECTED_FOLDER = "KEY_SELECTED_FOLDER";
 
   public final static String EXTRA_PICKER_TYPE = "EXTRA_PICKER_TYPE";
   public final static String EXTRA_SHOW_GIF = "SHOW_GIF";
@@ -30,6 +33,7 @@ public class FilePickerConst {
 
   public final static int FILE_TYPE_MEDIA = 1;
   public final static int FILE_TYPE_DOCUMENT = 2;
+  public final static int FILE_TYPE_FOLDER = 3;
 
   public final static int MEDIA_TYPE_IMAGE = 1;
   public final static int MEDIA_TYPE_VIDEO = 3;

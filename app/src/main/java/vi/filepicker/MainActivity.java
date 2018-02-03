@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private int MAX_ATTACHMENT_COUNT = 10;
     private ArrayList<String> photoPaths = new ArrayList<>();
     private ArrayList<String> docPaths = new ArrayList<>();
+    private ArrayList<String> folderPaths = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,20 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         }
     }
 
+    @AfterPermissionGranted(RC_FILE_PICKER_PERM)
+    public void pickFolderClicked(View view) {
+        if (EasyPermissions.hasPermissions(this,FilePickerConst.PERMISSIONS_FILE_PICKER)) {
+            onPickFolder();
+        } else {
+            // Ask for one permission
+            EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.rationale_doc_picker),
+                RC_FILE_PICKER_PERM,
+                FilePickerConst.PERMISSIONS_FILE_PICKER);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -86,18 +101,27 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
                 }
                 break;
+            case FilePickerConst.REQUEST_CODE_FOLDER:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    folderPaths = new ArrayList<>();
+                    folderPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_FOLDER));
+                }
+            break;
         }
 
-        addThemToView(photoPaths,docPaths);
+        addThemToView(photoPaths,docPaths, folderPaths);
     }
 
-    private void addThemToView(ArrayList<String> imagePaths, ArrayList<String> docPaths) {
+    private void addThemToView(ArrayList<String> imagePaths, ArrayList<String> docPaths, ArrayList<String> folderPaths) {
         ArrayList<String> filePaths = new ArrayList<>();
         if(imagePaths!=null)
             filePaths.addAll(imagePaths);
 
         if(docPaths!=null)
             filePaths.addAll(docPaths);
+
+        if(folderPaths!=null)
+            filePaths.addAll(folderPaths);
 
         RecyclerView recyclerView =  findViewById(R.id.recyclerview);
         if(recyclerView!=null) {
@@ -116,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     public void onPickPhoto() {
         int maxCount = MAX_ATTACHMENT_COUNT-docPaths.size();
-        if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
+        if((docPaths.size()+photoPaths.size()+folderPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
             FilePickerBuilder.getInstance()
@@ -139,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         String[] zips = {".zip",".rar"};
         String[] pdfs = {".pdf"};
         int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size();
-        if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
+        if((docPaths.size()+photoPaths.size()+folderPaths.size())==MAX_ATTACHMENT_COUNT)
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
         else
             FilePickerBuilder.getInstance()
@@ -154,6 +178,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     .pickFile(this);
     }
 
+    public void onPickFolder() {
+        int maxCount = MAX_ATTACHMENT_COUNT - photoPaths.size();
+        if ((docPaths.size()+photoPaths.size()+folderPaths.size()) == MAX_ATTACHMENT_COUNT)
+            Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
+        else
+            FilePickerBuilder.getInstance().setMaxCount(maxCount)
+                    .setSelectedFiles(folderPaths)
+                    .setMaxCount(3)
+                    .setActivityTheme(R.style.FilePickerTheme)
+                    .pickFolder(this);
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

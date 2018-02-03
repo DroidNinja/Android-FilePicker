@@ -126,7 +126,15 @@ public class FilePickerBuilder {
     mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.DOC_PICKER);
     start(context, FilePickerConst.DOC_PICKER);
   }
+  public void pickFolder(Activity context) {
+    mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.FOLDER_PICKER);
+    start(context, FilePickerConst.FOLDER_PICKER);
+  }
 
+  public void pickFolder(Fragment context) {
+    mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.FOLDER_PICKER);
+    start(context, FilePickerConst.FOLDER_PICKER);
+  }
   private void start(Activity context, int pickerType) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (ContextCompat.checkSelfPermission(context, FilePickerConst.PERMISSIONS_FILE_PICKER)
@@ -146,8 +154,10 @@ public class FilePickerBuilder {
 
     if (pickerType == FilePickerConst.MEDIA_PICKER) {
       context.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_PHOTO);
-    } else {
+    } else if (pickerType == FilePickerConst.DOC_PICKER) {
       context.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_DOC);
+    } else {
+      context.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_FOLDER);
     }
   }
 
@@ -169,8 +179,10 @@ public class FilePickerBuilder {
     intent.putExtras(mPickerOptionsBundle);
     if (pickerType == FilePickerConst.MEDIA_PICKER) {
       fragment.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_PHOTO);
-    } else {
+    } else if (pickerType == FilePickerConst.DOC_PICKER) {
       fragment.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_DOC);
+    } else {
+      fragment.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_FOLDER);
     }
   }
 }
