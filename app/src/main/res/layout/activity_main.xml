@@ -21,7 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Pick Photo"
-            android:onClick="pickPhotoClicked"
             />
 
         <Button
@@ -29,7 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Pick Doc"
-            android:onClick="pickDocClicked"
             />
 
         <Button
