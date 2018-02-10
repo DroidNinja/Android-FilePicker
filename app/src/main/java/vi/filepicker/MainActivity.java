@@ -12,6 +12,8 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.Toast;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import java.util.ArrayList;
 
 import droidninja.filepicker.FilePickerBuilder;
@@ -25,8 +27,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
-    private static final int RC_PHOTO_PICKER_PERM = 123;
-    private static final int RC_FILE_PICKER_PERM = 321;
+    public static final int RC_PHOTO_PICKER_PERM = 123;
+    public static final int RC_FILE_PICKER_PERM = 321;
     private int MAX_ATTACHMENT_COUNT = 10;
     private ArrayList<String> photoPaths = new ArrayList<>();
     private ArrayList<String> docPaths = new ArrayList<>();
@@ -35,10 +37,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
     }
 
     @AfterPermissionGranted(RC_PHOTO_PICKER_PERM)
-    public void pickPhotoClicked(View view) {
+    @OnClick(R.id.pick_photo)
+    public void pickPhotoClicked() {
         if (EasyPermissions.hasPermissions(this,FilePickerConst.PERMISSIONS_FILE_PICKER)) {
             onPickPhoto();
         } else {
@@ -52,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     @AfterPermissionGranted(RC_FILE_PICKER_PERM)
-    public void pickDocClicked(View view) {
+    @OnClick(R.id.pick_doc)
+    public void pickDocClicked() {
         if (EasyPermissions.hasPermissions(this,FilePickerConst.PERMISSIONS_FILE_PICKER)) {
             onPickDoc();
         } else {

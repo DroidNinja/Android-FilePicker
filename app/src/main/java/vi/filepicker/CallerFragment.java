@@ -1,6 +1,5 @@
 package vi.filepicker;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,19 +16,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 import butterknife.BindView;
-
-import java.util.ArrayList;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.fragments.BaseFragment;
 import java.util.ArrayList;
+import java.util.List;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
+import static vi.filepicker.MainActivity.RC_FILE_PICKER_PERM;
+import static vi.filepicker.MainActivity.RC_PHOTO_PICKER_PERM;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CallerFragment extends BaseFragment {
+public class CallerFragment extends BaseFragment implements EasyPermissions.PermissionCallbacks {
   private int MAX_ATTACHMENT_COUNT = 10;
   private ArrayList<String> photoPaths = new ArrayList<>();
   private ArrayList<String> docPaths = new ArrayList<>();
@@ -38,36 +42,45 @@ public class CallerFragment extends BaseFragment {
     // Required empty public constructor
   }
 
-  @BindView(R.id.open_fragment) Button openFragmentBtn;
-
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.activity_main, container, false);
     ButterKnife.bind(this, view);
-
+    Button openFragmentBtn = view.findViewById(R.id.open_fragment);
+    openFragmentBtn.setVisibility(View.GONE);
     return view;
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    initView();
+  @AfterPermissionGranted(RC_PHOTO_PICKER_PERM)
+  @OnClick(R.id.pick_photo)
+  public void pickPhoto() {
+    if (EasyPermissions.hasPermissions(getContext(),FilePickerConst.PERMISSIONS_FILE_PICKER)) {
+      onPickPhoto();
+    } else {
+      // Ask for one permission
+      EasyPermissions.requestPermissions(
+          this,
+          getString(R.string.rationale_photo_picker),
+          RC_PHOTO_PICKER_PERM,
+          FilePickerConst.PERMISSIONS_FILE_PICKER);
+    }
   }
 
-  private void initView() {
-    openFragmentBtn.setVisibility(View.GONE);
+  @AfterPermissionGranted(RC_FILE_PICKER_PERM)
+  @OnClick(R.id.pick_doc)
+  public void pickDoc() {
+    if (EasyPermissions.hasPermissions(getContext(),FilePickerConst.PERMISSIONS_FILE_PICKER)) {
+      onPickDoc();
+    } else {
+      // Ask for one permission
+      EasyPermissions.requestPermissions(
+          this,
+          getString(R.string.rationale_doc_picker),
+          RC_FILE_PICKER_PERM,
+          FilePickerConst.PERMISSIONS_FILE_PICKER);
+    }
   }
-
-    @OnClick(R.id.pick_photo)
-    public void pickPhotoClicked(View view) {
-        onPickPhoto();
-    }
-
-    @OnClick(R.id.pick_doc)
-    public void pickDocClicked(View view) {
-        onPickDoc();
-    }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     switch (requestCode) {
@@ -113,32 +126,54 @@ public class CallerFragment extends BaseFragment {
         .show();
   }
 
-    public void onPickPhoto() {
-        int maxCount = MAX_ATTACHMENT_COUNT-docPaths.size();
-        if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
-            Toast.makeText(getActivity(), "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
-        else
-            FilePickerBuilder.getInstance().setMaxCount(maxCount)
-                    .setSelectedFiles(photoPaths)
-                    .setActivityTheme(R.style.FilePickerTheme)
-                    .pickPhoto(this);
+  public void onPickPhoto() {
+    int maxCount = MAX_ATTACHMENT_COUNT - docPaths.size();
+    if ((docPaths.size() + photoPaths.size()) == MAX_ATTACHMENT_COUNT) {
+      Toast.makeText(getActivity(), "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
+          Toast.LENGTH_SHORT).show();
+    } else {
+      FilePickerBuilder.getInstance()
+          .setMaxCount(maxCount)
+          .setSelectedFiles(photoPaths)
+          .setActivityTheme(R.style.FilePickerTheme)
+          .pickPhoto(this);
     }
+  }
 
-    public void onPickDoc() {
-        int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size();
-        if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
-            Toast.makeText(getActivity(), "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
-        else
-            FilePickerBuilder.getInstance().setMaxCount(maxCount)
-                    .setSelectedFiles(docPaths)
-                    .setActivityTheme(R.style.FilePickerTheme)
-                    .pickFile(this);
+  public void onPickDoc() {
+    int maxCount = MAX_ATTACHMENT_COUNT - photoPaths.size();
+    if ((docPaths.size() + photoPaths.size()) == MAX_ATTACHMENT_COUNT) {
+      Toast.makeText(getActivity(), "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
+          Toast.LENGTH_SHORT).show();
+    } else {
+      FilePickerBuilder.getInstance()
+          .setMaxCount(maxCount)
+          .setSelectedFiles(docPaths)
+          .setActivityTheme(R.style.FilePickerTheme)
+          .pickFile(this);
     }
+  }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+  @Override public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+    if(requestCode == RC_PHOTO_PICKER_PERM){
+      onPickPhoto();
     }
+    else if(requestCode == RC_FILE_PICKER_PERM){
+      onPickDoc();
+    }
+  }
 
+  @Override public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+
+    if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+      new AppSettingsDialog.Builder(this).build().show();
+    }
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+  }
 }
