@@ -41,6 +41,11 @@ public class FilePickerBuilder {
     return this;
   }
 
+  public FilePickerBuilder setActivityTitle(String title) {
+    PickerManager.getInstance().setTitle(title);
+    return this;
+  }
+
   public FilePickerBuilder setSelectedFiles(ArrayList<String> selectedPhotos) {
     mPickerOptionsBundle.putStringArrayList(FilePickerConst.KEY_SELECTED_MEDIA, selectedPhotos);
     return this;
