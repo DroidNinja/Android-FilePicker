@@ -69,7 +69,8 @@ This Filepicker is based on the MediaStore api provided by android. It checks Me
 Method     | Use
 -------- | ---
 setMaxCount(int maxCount) | used to specify maximum count of media picks (dont use if you want no limit)
-setActivityTheme(int theme)    | used to set theme for toolbar (must be an actionbar theme)
+setActivityTheme(int theme)    | used to set theme for toolbar (must be an non-actionbar theme or use LibAppTheme)
+setActivityTitle(String title)    | used to set title for toolbar
 setSelectedFiles(ArrayList<String> selectedPhotos)     | to show already selected items
 enableVideoPicker(boolean status)    | added video picker alongside images
 enableImagePicker(boolean status)    | added option to disable image picker
