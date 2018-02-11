@@ -13,22 +13,6 @@ import droidninja.filepicker.R;
 
 public class FileUtils {
 
-    public static int getTypeDrawable(String path)
-    {
-        if(getFileType(path)== FilePickerConst.FILE_TYPE.EXCEL)
-            return R.drawable.ic_excel;
-        if(getFileType(path)== FilePickerConst.FILE_TYPE.WORD)
-            return R.drawable.ic_word;
-        if(getFileType(path)== FilePickerConst.FILE_TYPE.PPT)
-            return R.drawable.ic_ppt;
-        if(getFileType(path)== FilePickerConst.FILE_TYPE.PDF)
-            return R.drawable.ic_pdf;
-        if(getFileType(path)== FilePickerConst.FILE_TYPE.TXT)
-            return R.drawable.ic_txt;
-        else
-            return R.drawable.ic_txt;
-    }
-
     public static FilePickerConst.FILE_TYPE getFileType(String path)
     {
         String fileExtension = FilePickerUtils.getFileExtension(new File(path));

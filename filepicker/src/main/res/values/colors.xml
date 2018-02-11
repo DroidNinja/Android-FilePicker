@@ -6,6 +6,9 @@
   <color name="colorAccent">#FF4081</color>
   <color name="bg_gray">#ecedef</color>
   <color name="transparent_black">#94333232</color>
+  <color name="checkbox_color">#FB4846</color>
+  <color name="checkbox_unchecked_color">#DFDFDF</color>
+  <color name="search_icon_color">@android:color/white</color>
 
   <drawable name="tab_gray">@color/bg_gray</drawable>
   <drawable name="tab_white">@android:color/white</drawable>

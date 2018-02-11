@@ -149,18 +149,13 @@ public class CallerFragment extends BaseFragment implements EasyPermissions.Perm
       FilePickerBuilder.getInstance()
           .setMaxCount(maxCount)
           .setSelectedFiles(docPaths)
+          .enableDocSupport(true)
           .setActivityTheme(R.style.FilePickerTheme)
           .pickFile(this);
     }
   }
 
   @Override public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-    if(requestCode == RC_PHOTO_PICKER_PERM){
-      onPickPhoto();
-    }
-    else if(requestCode == RC_FILE_PICKER_PERM){
-      onPickDoc();
-    }
   }
 
   @Override public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {

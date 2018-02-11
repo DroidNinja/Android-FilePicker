@@ -37,6 +37,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        style="@style/SmoothCheckBoxStyle"
         />
 
 </droidninja.filepicker.views.SquareRelativeLayout>

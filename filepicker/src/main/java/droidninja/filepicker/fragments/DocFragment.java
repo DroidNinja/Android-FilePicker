@@ -3,8 +3,10 @@ package droidninja.filepicker.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,7 +61,7 @@ public class DocFragment extends BaseFragment implements FileAdapterListener {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setHasOptionsMenu(PickerManager.getInstance().hasSelectAll());
+    setHasOptionsMenu(true);
   }
 
   public static DocFragment newInstance(FileType fileType) {
@@ -76,7 +78,7 @@ public class DocFragment extends BaseFragment implements FileAdapterListener {
 
   @Override public void onItemSelected() {
     mListener.onItemSelected();
-    if(fileListAdapter!=null && selectAllItem!=null) {
+    if (fileListAdapter != null && selectAllItem != null) {
       if (fileListAdapter.getItemCount() == fileListAdapter.getSelectedItemCount()) {
         selectAllItem.setIcon(R.drawable.ic_select_all);
         selectAllItem.setChecked(true);
@@ -94,7 +96,7 @@ public class DocFragment extends BaseFragment implements FileAdapterListener {
   }
 
   private void initView(View view) {
-    recyclerView =  view.findViewById(R.id.recyclerview);
+    recyclerView = view.findViewById(R.id.recyclerview);
     emptyView = view.findViewById(R.id.empty_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     recyclerView.setVisibility(View.GONE);
@@ -126,9 +128,30 @@ public class DocFragment extends BaseFragment implements FileAdapterListener {
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.select_menu, menu);
+    inflater.inflate(R.menu.doc_picker_menu, menu);
     selectAllItem = menu.findItem(R.id.action_select);
-    onItemSelected();
+    if (PickerManager.getInstance().hasSelectAll()) {
+      selectAllItem.setVisible(true);
+      onItemSelected();
+    } else {
+      MenuItem search = menu.findItem(R.id.search);
+      SearchView searchView = (SearchView) search.getActionView();
+      searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override public boolean onQueryTextSubmit(String query) {
+
+          return false;
+        }
+
+        @Override public boolean onQueryTextChange(String newText) {
+          if (fileListAdapter != null) {
+            fileListAdapter.getFilter().filter(newText);
+          }
+          return true;
+        }
+      });
+
+      selectAllItem.setVisible(false);
+    }
     super.onCreateOptionsMenu(menu, inflater);
   }
 
@@ -136,22 +159,23 @@ public class DocFragment extends BaseFragment implements FileAdapterListener {
     int itemId = item.getItemId();
     if (itemId == R.id.action_select) {
       if (fileListAdapter != null) {
-        if(selectAllItem!=null)
-          if(selectAllItem.isChecked()) {
+        if (selectAllItem != null) {
+          if (selectAllItem.isChecked()) {
             fileListAdapter.clearSelection();
             PickerManager.getInstance().clearSelections();
 
             selectAllItem.setIcon(R.drawable.ic_deselect_all);
-          }
-        else {
+          } else {
             fileListAdapter.selectAll();
-            PickerManager.getInstance().add(fileListAdapter.getSelectedPaths(), FilePickerConst.FILE_TYPE_DOCUMENT);
+            PickerManager.getInstance()
+                .add(fileListAdapter.getSelectedPaths(), FilePickerConst.FILE_TYPE_DOCUMENT);
             selectAllItem.setIcon(R.drawable.ic_select_all);
           }
-          selectAllItem.setChecked(!selectAllItem.isChecked());
-          mListener.onItemSelected();
+        }
+        selectAllItem.setChecked(!selectAllItem.isChecked());
+        mListener.onItemSelected();
       }
-        return true;
+      return true;
     } else {
       return super.onOptionsItemSelected(item);
     }

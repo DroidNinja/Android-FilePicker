@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
+import android.support.v7.widget.Toolbar;
 import droidninja.filepicker.utils.Orientation;
 
 /**
@@ -16,20 +17,25 @@ import droidninja.filepicker.utils.Orientation;
 
 public abstract class BaseFilePickerActivity extends AppCompatActivity {
 
-    protected void onCreate(@Nullable Bundle savedInstanceState, @LayoutRes int layout) {
-        super.onCreate(savedInstanceState);
-        setTheme(PickerManager.getInstance().getTheme());
-        setContentView(layout);
+  protected void onCreate(@Nullable Bundle savedInstanceState, @LayoutRes int layout) {
+    super.onCreate(savedInstanceState);
+    setTheme(PickerManager.getInstance().getTheme());
+    setContentView(layout);
 
-        //set orientation
-        Orientation orientation = PickerManager.getInstance().getOrientation();
-        if(orientation==Orientation.PORTRAIT_ONLY)
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        else if(orientation==Orientation.LANDSCAPE_ONLY)
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    Toolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        initView();
-    }
+    //set orientation
+    Orientation orientation = PickerManager.getInstance().getOrientation();
+      if (orientation == Orientation.PORTRAIT_ONLY) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      } else if (orientation == Orientation.LANDSCAPE_ONLY) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+      }
 
-    protected abstract void initView();
+    initView();
+  }
+
+  protected abstract void initView();
 }

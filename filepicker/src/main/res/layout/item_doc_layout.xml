@@ -1,56 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     >
 
-    <ImageView
-        android:id="@+id/file_iv"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/ic_pdf"
-        android:layout_margin="10dp"
-        android:scaleType="centerInside"
-        />
+  <ImageView
+      android:id="@+id/file_iv"
+      android:layout_width="@dimen/file_icon_width"
+      android:layout_height="@dimen/file_icon_height"
+      android:layout_margin="10dp"
+      android:src="@drawable/icon_file_pdf"
+      />
 
-    <TextView
-        android:id="@+id/file_name_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="PPDF_112121.pdf"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:layout_toRightOf="@+id/file_iv"
-        android:layout_toEndOf="@+id/file_iv"
-        android:layout_toLeftOf="@+id/checkbox"
-        android:layout_toStartOf="@+id/checkbox"
-        android:layout_marginTop="15dp"
-        android:padding="5dp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        />
+  <TextView
+      android:id="@+id/file_type_tv"
+      android:layout_width="@dimen/file_icon_width"
+      android:layout_height="wrap_content"
+      tools:text="PDF"
+      android:textStyle="bold"
+      android:textColor="@android:color/white"
+      app:autoSizeTextType="uniform"
+      app:autoSizeMinTextSize="7sp"
+      app:autoSizeStepGranularity="1sp"
+      android:layout_alignBottom="@+id/file_iv"
+      android:layout_alignLeft="@+id/file_iv"
+      android:layout_alignRight="@+id/file_iv"
+      android:gravity="center|bottom"
+      android:layout_marginTop="25dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginRight="10dp"
+      android:layout_marginBottom="5dp"
+      tools:ignore="MissingPrefix"
+      android:maxLines="1"
+      />
 
-    <TextView
-        android:id="@+id/file_size_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/file_name_tv"
-        android:text="1.2MB"
-        android:layout_toRightOf="@+id/file_iv"
-        android:layout_toEndOf="@+id/file_iv"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"/>
+  <TextView
+      android:id="@+id/file_name_tv"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignTop="@+id/file_iv"
+      android:layout_toEndOf="@+id/file_iv"
+      android:layout_toLeftOf="@+id/checkbox"
+      android:layout_toRightOf="@+id/file_iv"
+      android:layout_toStartOf="@+id/checkbox"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:textColor="@android:color/black"
+      android:textSize="@dimen/file_name_textSize"
+      tools:text="PPDF_112121.pdf"
+
+      />
+
+  <TextView
+      android:id="@+id/file_size_tv"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/file_name_tv"
+      android:layout_toEndOf="@+id/file_iv"
+      android:layout_toRightOf="@+id/file_iv"
+      tools:text="1.2MB"
+      />
 
 
-    <droidninja.filepicker.views.SmoothCheckBox
-        android:id="@+id/checkbox"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="20dp"
-        />
+  <droidninja.filepicker.views.SmoothCheckBox
+      android:id="@+id/checkbox"
+      android:layout_width="@dimen/file_item_checkbox_size"
+      android:layout_height="@dimen/file_item_checkbox_size"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_margin="20dp"
+      style="@style/SmoothCheckBoxStyle"
+      />
 
 </RelativeLayout>

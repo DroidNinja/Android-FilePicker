@@ -60,6 +60,20 @@ public class FilePickerUtils {
     return false;
   }
 
+  public static <T> boolean contains2(final T[] array, final T v) {
+    if (v == null) {
+      for (final T e : array)
+        if (e == null)
+          return true;
+    } else {
+      for (final T e : array)
+        if (e == v || v.equals(e))
+          return true;
+    }
+
+    return false;
+  }
+
   public static void notifyMediaStore(Context context, String path) {
     if (path != null && !TextUtils.isEmpty(path)) {
       Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);

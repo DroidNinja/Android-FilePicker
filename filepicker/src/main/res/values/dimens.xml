@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="file_icon_width">40dp</dimen>
+  <dimen name="file_icon_height">40dp</dimen>
+  <dimen name="file_name_textSize">17sp</dimen>
+  <dimen name="file_item_checkbox_size">22dp</dimen>
+</resources>

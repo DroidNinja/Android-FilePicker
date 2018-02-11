@@ -27,165 +27,148 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
-    public static final int RC_PHOTO_PICKER_PERM = 123;
-    public static final int RC_FILE_PICKER_PERM = 321;
-    private int MAX_ATTACHMENT_COUNT = 10;
-    private ArrayList<String> photoPaths = new ArrayList<>();
-    private ArrayList<String> docPaths = new ArrayList<>();
+  public static final int RC_PHOTO_PICKER_PERM = 123;
+  public static final int RC_FILE_PICKER_PERM = 321;
+  private int MAX_ATTACHMENT_COUNT = 10;
+  private ArrayList<String> photoPaths = new ArrayList<>();
+  private ArrayList<String> docPaths = new ArrayList<>();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    ButterKnife.bind(this);
+  }
+
+  @AfterPermissionGranted(RC_PHOTO_PICKER_PERM) @OnClick(R.id.pick_photo)
+  public void pickPhotoClicked() {
+    if (EasyPermissions.hasPermissions(this, FilePickerConst.PERMISSIONS_FILE_PICKER)) {
+      onPickPhoto();
+    } else {
+      // Ask for one permission
+      EasyPermissions.requestPermissions(this, getString(R.string.rationale_photo_picker),
+          RC_PHOTO_PICKER_PERM, FilePickerConst.PERMISSIONS_FILE_PICKER);
     }
+  }
 
-    @AfterPermissionGranted(RC_PHOTO_PICKER_PERM)
-    @OnClick(R.id.pick_photo)
-    public void pickPhotoClicked() {
-        if (EasyPermissions.hasPermissions(this,FilePickerConst.PERMISSIONS_FILE_PICKER)) {
-            onPickPhoto();
-        } else {
-            // Ask for one permission
-            EasyPermissions.requestPermissions(
-                this,
-                getString(R.string.rationale_photo_picker),
-                RC_PHOTO_PICKER_PERM,
-                FilePickerConst.PERMISSIONS_FILE_PICKER);
+  @AfterPermissionGranted(RC_FILE_PICKER_PERM) @OnClick(R.id.pick_doc)
+  public void pickDocClicked() {
+    if (EasyPermissions.hasPermissions(this, FilePickerConst.PERMISSIONS_FILE_PICKER)) {
+      onPickDoc();
+    } else {
+      // Ask for one permission
+      EasyPermissions.requestPermissions(this, getString(R.string.rationale_doc_picker),
+          RC_FILE_PICKER_PERM, FilePickerConst.PERMISSIONS_FILE_PICKER);
+    }
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    switch (requestCode) {
+      case FilePickerConst.REQUEST_CODE_PHOTO:
+        if (resultCode == Activity.RESULT_OK && data != null) {
+          photoPaths = new ArrayList<>();
+          photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
         }
-    }
+        break;
 
-    @AfterPermissionGranted(RC_FILE_PICKER_PERM)
-    @OnClick(R.id.pick_doc)
-    public void pickDocClicked() {
-        if (EasyPermissions.hasPermissions(this,FilePickerConst.PERMISSIONS_FILE_PICKER)) {
-            onPickDoc();
-        } else {
-            // Ask for one permission
-            EasyPermissions.requestPermissions(
-                this,
-                getString(R.string.rationale_doc_picker),
-                RC_FILE_PICKER_PERM,
-                FilePickerConst.PERMISSIONS_FILE_PICKER);
+      case FilePickerConst.REQUEST_CODE_DOC:
+        if (resultCode == Activity.RESULT_OK && data != null) {
+          docPaths = new ArrayList<>();
+          docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
         }
+        break;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode)
-        {
-            case FilePickerConst.REQUEST_CODE_PHOTO:
-                if(resultCode== Activity.RESULT_OK && data!=null)
-                {
-                    photoPaths = new ArrayList<>();
-                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
+    addThemToView(photoPaths, docPaths);
+  }
 
-                }
-                break;
+  private void addThemToView(ArrayList<String> imagePaths, ArrayList<String> docPaths) {
+    ArrayList<String> filePaths = new ArrayList<>();
+    if (imagePaths != null) filePaths.addAll(imagePaths);
 
-            case FilePickerConst.REQUEST_CODE_DOC:
-                if(resultCode== Activity.RESULT_OK && data!=null)
-                {
-                    docPaths = new ArrayList<>();
-                    docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
-                }
-                break;
-        }
+    if (docPaths != null) filePaths.addAll(docPaths);
 
-        addThemToView(photoPaths,docPaths);
+    RecyclerView recyclerView = findViewById(R.id.recyclerview);
+    if (recyclerView != null) {
+      StaggeredGridLayoutManager layoutManager =
+          new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL);
+      layoutManager.setGapStrategy(
+          StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+      recyclerView.setLayoutManager(layoutManager);
+
+      ImageAdapter imageAdapter = new ImageAdapter(this, filePaths);
+
+      recyclerView.setAdapter(imageAdapter);
+      recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    private void addThemToView(ArrayList<String> imagePaths, ArrayList<String> docPaths) {
-        ArrayList<String> filePaths = new ArrayList<>();
-        if(imagePaths!=null)
-            filePaths.addAll(imagePaths);
+    Toast.makeText(this, "Num of files selected: " + filePaths.size(), Toast.LENGTH_SHORT).show();
+  }
 
-        if(docPaths!=null)
-            filePaths.addAll(docPaths);
-
-        RecyclerView recyclerView =  findViewById(R.id.recyclerview);
-        if(recyclerView!=null) {
-            StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL);
-            layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-            recyclerView.setLayoutManager(layoutManager);
-
-            ImageAdapter imageAdapter = new ImageAdapter(this, filePaths);
-
-            recyclerView.setAdapter(imageAdapter);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-        }
-
-        Toast.makeText(this, "Num of files selected: "+ filePaths.size(), Toast.LENGTH_SHORT).show();
+  public void onPickPhoto() {
+    int maxCount = MAX_ATTACHMENT_COUNT - docPaths.size();
+    if ((docPaths.size() + photoPaths.size()) == MAX_ATTACHMENT_COUNT) {
+      Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
+          Toast.LENGTH_SHORT).show();
+    } else {
+      FilePickerBuilder.getInstance()
+          .setMaxCount(maxCount)
+          .setSelectedFiles(photoPaths)
+          .setActivityTheme(R.style.FilePickerTheme)
+          .setActivityTitle("Please select media")
+          .enableVideoPicker(true)
+          .enableCameraSupport(true)
+          .showGifs(false)
+          .showFolderView(false)
+          .enableSelectAll(true)
+          .enableImagePicker(true)
+          .setCameraPlaceholder(R.drawable.custom_camera)
+          .withOrientation(Orientation.UNSPECIFIED)
+          .pickPhoto(this);
     }
+  }
 
-    public void onPickPhoto() {
-        int maxCount = MAX_ATTACHMENT_COUNT-docPaths.size();
-        if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
-            Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
-        else
-            FilePickerBuilder.getInstance()
-                .setMaxCount(maxCount)
-                .setSelectedFiles(photoPaths)
-                .setActivityTheme(R.style.FilePickerTheme)
-                .setActivityTitle("Please select media")
-                .enableVideoPicker(true)
-                .enableCameraSupport(true)
-                .showGifs(false)
-                .showFolderView(true)
-                .enableSelectAll(true)
-                .enableImagePicker(true)
-                .setCameraPlaceholder(R.drawable.custom_camera)
-                .withOrientation(Orientation.UNSPECIFIED)
-                .pickPhoto(this);
-
+  public void onPickDoc() {
+    String[] zips = { ".zip", ".rar" };
+    String[] pdfs = { ".pdf" };
+    int maxCount = MAX_ATTACHMENT_COUNT - photoPaths.size();
+    if ((docPaths.size() + photoPaths.size()) == MAX_ATTACHMENT_COUNT) {
+      Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
+          Toast.LENGTH_SHORT).show();
+    } else {
+      FilePickerBuilder.getInstance()
+          .setMaxCount(maxCount)
+          .setSelectedFiles(docPaths)
+          .setActivityTheme(R.style.FilePickerTheme)
+          .setActivityTitle("Please select doc")
+          .addFileSupport("ZIP", zips)
+          .addFileSupport("PDF", pdfs, R.drawable.pdf_blue)
+          .enableDocSupport(false)
+          .sortDocumentsBy(SortingTypes.name)
+          .withOrientation(Orientation.UNSPECIFIED)
+          .pickFile(this);
     }
+  }
 
-    public void onPickDoc() {
-        String[] zips = {".zip",".rar"};
-        String[] pdfs = {".pdf"};
-        int maxCount = MAX_ATTACHMENT_COUNT-photoPaths.size();
-        if((docPaths.size()+photoPaths.size())==MAX_ATTACHMENT_COUNT)
-            Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items", Toast.LENGTH_SHORT).show();
-        else
-            FilePickerBuilder.getInstance()
-            .setMaxCount(maxCount)
-                    .setSelectedFiles(docPaths)
-                    .setActivityTheme(R.style.FilePickerTheme)
-                    .setActivityTitle("Please select doc")
-                    .addFileSupport("ZIP",zips)
-            .addFileSupport("PDF",pdfs,R.drawable.pdf_blue)
-            .enableDocSupport(false)
-            .sortDocumentsBy(SortingTypes.name)
-            .withOrientation(Orientation.UNSPECIFIED)
-                    .pickFile(this);
+  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+  }
+
+  public void onOpenFragmentClicked(View view) {
+    Intent intent = new Intent(this, FragmentActivity.class);
+    startActivity(intent);
+  }
+
+  @Override public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+  }
+
+  @Override public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+
+    if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+      new AppSettingsDialog.Builder(this).build().show();
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
-    public void onOpenFragmentClicked(View view) {
-        Intent intent = new Intent(this, FragmentActivity.class);
-        startActivity(intent);
-    }
-
-    @Override public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        if(requestCode == RC_PHOTO_PICKER_PERM){
-            onPickPhoto();
-        }
-        else if(requestCode == RC_FILE_PICKER_PERM){
-            onPickDoc();
-        }
-    }
-
-    @Override public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            new AppSettingsDialog.Builder(this).build().show();
-        }
-    }
+  }
 }

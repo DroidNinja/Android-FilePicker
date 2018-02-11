@@ -184,19 +184,19 @@ public class PickerManager {
 
   public void addDocTypes() {
     String[] pdfs = { "pdf" };
-    fileTypes.add(new FileType(FilePickerConst.PDF, pdfs, R.drawable.ic_pdf));
+    fileTypes.add(new FileType(FilePickerConst.PDF, pdfs, R.drawable.icon_file_pdf));
 
     String[] docs = { "doc", "docx", "dot", "dotx" };
-    fileTypes.add(new FileType(FilePickerConst.DOC, docs, R.drawable.ic_word));
+    fileTypes.add(new FileType(FilePickerConst.DOC, docs, R.drawable.icon_file_doc));
 
     String[] ppts = { "ppt", "pptx" };
-    fileTypes.add(new FileType(FilePickerConst.PPT, ppts, R.drawable.ic_ppt));
+    fileTypes.add(new FileType(FilePickerConst.PPT, ppts, R.drawable.icon_file_ppt));
 
     String[] xlss = { "xls", "xlsx" };
-    fileTypes.add(new FileType(FilePickerConst.XLS, xlss, R.drawable.ic_excel));
+    fileTypes.add(new FileType(FilePickerConst.XLS, xlss, R.drawable.icon_file_xls));
 
     String[] txts = { "txt" };
-    fileTypes.add(new FileType(FilePickerConst.TXT, txts, R.drawable.ic_txt));
+    fileTypes.add(new FileType(FilePickerConst.TXT, txts, R.drawable.icon_file_unknown));
   }
 
   public ArrayList<FileType> getFileTypes() {

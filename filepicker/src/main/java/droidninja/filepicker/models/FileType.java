@@ -43,7 +43,7 @@ public class FileType implements Parcelable{
     public int getDrawable()
     {
         if(drawable==0)
-            return R.drawable.ic_file;
+            return R.drawable.icon_file_unknown;
         return drawable;
     }
 

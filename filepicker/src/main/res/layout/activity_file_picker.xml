@@ -3,7 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+   <android.support.design.widget.AppBarLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       app:layout_scrollFlags="scroll|enterAlways"
+       app:elevation="0dp"
+       android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+      <android.support.v7.widget.Toolbar
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          app:layout_scrollFlags="scroll|enterAlways"
+          android:background="?attr/colorPrimary"
+          app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+   </android.support.design.widget.AppBarLayout>
 
    <FrameLayout
        android:id="@+id/container"
