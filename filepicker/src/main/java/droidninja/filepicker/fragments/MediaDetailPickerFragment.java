@@ -148,7 +148,10 @@ public class MediaDetailPickerFragment extends BaseFragment implements FileAdapt
                 }
             }
         });
+    }
 
+    @Override public void onResume() {
+        super.onResume();
         getDataFromMedia();
     }
 

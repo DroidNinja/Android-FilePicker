@@ -1,13 +1,11 @@
 package droidninja.filepicker;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
@@ -114,29 +112,50 @@ public class FilePickerBuilder {
 
   public void pickPhoto(Activity context) {
     mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER);
-    start(context, FilePickerConst.MEDIA_PICKER);
+    start(context, FilePickerConst.REQUEST_CODE_PHOTO);
   }
 
   public void pickPhoto(Fragment context) {
     mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER);
-    start(context, FilePickerConst.MEDIA_PICKER);
+    start(context, FilePickerConst.REQUEST_CODE_PHOTO);
   }
 
   public void pickFile(Activity context) {
     mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.DOC_PICKER);
-    start(context, FilePickerConst.DOC_PICKER);
+    start(context, FilePickerConst.REQUEST_CODE_DOC);
   }
 
   public void pickFile(Fragment context) {
     mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.DOC_PICKER);
-    start(context, FilePickerConst.DOC_PICKER);
+    start(context, FilePickerConst.REQUEST_CODE_DOC);
   }
 
-  private void start(Activity context, int pickerType) {
+  public void pickPhoto(Activity context, int requestCode) {
+    mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER);
+    start(context, requestCode);
+  }
+
+  public void pickPhoto(Fragment context, int requestCode) {
+    mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER);
+    start(context, requestCode);
+  }
+
+  public void pickFile(Activity context, int requestCode) {
+    mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.DOC_PICKER);
+    start(context, requestCode);
+  }
+
+  public void pickFile(Fragment context, int requestCode) {
+    mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.DOC_PICKER);
+    start(context, requestCode);
+  }
+
+  private void start(Activity context, int requestCode) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (ContextCompat.checkSelfPermission(context, FilePickerConst.PERMISSIONS_FILE_PICKER)
           != PackageManager.PERMISSION_GRANTED) {
-        Toast.makeText(context, context.getResources().getString(R.string.permission_filepicker_rationale),
+        Toast.makeText(context,
+            context.getResources().getString(R.string.permission_filepicker_rationale),
             Toast.LENGTH_SHORT).show();
         return;
       }
@@ -149,19 +168,16 @@ public class FilePickerBuilder {
     Intent intent = new Intent(context, FilePickerActivity.class);
     intent.putExtras(mPickerOptionsBundle);
 
-    if (pickerType == FilePickerConst.MEDIA_PICKER) {
-      context.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_PHOTO);
-    } else {
-      context.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_DOC);
-    }
+    context.startActivityForResult(intent, requestCode);
   }
 
-  private void start(Fragment fragment, int pickerType) {
+  private void start(Fragment fragment, int requestCode) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      if (ContextCompat.checkSelfPermission(fragment.getContext(), FilePickerConst.PERMISSIONS_FILE_PICKER)
-          != PackageManager.PERMISSION_GRANTED) {
-        Toast.makeText(fragment.getContext(), fragment.getContext().getResources().getString(R.string.permission_filepicker_rationale),
-            Toast.LENGTH_SHORT).show();
+      if (ContextCompat.checkSelfPermission(fragment.getContext(),
+          FilePickerConst.PERMISSIONS_FILE_PICKER) != PackageManager.PERMISSION_GRANTED) {
+        Toast.makeText(fragment.getContext(), fragment.getContext()
+            .getResources()
+            .getString(R.string.permission_filepicker_rationale), Toast.LENGTH_SHORT).show();
         return;
       }
     }
@@ -172,10 +188,7 @@ public class FilePickerBuilder {
 
     Intent intent = new Intent(fragment.getActivity(), FilePickerActivity.class);
     intent.putExtras(mPickerOptionsBundle);
-    if (pickerType == FilePickerConst.MEDIA_PICKER) {
-      fragment.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_PHOTO);
-    } else {
-      fragment.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_DOC);
-    }
+
+    fragment.startActivityForResult(intent, requestCode);
   }
 }

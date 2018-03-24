@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +13,6 @@ import droidninja.filepicker.fragments.DocPickerFragment;
 import droidninja.filepicker.fragments.MediaPickerFragment;
 import droidninja.filepicker.fragments.PhotoPickerFragmentListener;
 import droidninja.filepicker.utils.FragmentUtil;
-
 import java.util.ArrayList;
 
 public class FilePickerActivity extends BaseFilePickerActivity
@@ -91,7 +89,14 @@ public class FilePickerActivity extends BaseFilePickerActivity
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.picker_menu, menu);
-
+    MenuItem menuItem = menu.findItem(R.id.action_done);
+    if(menuItem != null) {
+      if (PickerManager.getInstance().getMaxCount() == 1) {
+        menuItem.setVisible(false);
+      } else {
+        menuItem.setVisible(true);
+      }
+    }
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -152,8 +157,10 @@ public class FilePickerActivity extends BaseFilePickerActivity
     int currentCount = PickerManager.getInstance().getCurrentCount();
     setToolbarTitle(currentCount);
 
-    if (PickerManager.getInstance().getMaxCount() == 1 && currentCount == 1) returnData(
-        type == FilePickerConst.MEDIA_PICKER ? PickerManager.getInstance().getSelectedPhotos()
-            : PickerManager.getInstance().getSelectedFiles());
+    if (PickerManager.getInstance().getMaxCount() == 1 && currentCount == 1) {
+      returnData(
+          type == FilePickerConst.MEDIA_PICKER ? PickerManager.getInstance().getSelectedPhotos()
+              : PickerManager.getInstance().getSelectedFiles());
+    }
   }
 }

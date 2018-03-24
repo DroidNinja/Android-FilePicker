@@ -12,30 +12,47 @@ A filepicker which allows to select images and videos with flexibility. It also 
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    compile 'com.droidninja:filepicker:2.1.3'
+    compile 'com.droidninja:filepicker:2.1.4'
 ```
 
 # Note
 This Filepicker is based on the MediaStore api provided by android. It checks MediaStore database for a file entry. If your file is not showing in the picker, it means that it is not inserted into MediaStore database yet. There is method in `FilePickerUtils` class named `notifyMediaStore(Context context, String path)` through which you can notify the MediaStore database.
+Don't forget to add WRITE_EXTERNAL_STORAGE permission.
   
- # Usage
+# Usage
   
   Just include this in your onclick function:
   * For **photopicker**:
  ```java
  FilePickerBuilder.getInstance().setMaxCount(5)
                 .setSelectedFiles(filePaths)
-                .setActivityTheme(R.style.AppTheme)
+                .setActivityTheme(R.style.LibAppTheme)
                 .pickPhoto(this);
  ```
+If you want to use custom request code, you just have to like this:
+  ```java
+  FilePickerBuilder.getInstance().setMaxCount(5)
+                 .setSelectedFiles(filePaths)
+                 .setActivityTheme(R.style.LibAppTheme)
+                 .pickPhoto(this, CUSTOM_REQUEST_CODE);
+  ```
  
   * For **document picker**:
  ```java
   FilePickerBuilder.getInstance().setMaxCount(10)
                 .setSelectedFiles(filePaths)
-                .setActivityTheme(R.style.AppTheme)
+                .setActivityTheme(R.style.LibAppTheme)
                 .pickFile(this);
  ```
+ 
+ If you want to use custom request code, you just have to like this:
+   ```java
+   FilePickerBuilder.getInstance().setMaxCount(5)
+                  .setSelectedFiles(filePaths)
+                  .setActivityTheme(R.style.LibAppTheme)
+                  .pickFile(this, CUSTOM_REQUEST_CODE);
+   ```
+  
  
  After this, you will get list of file paths in activity result:
  ```java
@@ -91,7 +108,7 @@ String zipTypes = {".zip",".rar"};
 ```
 
 #Styling
-Just override these styles in your main module
+Just override these styles in your main module to change colors and themes
 ```xml
 <style name="LibAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->

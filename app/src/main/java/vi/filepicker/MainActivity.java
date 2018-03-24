@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
   public static final int RC_PHOTO_PICKER_PERM = 123;
   public static final int RC_FILE_PICKER_PERM = 321;
+  private static final int CUSTOM_REQUEST_CODE = 532;
   private int MAX_ATTACHMENT_COUNT = 10;
   private ArrayList<String> photoPaths = new ArrayList<>();
   private ArrayList<String> docPaths = new ArrayList<>();
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     switch (requestCode) {
-      case FilePickerConst.REQUEST_CODE_PHOTO:
+      case CUSTOM_REQUEST_CODE:
         if (resultCode == Activity.RESULT_OK && data != null) {
           photoPaths = new ArrayList<>();
           photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
           .setSelectedFiles(photoPaths)
           .setActivityTheme(R.style.FilePickerTheme)
           .setActivityTitle("Please select media")
-          .enableVideoPicker(true)
+          .enableVideoPicker(false)
           .enableCameraSupport(true)
           .showGifs(false)
           .showFolderView(false)
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
           .enableImagePicker(true)
           .setCameraPlaceholder(R.drawable.custom_camera)
           .withOrientation(Orientation.UNSPECIFIED)
-          .pickPhoto(this);
+          .pickPhoto(this, CUSTOM_REQUEST_CODE);
     }
   }
 
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
           Toast.LENGTH_SHORT).show();
     } else {
       FilePickerBuilder.getInstance()
-          .setMaxCount(maxCount)
+          .setMaxCount(1)
           .setSelectedFiles(docPaths)
           .setActivityTheme(R.style.FilePickerTheme)
           .setActivityTitle("Please select doc")
