@@ -138,13 +138,14 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
           Toast.LENGTH_SHORT).show();
     } else {
       FilePickerBuilder.getInstance()
-          .setMaxCount(1)
+          .setMaxCount(maxCount)
           .setSelectedFiles(docPaths)
           .setActivityTheme(R.style.FilePickerTheme)
           .setActivityTitle("Please select doc")
           .addFileSupport("ZIP", zips)
           .addFileSupport("PDF", pdfs, R.drawable.pdf_blue)
           .enableDocSupport(false)
+          .enableSelectAll(true)
           .sortDocumentsBy(SortingTypes.name)
           .withOrientation(Orientation.UNSPECIFIED)
           .pickFile(this);

@@ -3,7 +3,6 @@ package droidninja.filepicker.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -134,24 +133,25 @@ public class DocFragment extends BaseFragment implements FileAdapterListener {
       selectAllItem.setVisible(true);
       onItemSelected();
     } else {
-      MenuItem search = menu.findItem(R.id.search);
-      SearchView searchView = (SearchView) search.getActionView();
-      searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-        @Override public boolean onQueryTextSubmit(String query) {
-
-          return false;
-        }
-
-        @Override public boolean onQueryTextChange(String newText) {
-          if (fileListAdapter != null) {
-            fileListAdapter.getFilter().filter(newText);
-          }
-          return true;
-        }
-      });
-
       selectAllItem.setVisible(false);
     }
+
+    MenuItem search = menu.findItem(R.id.search);
+    SearchView searchView = (SearchView) search.getActionView();
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override public boolean onQueryTextSubmit(String query) {
+
+        return false;
+      }
+
+      @Override public boolean onQueryTextChange(String newText) {
+        if (fileListAdapter != null) {
+          fileListAdapter.getFilter().filter(newText);
+        }
+        return true;
+      }
+    });
+
     super.onCreateOptionsMenu(menu, inflater);
   }
 
