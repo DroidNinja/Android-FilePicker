@@ -24,4 +24,9 @@
         <item name="color_unchecked_stroke">@color/checkbox_unchecked_color</item>
         <item name="color_tick">@android:color/white</item>
     </style>
+
+    <style name="Theme.ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="Theme.PopupTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
 </resources>
