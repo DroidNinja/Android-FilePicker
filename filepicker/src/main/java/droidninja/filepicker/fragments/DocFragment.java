@@ -1,8 +1,10 @@
 package droidninja.filepicker.fragments;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -128,7 +130,10 @@ public class DocFragment extends BaseFragment implements FileAdapterListener {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     inflater.inflate(R.menu.doc_picker_menu, menu);
+    int menuItemIconColor = ContextCompat.getColor(this.getContext(), R.color.menu_icon_color);
+
     selectAllItem = menu.findItem(R.id.action_select);
+    selectAllItem.getIcon().setColorFilter(menuItemIconColor, PorterDuff.Mode.MULTIPLY);
     if (PickerManager.getInstance().hasSelectAll()) {
       selectAllItem.setVisible(true);
       onItemSelected();
@@ -137,6 +142,7 @@ public class DocFragment extends BaseFragment implements FileAdapterListener {
     }
 
     MenuItem search = menu.findItem(R.id.search);
+    search.getIcon().setColorFilter(menuItemIconColor, PorterDuff.Mode.MULTIPLY);
     SearchView searchView = (SearchView) search.getActionView();
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override public boolean onQueryTextSubmit(String query) {

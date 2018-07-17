@@ -22,4 +22,16 @@
         <item name="tabMaxWidth">0dp</item>
     </style>
 
+    <style name="Theme.ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:editTextColor">@android:color/black</item>
+        <item name="android:textColorHint">@android:color/black</item>
+    </style>
+
+    <style name="Theme.PopupTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">@android:color/black</item>
+    </style>
+
+    <color name="menu_icon_color">@android:color/black</color>
+
 </resources>

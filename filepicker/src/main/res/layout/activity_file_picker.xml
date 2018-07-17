@@ -11,7 +11,7 @@
        android:layout_height="wrap_content"
        app:layout_scrollFlags="scroll|enterAlways"
        app:elevation="0dp"
-       android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+       android:theme="@style/Theme.ToolbarTheme">
 
       <android.support.v7.widget.Toolbar
           android:id="@+id/toolbar"
@@ -19,7 +19,7 @@
           android:layout_height="?attr/actionBarSize"
           app:layout_scrollFlags="scroll|enterAlways"
           android:background="?attr/colorPrimary"
-          app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+          app:popupTheme="@style/Theme.PopupTheme" />
 
    </android.support.design.widget.AppBarLayout>
 
