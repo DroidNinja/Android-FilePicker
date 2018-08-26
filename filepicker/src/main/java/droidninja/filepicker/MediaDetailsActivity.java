@@ -178,7 +178,7 @@ public class MediaDetailsActivity extends BaseFilePickerActivity implements File
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
-    if(PickerManager.getInstance().getMaxCount()>1) {
+    if(PickerManager.getInstance().getMaxCount()==-1) {
       getMenuInflater().inflate(R.menu.media_detail_menu, menu);
       selectAllItem = menu.findItem(R.id.action_select);
       selectAllItem.setVisible(PickerManager.getInstance().hasSelectAll());
