@@ -1,7 +1,7 @@
 package vi.filepicker;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import droidninja.filepicker.utils.FragmentUtil;
 
 public class FragmentActivity extends AppCompatActivity {
@@ -16,6 +16,6 @@ public class FragmentActivity extends AppCompatActivity {
 
     private void initView() {
         CallerFragment callerFragment = new CallerFragment();
-        FragmentUtil.addFragment(this, R.id.container,callerFragment);
+        FragmentUtil.INSTANCE.addFragment(this, R.id.container,callerFragment);
     }
 }

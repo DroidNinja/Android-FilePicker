@@ -17,12 +17,12 @@
 package droidninja.filepicker.utils;
 
 import android.database.DataSetObserver;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.core.view.ViewCompat;
+import androidx.viewpager.widget.ViewPager;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;

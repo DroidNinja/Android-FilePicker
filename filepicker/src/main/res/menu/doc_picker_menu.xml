@@ -7,7 +7,7 @@
       android:icon="@drawable/ic_search"
       android:title="Search"
       app:showAsAction="ifRoom|collapseActionView"
-      app:actionViewClass="android.support.v7.widget.SearchView"/>
+      app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
   <item android:id="@+id/action_select"
       android:icon="@drawable/ic_deselect_all"

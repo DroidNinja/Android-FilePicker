@@ -40,7 +40,7 @@ public class BaseFile implements Parcelable {
 
   public boolean isImage() {
     String[] types = { "jpg", "jpeg", "png", "gif" };
-    return FilePickerUtils.contains(types, this.path);
+    return FilePickerUtils.INSTANCE.contains(types, this.path);
   }
 
   @Override public boolean equals(Object o) {

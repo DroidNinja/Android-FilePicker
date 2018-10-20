@@ -77,7 +77,7 @@ public class Document extends BaseFile {
 
     public boolean isThisType(String[] types)
     {
-        return FilePickerUtils.contains(types, this.path);
+        return FilePickerUtils.INSTANCE.contains(types, this.path);
     }
 
     public FileType getFileType()

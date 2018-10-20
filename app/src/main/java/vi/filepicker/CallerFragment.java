@@ -3,19 +3,19 @@ package vi.filepicker;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.OrientationHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-import butterknife.BindView;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import droidninja.filepicker.FilePickerBuilder;
@@ -46,16 +46,26 @@ public class CallerFragment extends BaseFragment implements EasyPermissions.Perm
       Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.activity_main, container, false);
-    ButterKnife.bind(this, view);
     Button openFragmentBtn = view.findViewById(R.id.open_fragment);
     openFragmentBtn.setVisibility(View.GONE);
+    view.findViewById(R.id.pick_photo).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        pickPhoto();
+      }
+    });
+    view.findViewById(R.id.pick_doc).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        pickDoc();
+      }
+    });
     return view;
   }
 
   @AfterPermissionGranted(RC_PHOTO_PICKER_PERM)
-  @OnClick(R.id.pick_photo)
   public void pickPhoto() {
-    if (EasyPermissions.hasPermissions(getContext(),FilePickerConst.PERMISSIONS_FILE_PICKER)) {
+    if (EasyPermissions.hasPermissions(getContext(), FilePickerConst.PERMISSIONS_FILE_PICKER)) {
       onPickPhoto();
     } else {
       // Ask for one permission
@@ -63,14 +73,13 @@ public class CallerFragment extends BaseFragment implements EasyPermissions.Perm
           this,
           getString(R.string.rationale_photo_picker),
           RC_PHOTO_PICKER_PERM,
-          FilePickerConst.PERMISSIONS_FILE_PICKER);
+              FilePickerConst.PERMISSIONS_FILE_PICKER);
     }
   }
 
   @AfterPermissionGranted(RC_FILE_PICKER_PERM)
-  @OnClick(R.id.pick_doc)
   public void pickDoc() {
-    if (EasyPermissions.hasPermissions(getContext(),FilePickerConst.PERMISSIONS_FILE_PICKER)) {
+    if (EasyPermissions.hasPermissions(getContext(), FilePickerConst.PERMISSIONS_FILE_PICKER)) {
       onPickDoc();
     } else {
       // Ask for one permission
@@ -78,7 +87,7 @@ public class CallerFragment extends BaseFragment implements EasyPermissions.Perm
           this,
           getString(R.string.rationale_doc_picker),
           RC_FILE_PICKER_PERM,
-          FilePickerConst.PERMISSIONS_FILE_PICKER);
+              FilePickerConst.PERMISSIONS_FILE_PICKER);
     }
   }
 
@@ -132,7 +141,7 @@ public class CallerFragment extends BaseFragment implements EasyPermissions.Perm
       Toast.makeText(getActivity(), "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
           Toast.LENGTH_SHORT).show();
     } else {
-      FilePickerBuilder.getInstance()
+      FilePickerBuilder.Companion.getInstance()
           .setMaxCount(maxCount)
           .setSelectedFiles(photoPaths)
           .setActivityTheme(R.style.FilePickerTheme)
@@ -146,7 +155,7 @@ public class CallerFragment extends BaseFragment implements EasyPermissions.Perm
       Toast.makeText(getActivity(), "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
           Toast.LENGTH_SHORT).show();
     } else {
-      FilePickerBuilder.getInstance()
+      FilePickerBuilder.Companion.getInstance()
           .setMaxCount(maxCount)
           .setSelectedFiles(docPaths)
           .enableDocSupport(true)

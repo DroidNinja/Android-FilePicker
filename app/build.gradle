@@ -1,16 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "vi.filepicker"
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -24,23 +24,23 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     implementation project(':filepicker')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation  'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation  'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'pub.devrel:easypermissions:1.1.1'
+    implementation "com.github.xinyuez:easypermissions:2.0.1"
 
     // Required for instrumented tests
-    androidTestImplementation 'com.android.support:support-annotations:27.1.1'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
+    androidTestImplementation 'androidx.test:runner:1.1.0-beta02'
+    androidTestImplementation 'androidx.test:rules:1.1.0-beta02'
     // Optional -- UI testing with Espresso
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-beta02', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0-beta02'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0-beta02'
 
 //    compile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
 }

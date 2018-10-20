@@ -2,13 +2,13 @@ package vi.filepicker;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.OrientationHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.Toast;
 
@@ -37,10 +37,21 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    ButterKnife.bind(this);
+    findViewById(R.id.pick_photo).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        pickPhotoClicked();
+      }
+    });
+    findViewById(R.id.pick_doc).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        pickDocClicked();
+      }
+    });
   }
 
-  @AfterPermissionGranted(RC_PHOTO_PICKER_PERM) @OnClick(R.id.pick_photo)
+  @AfterPermissionGranted(RC_PHOTO_PICKER_PERM)
   public void pickPhotoClicked() {
     if (EasyPermissions.hasPermissions(this, FilePickerConst.PERMISSIONS_FILE_PICKER)) {
       onPickPhoto();
@@ -51,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
   }
 
-  @AfterPermissionGranted(RC_FILE_PICKER_PERM) @OnClick(R.id.pick_doc)
+  @AfterPermissionGranted(RC_FILE_PICKER_PERM)
   public void pickDocClicked() {
     if (EasyPermissions.hasPermissions(this, FilePickerConst.PERMISSIONS_FILE_PICKER)) {
       onPickDoc();
@@ -112,16 +123,16 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
       Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
           Toast.LENGTH_SHORT).show();
     } else {
-      FilePickerBuilder.getInstance()
+      FilePickerBuilder.Companion.getInstance()
           .setMaxCount(maxCount)
           .setSelectedFiles(photoPaths)
           .setActivityTheme(R.style.FilePickerTheme)
           .setActivityTitle("Please select media")
-          .enableVideoPicker(false)
+          .enableVideoPicker(true)
           .enableCameraSupport(true)
-          .showGifs(false)
-          .showFolderView(false)
-          .enableSelectAll(true)
+          .showGifs(true)
+          .showFolderView(true)
+          .enableSelectAll(false)
           .enableImagePicker(true)
           .setCameraPlaceholder(R.drawable.custom_camera)
           .withOrientation(Orientation.UNSPECIFIED)
@@ -137,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
       Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
           Toast.LENGTH_SHORT).show();
     } else {
-      FilePickerBuilder.getInstance()
+      FilePickerBuilder.Companion.getInstance()
           .setMaxCount(maxCount)
           .setSelectedFiles(docPaths)
           .setActivityTheme(R.style.FilePickerTheme)
