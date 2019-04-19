@@ -9,9 +9,9 @@ import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 import android.widget.Toast
+import androidx.annotation.IntegerRes
 import droidninja.filepicker.models.FileType
 import droidninja.filepicker.models.sort.SortingTypes
-import droidninja.filepicker.utils.Orientation
 import java.util.ArrayList
 
 /**
@@ -81,7 +81,8 @@ class FilePickerBuilder {
         return this
     }
 
-    fun withOrientation(orientation: Orientation): FilePickerBuilder {
+
+    fun withOrientation(@IntegerRes orientation:  Int): FilePickerBuilder {
         PickerManager.orientation = orientation
         return this
     }
@@ -182,7 +183,7 @@ class FilePickerBuilder {
     }
 
     companion object {
-
+        @JvmStatic
         val instance: FilePickerBuilder
             get() = FilePickerBuilder()
     }

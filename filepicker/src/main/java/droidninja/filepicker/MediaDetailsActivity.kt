@@ -113,7 +113,9 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
         MediaStoreHelper.getDirs(contentResolver, mediaStoreArgs,
                 object : FileResultCallback<PhotoDirectory> {
                     override fun onResultCallback(files: List<PhotoDirectory>) {
-                        updateList(files.toMutableList())
+                        if(!isFinishing || !isDestroyed) {
+                            updateList(files.toMutableList())
+                        }
                     }
                 })
     }

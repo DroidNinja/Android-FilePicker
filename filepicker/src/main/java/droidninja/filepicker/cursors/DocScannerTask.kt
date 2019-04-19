@@ -29,7 +29,7 @@ import java.util.function.Predicate
 class DocScannerTask(val contentResolver: ContentResolver, private val fileTypes: List<FileType>, private val comparator: Comparator<Document>?,
                      private val resultCallback: FileMapResultCallback?) : AsyncTask<Void, Void, Map<FileType, List<Document>>>() {
 
-    val DOC_PROJECTION = arrayOf(MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.MIME_TYPE, MediaStore.Files.FileColumns.SIZE, MediaStore.Files.FileColumns.DATE_ADDED, MediaStore.Files.FileColumns.TITLE)
+    private val DOC_PROJECTION = arrayOf(MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.MIME_TYPE, MediaStore.Files.FileColumns.SIZE, MediaStore.Files.FileColumns.DATE_ADDED, MediaStore.Files.FileColumns.TITLE)
 
     private fun createDocumentType(documents: ArrayList<Document>): HashMap<FileType, List<Document>> {
         val documentMap = HashMap<FileType, List<Document>>()

@@ -1,11 +1,11 @@
 package droidninja.filepicker
 
+import android.content.pm.ActivityInfo
 import java.util.ArrayList
 
 import droidninja.filepicker.models.BaseFile
 import droidninja.filepicker.models.FileType
 import droidninja.filepicker.models.sort.SortingTypes
-import droidninja.filepicker.utils.Orientation
 import java.util.LinkedHashSet
 
 /**
@@ -37,7 +37,27 @@ object PickerManager {
 
     var isEnableCamera = true
 
-    var orientation = Orientation.UNSPECIFIED
+    /**
+     * The preferred screen orientation this activity would like to run in.
+     * From the {@link android.R.attr#screenOrientation} attribute, one of
+     * {@link #SCREEN_ORIENTATION_UNSPECIFIED},
+     * {@link #SCREEN_ORIENTATION_LANDSCAPE},
+     * {@link #SCREEN_ORIENTATION_PORTRAIT},
+     * {@link #SCREEN_ORIENTATION_USER},
+     * {@link #SCREEN_ORIENTATION_BEHIND},
+     * {@link #SCREEN_ORIENTATION_SENSOR},
+     * {@link #SCREEN_ORIENTATION_NOSENSOR},
+     * {@link #SCREEN_ORIENTATION_SENSOR_LANDSCAPE},
+     * {@link #SCREEN_ORIENTATION_SENSOR_PORTRAIT},
+     * {@link #SCREEN_ORIENTATION_REVERSE_LANDSCAPE},
+     * {@link #SCREEN_ORIENTATION_REVERSE_PORTRAIT},
+     * {@link #SCREEN_ORIENTATION_FULL_SENSOR},
+     * {@link #SCREEN_ORIENTATION_USER_LANDSCAPE},
+     * {@link #SCREEN_ORIENTATION_USER_PORTRAIT},
+     * {@link #SCREEN_ORIENTATION_FULL_USER},
+     * {@link #SCREEN_ORIENTATION_LOCKED},
+     */
+    var orientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         get() = field
 
     var isShowFolderView = true

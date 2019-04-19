@@ -121,7 +121,9 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
             MediaStoreHelper.getDirs(it.contentResolver, mediaStoreArgs,
                     object : FileResultCallback<PhotoDirectory> {
                         override fun onResultCallback(files: List<PhotoDirectory>) {
-                            updateList(files.toMutableList())
+                            if(isAdded) {
+                                updateList(files.toMutableList())
+                            }
                         }
                     })
         }

@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "vi.filepicker"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -24,15 +24,13 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     implementation project(':filepicker')
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation  'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation "com.github.xinyuez:easypermissions:2.0.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // Required for instrumented tests
-    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.0.2'
     androidTestImplementation 'androidx.test:runner:1.1.0-beta02'
     androidTestImplementation 'androidx.test:rules:1.1.0-beta02'
     // Optional -- UI testing with Espresso

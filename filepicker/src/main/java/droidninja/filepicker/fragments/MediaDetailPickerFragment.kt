@@ -73,7 +73,7 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
 
     override fun onItemSelected() {
         mListener?.onItemSelected()
-        photoGridAdapter?.let { adapter->
+        photoGridAdapter?.let { adapter ->
             selectAllItem?.let { menuItem ->
                 if (adapter.itemCount == adapter.selectedItemCount) {
                     menuItem.setIcon(R.drawable.ic_select_all)
@@ -140,7 +140,9 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
             MediaStoreHelper.getDirs(it.contentResolver, mediaStoreArgs,
                     object : FileResultCallback<PhotoDirectory> {
                         override fun onResultCallback(files: List<PhotoDirectory>) {
-                            updateList(files)
+                            if (isAdded) {
+                                updateList(files)
+                            }
                         }
                     })
         }
@@ -169,15 +171,15 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
                     photoGridAdapter = PhotoGridAdapter(it, mGlideRequestManager, medias, PickerManager.selectedPhotos, fileType == FilePickerConst.MEDIA_TYPE_IMAGE && PickerManager.isEnableCamera, this)
                     recyclerView.adapter = photoGridAdapter
                     photoGridAdapter?.setCameraListener(View.OnClickListener {
-                            try {
-                                val intent = imageCaptureManager?.dispatchTakePictureIntent()
-                                if (intent != null)
-                                    startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO)
-                                else
-                                    Toast.makeText(activity, R.string.no_camera_exists, Toast.LENGTH_SHORT).show()
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                            }
+                        try {
+                            val intent = imageCaptureManager?.dispatchTakePictureIntent()
+                            if (intent != null)
+                                startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO)
+                            else
+                                Toast.makeText(activity, R.string.no_camera_exists, Toast.LENGTH_SHORT).show()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
                     })
                 }
             }

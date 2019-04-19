@@ -1,4 +1,4 @@
-# Android-FilePicker
+# Android-FilePicker (Androidx based)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android--FilePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4044)
  [ ![Latest Version](https://api.bintray.com/packages/droidninja/maven/com.droidninja.filepicker/images/download.svg) ](https://bintray.com/droidninja/maven/com.droidninja.filepicker/_latestVersion)
  
@@ -12,11 +12,11 @@ A filepicker which allows to select images and videos with flexibility. It also 
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    compile 'com.droidninja:filepicker:2.2.0'
+    compile 'com.droidninja:filepicker:2.2.1'
 ```
 
 # Note
-This Filepicker is based on the MediaStore api provided by android. It checks MediaStore database for a file entry. If your file is not showing in the picker, it means that it is not inserted into MediaStore database yet. There is method in `FilePickerUtils` class named `notifyMediaStore(Context context, String path)` through which you can notify the MediaStore database.
+For using this library, you have to migrate your project to ![androidx](https://developer.android.com/jetpack/androidx/migrate) or you can use older version. This Filepicker is based on the MediaStore api provided by android. It checks MediaStore database for a file entry. If your file is not showing in the picker, it means that it is not inserted into MediaStore database yet. There is method in `FilePickerUtils` class named `notifyMediaStore(Context context, String path)` through which you can notify the MediaStore database.
 Don't forget to add WRITE_EXTERNAL_STORAGE permission.
   
 # Usage
@@ -93,7 +93,7 @@ enableVideoPicker(boolean status)    | added video picker alongside images
 enableImagePicker(boolean status)    | added option to disable image picker
 enableSelectAll(boolean status)    | added option to enable/disable select all feature(it will only work with no limit option)
 setCameraPlaceholder(int drawable)    | set custom camera drawable
-withOrientation(Orientation type)  | In case, if you want to set orientation. (*default=Orientation.UNSPECIFIED*)
+withOrientation(Orientation type)  | In case, if you want to set orientation, use ActivityInfo for constants (*default=ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED*)
 showGifs(boolean status)    | to show gifs images in the picker
 showFolderView(boolean status)    | if you want to show folder type pick view, enable this. (*Enabled by default*)
 enableDocSupport(boolean status)    | If you want to enable/disable default document picker, use this method. (*Enabled by default*)

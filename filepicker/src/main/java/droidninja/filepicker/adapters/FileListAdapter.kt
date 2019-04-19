@@ -118,9 +118,10 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
                 return filterResults
             }
 
+            @Suppress("UNCHECKED_CAST")
             override fun publishResults(charSequence: CharSequence, filterResults: Filter.FilterResults) {
-                mFilteredList = filterResults.values as List<Document>
-                notifyDataSetChanged()
+                    mFilteredList = filterResults.values as List<Document>
+                    notifyDataSetChanged()
             }
         }
     }

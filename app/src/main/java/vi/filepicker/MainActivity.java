@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.OrientationHelper;
@@ -11,15 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.Toast;
-
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import java.util.ArrayList;
 
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.models.sort.SortingTypes;
-import droidninja.filepicker.utils.Orientation;
 import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
@@ -123,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
       Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
           Toast.LENGTH_SHORT).show();
     } else {
-      FilePickerBuilder.Companion.getInstance()
+      FilePickerBuilder.getInstance()
           .setMaxCount(maxCount)
           .setSelectedFiles(photoPaths)
           .setActivityTheme(R.style.FilePickerTheme)
@@ -135,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
           .enableSelectAll(false)
           .enableImagePicker(true)
           .setCameraPlaceholder(R.drawable.custom_camera)
-          .withOrientation(Orientation.UNSPECIFIED)
+          .withOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
           .pickPhoto(this, CUSTOM_REQUEST_CODE);
     }
   }
@@ -148,17 +146,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
       Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
           Toast.LENGTH_SHORT).show();
     } else {
-      FilePickerBuilder.Companion.getInstance()
+      FilePickerBuilder.getInstance()
           .setMaxCount(maxCount)
           .setSelectedFiles(docPaths)
           .setActivityTheme(R.style.FilePickerTheme)
           .setActivityTitle("Please select doc")
           .addFileSupport("ZIP", zips)
           .addFileSupport("PDF", pdfs, R.drawable.pdf_blue)
-          .enableDocSupport(false)
+          .enableDocSupport(true)
           .enableSelectAll(true)
           .sortDocumentsBy(SortingTypes.name)
-          .withOrientation(Orientation.UNSPECIFIED)
+          .withOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
           .pickFile(this);
     }
   }

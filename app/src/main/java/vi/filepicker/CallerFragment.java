@@ -16,8 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.fragments.BaseFragment;
