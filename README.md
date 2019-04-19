@@ -2,7 +2,7 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android--FilePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4044)
  [ ![Latest Version](https://api.bintray.com/packages/droidninja/maven/com.droidninja.filepicker/images/download.svg) ](https://bintray.com/droidninja/maven/com.droidninja.filepicker/_latestVersion)
  
-A filepicker which allows to select images and videos with flexibility. It also supports selection of files by specifying its file type. Check out app module for example.
+A filepicker which allows to select images and videos with flexibility. It also supports selection of files by specifying its file type. For using this library, you have to migrate your project to [androidx](https://developer.android.com/jetpack/androidx/migrate) or you can use older version(2.1.5). Check out app module for example.
 
   ![demo](https://image.ibb.co/iRpztv/device_2017_03_10_164003.png)
   ![demo](https://image.ibb.co/m75uRF/device_2017_03_10_163900.png)
@@ -16,7 +16,7 @@ A filepicker which allows to select images and videos with flexibility. It also 
 ```
 
 # Note
-For using this library, you have to migrate your project to ![androidx](https://developer.android.com/jetpack/androidx/migrate) or you can use older version. This Filepicker is based on the MediaStore api provided by android. It checks MediaStore database for a file entry. If your file is not showing in the picker, it means that it is not inserted into MediaStore database yet. There is method in `FilePickerUtils` class named `notifyMediaStore(Context context, String path)` through which you can notify the MediaStore database.
+This Filepicker is based on the MediaStore api provided by android. It checks MediaStore database for a file entry. If your file is not showing in the picker, it means that it is not inserted into MediaStore database yet. There is method in `FilePickerUtils` class named `notifyMediaStore(Context context, String path)` through which you can notify the MediaStore database.
 Don't forget to add WRITE_EXTERNAL_STORAGE permission.
   
 # Usage
