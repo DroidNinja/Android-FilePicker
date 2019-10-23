@@ -37,9 +37,7 @@ import java.lang.reflect.Method;
 public class TabLayoutHelper {
     protected TabLayout mTabLayout;
     protected ViewPager mViewPager;
-
     protected TabLayout.BaseOnTabSelectedListener mUserOnTabSelectedListener;
-
     protected TabLayout.BaseOnTabSelectedListener mInternalOnTabSelectedListener;
     protected FixedTabLayoutOnPageChangeListener mInternalTabLayoutOnPageChangeListener;
     protected ViewPager.OnAdapterChangeListener mInternalOnAdapterChangeListener;
