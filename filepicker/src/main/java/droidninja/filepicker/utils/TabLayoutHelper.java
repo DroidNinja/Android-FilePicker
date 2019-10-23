@@ -17,15 +17,17 @@
 package droidninja.filepicker.utils;
 
 import android.database.DataSetObserver;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.core.view.ViewCompat;
-import androidx.viewpager.widget.ViewPager;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
@@ -36,9 +38,9 @@ public class TabLayoutHelper {
     protected TabLayout mTabLayout;
     protected ViewPager mViewPager;
 
-    protected TabLayout.OnTabSelectedListener mUserOnTabSelectedListener;
+    protected TabLayout.BaseOnTabSelectedListener mUserOnTabSelectedListener;
 
-    protected TabLayout.OnTabSelectedListener mInternalOnTabSelectedListener;
+    protected TabLayout.BaseOnTabSelectedListener mInternalOnTabSelectedListener;
     protected FixedTabLayoutOnPageChangeListener mInternalTabLayoutOnPageChangeListener;
     protected ViewPager.OnAdapterChangeListener mInternalOnAdapterChangeListener;
     protected DataSetObserver mInternalDataSetObserver;
@@ -71,7 +73,8 @@ public class TabLayoutHelper {
             }
         };
 
-        mInternalOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+
+        mInternalOnTabSelectedListener = new TabLayout.BaseOnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 handleOnTabSelected(tab);
@@ -123,6 +126,15 @@ public class TabLayoutHelper {
     }
 
     /**
+     * Gets whether auto tab mode adjustment is enabled.
+     *
+     * @return True for enabled, otherwise false.
+     */
+    public boolean isAutoAdjustTabModeEnabled() {
+        return mAutoAdjustTabMode;
+    }
+
+    /**
      * Sets auto tab mode adjustment enabled
      *
      * @param enabled True for enabled, otherwise false.
@@ -138,15 +150,6 @@ public class TabLayoutHelper {
         } else {
             cancelPendingAdjustTabMode();
         }
-    }
-
-    /**
-     * Gets whether auto tab mode adjustment is enabled.
-     *
-     * @return True for enabled, otherwise false.
-     */
-    public boolean isAutoAdjustTabModeEnabled() {
-        return mAutoAdjustTabMode;
     }
 
     /**
