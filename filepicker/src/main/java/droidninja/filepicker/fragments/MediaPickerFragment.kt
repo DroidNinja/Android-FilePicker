@@ -28,12 +28,12 @@ class MediaPickerFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_media_picker, container, false)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is MediaPickerFragmentListener) {
             mListener = context
         } else {
-            throw RuntimeException(context?.toString() + " must implement MediaPickerFragment")
+            throw RuntimeException("$context must implement MediaPickerFragment")
         }
     }
 

@@ -41,12 +41,12 @@ class DocPickerFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_doc_picker, container, false)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is DocPickerFragmentListener) {
             mListener = context
         } else {
-            throw RuntimeException(context?.toString() + " must implement DocPickerFragmentListener")
+            throw RuntimeException("$context must implement DocPickerFragmentListener")
         }
     }
 

@@ -58,7 +58,7 @@ class DocScannerTask(val contentResolver: ContentResolver, private val fileTypes
                 + "!="
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
 
-        val cursor = contentResolver.query(MediaStore.Files.getContentUri("external"), DOC_PROJECTION, selection, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
+        val cursor = contentResolver.query(MediaStore.Files.getContentUri("external"), DOC_PROJECTION, null, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
 
         if (cursor != null) {
             documents = getDocumentFromCursor(cursor)
