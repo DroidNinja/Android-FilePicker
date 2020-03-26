@@ -1,5 +1,6 @@
 package droidninja.filepicker.adapters
 
+import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
 
 import java.util.ArrayList
@@ -7,7 +8,7 @@ import java.util.ArrayList
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.models.BaseFile
 
-abstract class SelectableAdapter<VH : RecyclerView.ViewHolder, T : BaseFile>(items: List<T>, selectedPaths: List<String>) : RecyclerView.Adapter<VH>(), Selectable<T> {
+abstract class SelectableAdapter<VH : RecyclerView.ViewHolder, T : BaseFile>(items: List<T>, selectedPaths: List<Uri>) : RecyclerView.Adapter<VH>(), Selectable<T> {
     var items: List<T>
         private set
 
@@ -16,9 +17,9 @@ abstract class SelectableAdapter<VH : RecyclerView.ViewHolder, T : BaseFile>(ite
     override val selectedItemCount: Int
         get() = selectedPhotos.size
 
-    val selectedPaths: ArrayList<String>
+    val selectedPaths: ArrayList<Uri>
         get() {
-            val paths = ArrayList<String>()
+            val paths = ArrayList<Uri>()
             for (index in selectedPhotos.indices) {
                 paths.add(selectedPhotos[index].path)
             }
@@ -32,7 +33,7 @@ abstract class SelectableAdapter<VH : RecyclerView.ViewHolder, T : BaseFile>(ite
         addPathsToSelections(selectedPaths)
     }
 
-    private fun addPathsToSelections(selectedPaths: List<String>?) {
+    private fun addPathsToSelections(selectedPaths: List<Uri>?) {
         if (selectedPaths == null) return
 
         for (index in items.indices) {

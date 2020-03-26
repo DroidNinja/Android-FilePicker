@@ -3,6 +3,7 @@ package droidninja.filepicker.fragments
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -17,6 +18,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -30,18 +33,18 @@ import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.adapters.FileAdapterListener
 import droidninja.filepicker.adapters.PhotoGridAdapter
-import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback
 import droidninja.filepicker.models.Media
 import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 import droidninja.filepicker.utils.ImageCaptureManager
-import droidninja.filepicker.utils.MediaStoreHelper
+import droidninja.filepicker.viewmodels.VMMediaPicker
 
 
 class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
     lateinit var recyclerView: RecyclerView
 
     lateinit var emptyView: TextView
+    lateinit var viewModel: VMMediaPicker
 
     private var mListener: PhotoPickerFragmentListener? = null
     private var photoGridAdapter: PhotoGridAdapter? = null
@@ -87,6 +90,7 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(PickerManager.hasSelectAll())
         mGlideRequestManager = Glide.with(this)
+        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(requireActivity().application)).get(VMMediaPicker::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -125,27 +129,11 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
                 }
             })
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        getDataFromMedia()
-    }
-
-    private fun getDataFromMedia() {
-        val mediaStoreArgs = Bundle()
-
-        mediaStoreArgs.putInt(FilePickerConst.EXTRA_FILE_TYPE, fileType)
-        context?.let {
-            MediaStoreHelper.getDirs(it.contentResolver, mediaStoreArgs,
-                    object : FileResultCallback<PhotoDirectory> {
-                        override fun onResultCallback(files: List<PhotoDirectory>) {
-                            if (isAdded) {
-                                updateList(files)
-                            }
-                        }
-                    })
-        }
+        viewModel.lvMediaData.observe(viewLifecycleOwner, Observer { data->
+            updateList(data.toMutableList())
+        })
+        viewModel.getMedia(mediaType = fileType)
     }
 
     private fun updateList(dirs: List<PhotoDirectory>) {
@@ -155,7 +143,7 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
                 medias.addAll(dirs[i].medias)
             }
 
-            medias.sortWith(Comparator { a, b -> b.id - a.id })
+            medias.sortWith(Comparator { a, b -> (b.id - a.id).toInt() })
 
             if (medias.size > 0) {
                 emptyView.visibility = View.GONE
@@ -192,10 +180,10 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
             ImageCaptureManager.REQUEST_TAKE_PHOTO -> if (resultCode == Activity.RESULT_OK) {
                 val imagePath = imageCaptureManager?.notifyMediaStoreDatabase()
                 if (imagePath != null && PickerManager.getMaxCount() == 1) {
-                    PickerManager.add(imagePath, FilePickerConst.FILE_TYPE_MEDIA)
+                    PickerManager.add(Uri.parse(imagePath), FilePickerConst.FILE_TYPE_MEDIA)
                     mListener?.onItemSelected()
                 } else {
-                    Handler().postDelayed({ getDataFromMedia() }, 1000)
+                    Handler().postDelayed({ viewModel.getMedia(mediaType = fileType) }, 1000)
                 }
             }
         }

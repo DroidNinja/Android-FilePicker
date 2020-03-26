@@ -14,6 +14,6 @@ public class NameComparator implements Comparator<Document> {
 
     @Override
     public int compare(Document o1, Document o2) {
-        return o1.getTitle().toLowerCase().compareTo(o2.getTitle().toLowerCase());
+        return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
     }
 }

@@ -1,6 +1,7 @@
 package droidninja.filepicker.cursors
 
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.os.AsyncTask
@@ -35,7 +36,7 @@ class DocScannerTask(val contentResolver: ContentResolver, private val fileTypes
         val documentMap = HashMap<FileType, List<Document>>()
 
         for (fileType in fileTypes) {
-            val documentListFilteredByType = documents.filter { document -> document.isThisType(fileType.extensions) }
+            val documentListFilteredByType = documents.filter { document -> FilePickerUtils.contains(fileType.extensions, document.mimeType) }
 
             comparator?.let {
                 documentListFilteredByType.sortedWith(comparator)
@@ -50,15 +51,8 @@ class DocScannerTask(val contentResolver: ContentResolver, private val fileTypes
     override fun doInBackground(vararg voids: Void): Map<FileType, List<Document>> {
         var documents = ArrayList<Document>()
 
-        val selection = (MediaStore.Files.FileColumns.MEDIA_TYPE
-                + "!="
-                + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
-                + " AND "
-                + MediaStore.Files.FileColumns.MEDIA_TYPE
-                + "!="
-                + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
 
-        val cursor = contentResolver.query(MediaStore.Files.getContentUri("external"), DOC_PROJECTION, null, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
+        val cursor = contentResolver.query(MediaStore.Downloads.EXTERNAL_CONTENT_URI, DOC_PROJECTION, null, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
 
         if (cursor != null) {
             documents = getDocumentFromCursor(cursor)
@@ -76,7 +70,7 @@ class DocScannerTask(val contentResolver: ContentResolver, private val fileTypes
         val documents = ArrayList<Document>()
         while (data.moveToNext()) {
 
-            val imageId = data.getInt(data.getColumnIndexOrThrow(_ID))
+            val imageId = data.getLong(data.getColumnIndexOrThrow(_ID))
             val path = data.getString(data.getColumnIndexOrThrow(DATA))
             val title = data.getString(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.TITLE))
 
@@ -84,9 +78,13 @@ class DocScannerTask(val contentResolver: ContentResolver, private val fileTypes
 
                 val fileType = getFileType(PickerManager.getFileTypes(), path)
                 val file = File(path)
+                val contentUri = ContentUris.withAppendedId(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        imageId
+                )
                 if (fileType != null && !file.isDirectory && file.exists()) {
 
-                    val document = Document(imageId, title, path)
+                    val document = Document(imageId, title, contentUri)
                     document.fileType = fileType
 
                     val mimeType = data.getString(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MIME_TYPE))

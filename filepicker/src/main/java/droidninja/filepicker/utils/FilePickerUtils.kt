@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
+import android.webkit.MimeTypeMap
 import java.io.File
 
 /**
@@ -21,9 +22,11 @@ object FilePickerUtils {
 
     }
 
-    fun contains(types: Array<String>, path: String): Boolean {
-        for (string in types) {
-            if (path.toLowerCase().endsWith(string)) return true
+    fun contains(types: Array<String>, mimeType: String?): Boolean {
+        for (type in types) {
+            if(MimeTypeMap.getSingleton().getMimeTypeFromExtension(type) == mimeType){
+                return true
+            }
         }
         return false
     }

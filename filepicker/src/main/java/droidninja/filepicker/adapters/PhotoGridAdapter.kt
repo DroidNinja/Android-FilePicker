@@ -1,6 +1,7 @@
 package droidninja.filepicker.adapters
 
 import android.content.Context
+import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -25,7 +26,7 @@ import droidninja.filepicker.views.SmoothCheckBox
 class PhotoGridAdapter(private val context: Context,
                        private val glide: RequestManager,
                        medias: ArrayList<Media>,
-                       selectedPaths: ArrayList<String>,
+                       selectedPaths: ArrayList<Uri>,
                        private val showCamera: Boolean,
                        private val mListener: FileAdapterListener?) : SelectableAdapter<PhotoGridAdapter.PhotoViewHolder, Media>(medias, selectedPaths) {
     private var imageSize: Int = 0
@@ -54,7 +55,7 @@ class PhotoGridAdapter(private val context: Context,
             val media = items[if (showCamera) position - 1 else position]
 
             if (AndroidLifecycleUtils.canLoadImage(holder.imageView.context)) {
-                glide.load(File(media.path))
+                glide.load(media.path)
                         .apply(RequestOptions
                                 .centerCropTransform()
                                 .override(imageSize, imageSize)
@@ -64,7 +65,7 @@ class PhotoGridAdapter(private val context: Context,
             }
 
 
-            if (media.getMediaType() == FilePickerConst.MEDIA_TYPE_VIDEO)
+            if (media.mediaType == FilePickerConst.MEDIA_TYPE_VIDEO)
                 holder.videoIcon.visibility = View.VISIBLE
             else
                 holder.videoIcon.visibility = View.GONE

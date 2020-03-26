@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
           .enableVideoPicker(true)
           .enableCameraSupport(true)
           .showGifs(true)
-          .showFolderView(true)
+          .showFolderView(false)
           .enableSelectAll(false)
           .enableImagePicker(true)
           .setCameraPlaceholder(R.drawable.custom_camera)
@@ -139,8 +139,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
   }
 
   public void onPickDoc() {
-    String[] zips = { ".zip", ".rar" };
-    String[] pdfs = { ".pdf" };
+    String[] zips = { "zip", "rar" };
+    String[] pdfs = { "pdf" };
     int maxCount = MAX_ATTACHMENT_COUNT - photoPaths.size();
     if ((docPaths.size() + photoPaths.size()) == MAX_ATTACHMENT_COUNT) {
       Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
