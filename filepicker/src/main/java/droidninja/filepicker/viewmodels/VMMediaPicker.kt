@@ -120,7 +120,7 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
             val cursor = getApplication<Application>().contentResolver.query(uri, projection, selection, null, sortOrder)
 
             if (cursor != null) {
-                data = getPhotoDirectories(cursor)
+                data = getPhotoDirectories(mediaType, cursor)
                 cursor.close()
             }
         }
@@ -128,7 +128,7 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
     }
 
     @WorkerThread
-    private fun getPhotoDirectories(data: Cursor): MutableList<PhotoDirectory> {
+    private fun getPhotoDirectories(fileType: Int, data: Cursor): MutableList<PhotoDirectory> {
         val directories = mutableListOf<PhotoDirectory>()
 
         while (data.moveToNext()) {
@@ -143,12 +143,18 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
             photoDirectory.id = imageId
             photoDirectory.bucketId = bucketId
             photoDirectory.name = name
-            val contentUri = ContentUris.withAppendedId(
+
+            var contentUri = ContentUris.withAppendedId(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     imageId
             )
+            if (fileType == FilePickerConst.MEDIA_TYPE_VIDEO) {
+                contentUri = ContentUris.withAppendedId(
+                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                        imageId
+                )
+            }
             if (!directories.contains(photoDirectory)) {
-
                 photoDirectory.addPhoto(imageId, fileName, contentUri, mediaType)
                 photoDirectory.dateAdded = data.getLong(data.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_ADDED))
                 directories.add(photoDirectory)

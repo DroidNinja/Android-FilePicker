@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
           .enableVideoPicker(true)
           .enableCameraSupport(true)
           .showGifs(true)
-          .showFolderView(true)
+          .showFolderView(false)
           .enableSelectAll(false)
           .enableImagePicker(true)
           .setCameraPlaceholder(R.drawable.custom_camera)
