@@ -2,9 +2,7 @@ package droidninja.filepicker
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.ActionBar
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -13,17 +11,17 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import droidninja.filepicker.adapters.FileAdapterListener
 import droidninja.filepicker.adapters.PhotoGridAdapter
-import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback
 import droidninja.filepicker.models.Media
 import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
-import droidninja.filepicker.utils.MediaStoreHelper
+import droidninja.filepicker.viewmodels.VMMediaPicker
 import java.util.ArrayList
-import java.util.Collections
 import java.util.Comparator
 
 class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
@@ -34,6 +32,7 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     private var fileType: Int = 0
     private var selectAllItem: MenuItem? = null
     private var photoDirectory: PhotoDirectory? = null
+    lateinit var viewModel: VMMediaPicker
 
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +40,7 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     }
 
     override fun initView() {
+        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(application)).get(VMMediaPicker::class.java)
         mGlideRequestManager = Glide.with(this)
         val intent = intent
         if (intent != null) {
@@ -96,39 +96,15 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
                 }
             }
         })
+
+        viewModel.lvMediaData.observe(this, Observer { data ->
+            updateList(data)
+        })
+        viewModel.getMedia(bucketId = photoDirectory?.bucketId, mediaType = fileType)
     }
 
-    override fun onResume() {
-        super.onResume()
-        getDataFromMedia(photoDirectory?.bucketId)
-    }
-
-    private fun getDataFromMedia(bucketId: String?) {
-        val mediaStoreArgs = Bundle()
-        mediaStoreArgs.putBoolean(FilePickerConst.EXTRA_SHOW_GIF, false)
-        mediaStoreArgs.putString(FilePickerConst.EXTRA_BUCKET_ID, bucketId)
-
-        mediaStoreArgs.putInt(FilePickerConst.EXTRA_FILE_TYPE, fileType)
-
-        MediaStoreHelper.getDirs(contentResolver, mediaStoreArgs,
-                object : FileResultCallback<PhotoDirectory> {
-                    override fun onResultCallback(files: List<PhotoDirectory>) {
-                        if(!isFinishing || !isDestroyed) {
-                            updateList(files.toMutableList())
-                        }
-                    }
-                })
-    }
-
-    private fun updateList(dirs: MutableList<PhotoDirectory>) {
-        val medias = ArrayList<Media>()
-        for (i in dirs.indices) {
-            medias.addAll(dirs[i].medias)
-        }
-
-        medias.sortWith(Comparator { a, b -> b.id - a.id })
-
-        if (medias.size > 0) {
+    private fun updateList(medias: List<Media>) {
+        if (medias.isNotEmpty()) {
             emptyView?.visibility = View.GONE
             recyclerView?.visibility = View.VISIBLE
         } else {
@@ -138,8 +114,7 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
         }
 
         if (photoGridAdapter != null) {
-            photoGridAdapter?.setData(medias)
-            photoGridAdapter?.notifyDataSetChanged()
+            photoGridAdapter?.setData(medias, PickerManager.selectedPhotos)
         } else {
             photoGridAdapter = PhotoGridAdapter(this, mGlideRequestManager, medias,
                     PickerManager.selectedPhotos, false, this)

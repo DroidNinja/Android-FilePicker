@@ -6,11 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -29,8 +32,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
   public static final int RC_FILE_PICKER_PERM = 321;
   private static final int CUSTOM_REQUEST_CODE = 532;
   private int MAX_ATTACHMENT_COUNT = 10;
-  private ArrayList<String> photoPaths = new ArrayList<>();
-  private ArrayList<String> docPaths = new ArrayList<>();
+  private ArrayList<Uri> photoPaths = new ArrayList<>();
+  private ArrayList<Uri> docPaths = new ArrayList<>();
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -76,15 +79,21 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     switch (requestCode) {
       case CUSTOM_REQUEST_CODE:
         if (resultCode == Activity.RESULT_OK && data != null) {
-          photoPaths = new ArrayList<>();
-          photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
+          ArrayList<Uri> dataList = data.getParcelableArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA);
+          if(dataList != null) {
+            photoPaths = new ArrayList<Uri>();
+            photoPaths.addAll(dataList);
+          }
         }
         break;
 
       case FilePickerConst.REQUEST_CODE_DOC:
         if (resultCode == Activity.RESULT_OK && data != null) {
-          docPaths = new ArrayList<>();
-          docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
+          ArrayList<Uri> dataList = data.getParcelableArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS);
+          if(dataList != null) {
+            docPaths = new ArrayList<>();
+            docPaths.addAll(dataList);
+          }
         }
         break;
     }
@@ -92,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     addThemToView(photoPaths, docPaths);
   }
 
-  private void addThemToView(ArrayList<String> imagePaths, ArrayList<String> docPaths) {
-    ArrayList<String> filePaths = new ArrayList<>();
+  private void addThemToView(ArrayList<Uri> imagePaths, ArrayList<Uri> docPaths) {
+    ArrayList<Uri> filePaths = new ArrayList<>();
     if (imagePaths != null) filePaths.addAll(imagePaths);
 
     if (docPaths != null) filePaths.addAll(docPaths);
@@ -129,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
           .enableVideoPicker(true)
           .enableCameraSupport(true)
           .showGifs(true)
-          .showFolderView(true)
+          .showFolderView(false)
           .enableSelectAll(false)
           .enableImagePicker(true)
           .setCameraPlaceholder(R.drawable.custom_camera)
@@ -139,8 +148,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
   }
 
   public void onPickDoc() {
-    String[] zips = { ".zip", ".rar" };
-    String[] pdfs = { ".pdf" };
+    String[] zips = { "zip", "rar" };
+    String[] pdfs = { "pdf" };
     int maxCount = MAX_ATTACHMENT_COUNT - photoPaths.size();
     if ((docPaths.size() + photoPaths.size()) == MAX_ATTACHMENT_COUNT) {
       Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",

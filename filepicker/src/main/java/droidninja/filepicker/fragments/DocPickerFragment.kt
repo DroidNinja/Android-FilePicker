@@ -8,22 +8,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-
-import java.util.ArrayList
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.adapters.SectionsPagerAdapter
-import droidninja.filepicker.cursors.loadercallbacks.FileMapResultCallback
 import droidninja.filepicker.models.Document
 import droidninja.filepicker.models.FileType
-import droidninja.filepicker.utils.MediaStoreHelper
 import droidninja.filepicker.utils.TabLayoutHelper
+import droidninja.filepicker.viewmodels.VMDocPicker
 
 class DocPickerFragment : BaseFragment() {
 
     lateinit var tabLayout: TabLayout
-
+    lateinit var viewModel: VMDocPicker
     lateinit var viewPager: ViewPager
     private var progressBar: ProgressBar? = null
     private var mListener: DocPickerFragmentListener? = null
@@ -33,6 +32,7 @@ class DocPickerFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(requireActivity().application)).get(VMDocPicker::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -41,12 +41,12 @@ class DocPickerFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_doc_picker, container, false)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is DocPickerFragmentListener) {
             mListener = context
         } else {
-            throw RuntimeException(context?.toString() + " must implement DocPickerFragmentListener")
+            throw RuntimeException("$context must implement DocPickerFragmentListener")
         }
     }
 
@@ -63,7 +63,11 @@ class DocPickerFragment : BaseFragment() {
 
     private fun initView() {
         setUpViewPager()
-        setData()
+        viewModel.lvDocData.observe(viewLifecycleOwner, Observer { files ->
+            progressBar?.visibility = View.GONE
+            setDataOnFragments(files)
+        })
+        viewModel.getDocs(PickerManager.getFileTypes(), PickerManager.sortingType.comparator)
     }
 
     private fun setViews(view: View) {
@@ -73,23 +77,6 @@ class DocPickerFragment : BaseFragment() {
 
         tabLayout.tabGravity = TabLayout.GRAVITY_FILL
         tabLayout.tabMode = TabLayout.MODE_SCROLLABLE
-    }
-
-    private fun setData() {
-        context?.let {
-            MediaStoreHelper.getDocs(it.contentResolver,
-                    PickerManager.getFileTypes(),
-                    PickerManager.sortingType.comparator,
-                    object : FileMapResultCallback {
-                        override fun onResultCallback(files: Map<FileType, List<Document>>) {
-                            if(isAdded) {
-                                progressBar?.visibility = View.GONE
-                                setDataOnFragments(files)
-                            }
-                        }
-                    }
-            )
-        }
     }
 
     private fun setDataOnFragments(filesMap: Map<FileType, List<Document>>) {
@@ -128,10 +115,9 @@ class DocPickerFragment : BaseFragment() {
 
     companion object {
 
-        private val TAG = DocPickerFragment::class.java.simpleName
-
+        private const val TAG = "DocPickerFragment"
         fun newInstance(): DocPickerFragment {
             return DocPickerFragment()
         }
     }
-}// Required empty public constructor
+}

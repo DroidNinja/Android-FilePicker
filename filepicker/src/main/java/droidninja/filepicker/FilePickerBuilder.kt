@@ -3,6 +3,7 @@ package droidninja.filepicker
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.DrawableRes
@@ -36,8 +37,8 @@ class FilePickerBuilder {
         return this
     }
 
-    fun setSelectedFiles(selectedPhotos: ArrayList<String>): FilePickerBuilder {
-        mPickerOptionsBundle.putStringArrayList(FilePickerConst.KEY_SELECTED_MEDIA, selectedPhotos)
+    fun setSelectedFiles(selectedPhotos: ArrayList<Uri>): FilePickerBuilder {
+        mPickerOptionsBundle.putParcelableArrayList(FilePickerConst.KEY_SELECTED_MEDIA, selectedPhotos)
         return this
     }
 
@@ -87,14 +88,10 @@ class FilePickerBuilder {
         return this
     }
 
+    @JvmOverloads
     fun addFileSupport(title: String, extensions: Array<String>,
-                       @DrawableRes drawable: Int): FilePickerBuilder {
+                       @DrawableRes drawable: Int = R.drawable.icon_file_unknown): FilePickerBuilder {
         PickerManager.addFileType(FileType(title, extensions, drawable))
-        return this
-    }
-
-    fun addFileSupport(title: String, extensions: Array<String>): FilePickerBuilder {
-        PickerManager.addFileType(FileType(title, extensions, 0))
         return this
     }
 
@@ -153,8 +150,6 @@ class FilePickerBuilder {
             }
         }
 
-        PickerManager.providerAuthorities = context.applicationContext.packageName + ".droidninja.filepicker.provider"
-
         val intent = Intent(context, FilePickerActivity::class.java)
         intent.putExtras(mPickerOptionsBundle)
 
@@ -172,8 +167,6 @@ class FilePickerBuilder {
                     return
                 }
             }
-
-            PickerManager.providerAuthorities = it.applicationContext?.packageName + ".droidninja.filepicker.provider"
 
             val intent = Intent(fragment.activity, FilePickerActivity::class.java)
             intent.putExtras(mPickerOptionsBundle)

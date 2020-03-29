@@ -3,6 +3,8 @@ package vi.filepicker;
 import android.content.Context;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +21,11 @@ import java.util.ArrayList;
  */
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.FileViewHolder> {
 
-  private final ArrayList<String> paths;
+  private final ArrayList<Uri> paths;
   private final Context context;
   private int imageSize;
 
-  public ImageAdapter(Context context, ArrayList<String> paths) {
+  public ImageAdapter(Context context, ArrayList<Uri> paths) {
     this.context = context;
     this.paths = paths;
     setColumnNumber(context, 3);
@@ -45,9 +47,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.FileViewHold
   }
 
   @Override public void onBindViewHolder(FileViewHolder holder, int position) {
-    String path = paths.get(position);
+    Uri path = paths.get(position);
     Glide.with(context)
-        .load(new File(path))
+        .load(path)
         .apply(RequestOptions.centerCropTransform()
             .dontAnimate()
             .override(imageSize, imageSize)

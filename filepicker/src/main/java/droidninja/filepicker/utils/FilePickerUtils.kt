@@ -1,9 +1,13 @@
 package droidninja.filepicker.utils
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.database.ContentObserver
 import android.net.Uri
+import android.os.Handler
 import android.text.TextUtils
+import android.webkit.MimeTypeMap
 import java.io.File
 
 /**
@@ -21,34 +25,25 @@ object FilePickerUtils {
 
     }
 
-    fun contains(types: Array<String>, path: String): Boolean {
-        for (string in types) {
-            if (path.toLowerCase().endsWith(string)) return true
+    fun contains(types: Array<String>, mimeType: String?): Boolean {
+        for (type in types) {
+            if(MimeTypeMap.getSingleton().getMimeTypeFromExtension(type) == mimeType){
+                return true
+            }
         }
         return false
     }
+}
 
-    fun <T> contains2(array: Array<T>, v: T?): Boolean {
-        if (v == null) {
-            for (e in array)
-                if (e == null)
-                    return true
-        } else {
-            for (e in array)
-                if (e === v || v == e)
-                    return true
-        }
-
-        return false
-    }
-
-    fun notifyMediaStore(context: Context, path: String?) {
-        if (path != null && !TextUtils.isEmpty(path)) {
-            val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-            val f = File(path)
-            val contentUri = Uri.fromFile(f)
-            mediaScanIntent.data = contentUri
-            context.sendBroadcast(mediaScanIntent)
+fun ContentResolver.registerObserver(
+        uri: Uri,
+        observer: (selfChange: Boolean) -> Unit
+): ContentObserver {
+    val contentObserver = object : ContentObserver(Handler()) {
+        override fun onChange(selfChange: Boolean) {
+            observer(selfChange)
         }
     }
+    registerContentObserver(uri, true, contentObserver)
+    return contentObserver
 }

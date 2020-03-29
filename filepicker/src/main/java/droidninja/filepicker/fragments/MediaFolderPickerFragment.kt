@@ -3,6 +3,7 @@ package droidninja.filepicker.fragments
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -14,6 +15,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import droidninja.filepicker.FilePickerConst
@@ -21,26 +24,28 @@ import droidninja.filepicker.MediaDetailsActivity
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.adapters.FolderGridAdapter
-import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback
+import droidninja.filepicker.models.Media
 import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 import droidninja.filepicker.utils.GridSpacingItemDecoration
 import droidninja.filepicker.utils.ImageCaptureManager
-import droidninja.filepicker.utils.MediaStoreHelper
+import droidninja.filepicker.viewmodels.VMMediaPicker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
-import java.util.ArrayList
 
 class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAdapterListener {
     lateinit var recyclerView: RecyclerView
 
     lateinit var emptyView: TextView
+    lateinit var viewModel: VMMediaPicker
 
     private var mListener: PhotoPickerFragmentListener? = null
     private var photoGridAdapter: FolderGridAdapter? = null
     private var imageCaptureManager: ImageCaptureManager? = null
     private lateinit var mGlideRequestManager: RequestManager
     private var fileType: Int = 0
-    private var data: MutableList<PhotoDirectory>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -48,13 +53,13 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
         return inflater.inflate(R.layout.fragment_media_folder_picker, container, false)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is PhotoPickerFragmentListener) {
             mListener = context
         } else {
             throw RuntimeException(
-                    context?.toString() + " must implement PhotoPickerFragmentListener")
+                    "$context must implement PhotoPickerFragmentListener")
         }
     }
 
@@ -66,6 +71,7 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mGlideRequestManager = Glide.with(this)
+        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(requireActivity().application)).get(VMMediaPicker::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,9 +84,8 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
         emptyView = view.findViewById(R.id.empty_view)
         arguments?.let {
             fileType = it.getInt(BaseFragment.FILE_TYPE)
-            activity?.let {
-                imageCaptureManager = ImageCaptureManager(it)
-            }
+
+            imageCaptureManager = ImageCaptureManager(requireContext())
             val layoutManager = GridLayoutManager(activity, 2)
 
             val spanCount = 2 // 2 columns
@@ -107,32 +112,21 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
                     }
                 }
             })
-            getDataFromMedia()
+
+            viewModel.lvPhotoDirsData.observe(viewLifecycleOwner, Observer { data ->
+                updateList(data)
+            })
+
+            viewModel.lvDataChanged.observe(viewLifecycleOwner, Observer {
+                viewModel.getPhotoDirs(mediaType = fileType)
+            })
+
+            viewModel.getPhotoDirs(mediaType = fileType)
         }
     }
 
-    private fun getDataFromMedia() {
-        val mediaStoreArgs = Bundle()
-        mediaStoreArgs.putBoolean(FilePickerConst.EXTRA_SHOW_GIF,
-                PickerManager.isShowGif)
-        mediaStoreArgs.putInt(FilePickerConst.EXTRA_FILE_TYPE, fileType)
-
-        context?.let {
-            MediaStoreHelper.getDirs(it.contentResolver, mediaStoreArgs,
-                    object : FileResultCallback<PhotoDirectory> {
-                        override fun onResultCallback(files: List<PhotoDirectory>) {
-                            if(isAdded) {
-                                updateList(files.toMutableList())
-                            }
-                        }
-                    })
-        }
-    }
-
-    private fun updateList(dirs: MutableList<PhotoDirectory>) {
+    private fun updateList(dirs: List<PhotoDirectory>) {
         view?.let {
-            Log.i("updateList", "" + dirs.size)
-            data = dirs
             if (dirs.isNotEmpty()) {
                 emptyView.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
@@ -142,34 +136,10 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
                 return
             }
 
-            val photoDirectory = PhotoDirectory()
-            photoDirectory.bucketId = FilePickerConst.ALL_PHOTOS_BUCKET_ID
-
-            if (fileType == FilePickerConst.MEDIA_TYPE_VIDEO) {
-                photoDirectory.name = getString(R.string.all_videos)
-            } else if (fileType == FilePickerConst.MEDIA_TYPE_IMAGE) {
-                photoDirectory.name = getString(R.string.all_photos)
-            } else {
-                photoDirectory.name = getString(R.string.all_files)
-            }
-
-            if (dirs.size > 0 && dirs[0].medias.size > 0) {
-                photoDirectory.dateAdded = dirs[0].dateAdded
-                photoDirectory.coverPath = dirs[0].medias[0].path
-            }
-
-            for (i in dirs.indices) {
-                photoDirectory.addPhotos(dirs[i].medias)
-            }
-
-            dirs.add(0, photoDirectory)
-
             if (photoGridAdapter == null) {
-                context?.let {
-                    photoGridAdapter = FolderGridAdapter(it, mGlideRequestManager, dirs, mutableListOf(), fileType == FilePickerConst.MEDIA_TYPE_IMAGE && PickerManager.isEnableCamera)
-                    recyclerView.adapter = photoGridAdapter
-                    photoGridAdapter?.setFolderGridAdapterListener(this)
-                }
+                photoGridAdapter = FolderGridAdapter(requireContext(), mGlideRequestManager, dirs, fileType == FilePickerConst.MEDIA_TYPE_IMAGE && PickerManager.isEnableCamera)
+                recyclerView.adapter = photoGridAdapter
+                photoGridAdapter?.setFolderGridAdapterListener(this)
             } else {
                 photoGridAdapter?.setData(dirs)
                 photoGridAdapter?.notifyDataSetChanged()
@@ -179,12 +149,12 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
 
     override fun onCameraClicked() {
         try {
-            context?.let {
-                val intent = imageCaptureManager?.dispatchTakePictureIntent()
+            uiScope.launch {
+                val intent = withContext(Dispatchers.IO) { imageCaptureManager?.dispatchTakePictureIntent() }
                 if (intent != null) {
                     startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO)
                 } else {
-                    Toast.makeText(it, R.string.no_camera_exists, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), R.string.no_camera_exists, Toast.LENGTH_SHORT).show()
                 }
             }
         } catch (e: IOException) {
@@ -204,12 +174,16 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             ImageCaptureManager.REQUEST_TAKE_PHOTO -> if (resultCode == Activity.RESULT_OK) {
-                val imagePath = imageCaptureManager?.notifyMediaStoreDatabase()
-                if (imagePath != null && PickerManager.getMaxCount() == 1) {
-                    PickerManager.add(imagePath, FilePickerConst.FILE_TYPE_MEDIA)
-                    mListener?.onItemSelected()
-                } else {
-                    Handler().postDelayed({ getDataFromMedia() }, 1000)
+                val imagePath = imageCaptureManager?.currentPhotoPath
+                if (imagePath != null) {
+                    if (PickerManager.getMaxCount() == 1) {
+                        PickerManager.add(imagePath, FilePickerConst.FILE_TYPE_MEDIA)
+                        mListener?.onItemSelected()
+                    }
+                }
+            } else {
+                uiScope.launch(Dispatchers.IO) {
+                    imageCaptureManager?.deleteContentUri(imageCaptureManager?.currentPhotoPath)
                 }
             }
         }

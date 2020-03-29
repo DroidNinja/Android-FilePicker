@@ -3,6 +3,7 @@ package droidninja.filepicker
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.ActionBar
 import android.text.TextUtils
@@ -26,7 +27,7 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
     override fun initView() {
         val intent = intent
         if (intent != null) {
-            var selectedPaths: ArrayList<String>? = intent.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA)
+            val selectedPaths: ArrayList<Uri>? = intent.getParcelableArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA)
             type = intent.getIntExtra(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER)
 
             if (selectedPaths != null) {
@@ -48,7 +49,7 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
         }
     }
 
-    private fun setToolbarTitle(count: Int) {
+    override fun setToolbarTitle(count: Int) {
         val actionBar = supportActionBar
         if (actionBar != null) {
             val maxCount = PickerManager.getMaxCount()
@@ -108,7 +109,6 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
 
     override fun onBackPressed() {
         super.onBackPressed()
-        PickerManager.reset()
         setResult(Activity.RESULT_CANCELED)
         finish()
     }
@@ -128,16 +128,21 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
         }
     }
 
-    private fun returnData(paths: ArrayList<String>) {
+    private fun returnData(paths: ArrayList<Uri>) {
         val intent = Intent()
         if (type == FilePickerConst.MEDIA_PICKER) {
-            intent.putStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA, paths)
+            intent.putParcelableArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA, paths)
         } else {
-            intent.putStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS, paths)
+            intent.putParcelableArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS, paths)
         }
 
         setResult(Activity.RESULT_OK, intent)
         finish()
+    }
+
+    override fun onDestroy() {
+        PickerManager.reset()
+        super.onDestroy()
     }
 
     override fun onItemSelected() {
