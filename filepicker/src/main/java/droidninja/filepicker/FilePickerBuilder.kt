@@ -88,14 +88,10 @@ class FilePickerBuilder {
         return this
     }
 
+    @JvmOverloads
     fun addFileSupport(title: String, extensions: Array<String>,
-                       @DrawableRes drawable: Int): FilePickerBuilder {
+                       @DrawableRes drawable: Int = R.drawable.icon_file_unknown): FilePickerBuilder {
         PickerManager.addFileType(FileType(title, extensions, drawable))
-        return this
-    }
-
-    fun addFileSupport(title: String, extensions: Array<String>): FilePickerBuilder {
-        PickerManager.addFileType(FileType(title, extensions, 0))
         return this
     }
 

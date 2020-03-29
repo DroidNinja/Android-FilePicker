@@ -36,6 +36,14 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
         var data = HashMap<FileType, List<Document>>()
         withContext(Dispatchers.IO) {
 
+            val selection = (MediaStore.Files.FileColumns.MEDIA_TYPE
+                    + "!="
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
+                    + " AND "
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE
+                    + "!="
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
+
             val DOC_PROJECTION = arrayOf(MediaStore.Files.FileColumns._ID,
                     MediaStore.Files.FileColumns.DATA,
                     MediaStore.Files.FileColumns.MIME_TYPE,
@@ -43,7 +51,7 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
                     MediaStore.Files.FileColumns.DATE_ADDED,
                     MediaStore.Files.FileColumns.TITLE)
 
-            val cursor = getApplication<Application>().contentResolver.query(MediaStore.Downloads.EXTERNAL_CONTENT_URI, DOC_PROJECTION, null, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
+            val cursor = getApplication<Application>().contentResolver.query(MediaStore.Files.getContentUri("external"), DOC_PROJECTION, selection, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
 
             if (cursor != null) {
                 data = createDocumentType(fileTypes, comparator, getDocumentFromCursor(cursor))
