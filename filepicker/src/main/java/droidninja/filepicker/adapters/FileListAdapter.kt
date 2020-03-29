@@ -23,7 +23,7 @@ import droidninja.filepicker.views.SmoothCheckBox
 /**
  * Created by droidNinja on 29/07/16.
  */
-class FileListAdapter(private val context: Context, private var mFilteredList: List<Document>, selectedPaths: List<Uri>,
+class FileListAdapter(private val context: Context, private var mFilteredList: List<Document>, selectedPaths: MutableList<Uri>,
                       private val mListener: FileAdapterListener?) : SelectableAdapter<FileListAdapter.FileViewHolder, Document>(mFilteredList, selectedPaths), Filterable {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder {
@@ -45,7 +45,8 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
         }
 
         holder.fileNameTextView.text = document.name
-        holder.fileSizeTextView.text = Formatter.formatShortFileSize(context, java.lang.Long.parseLong(document.size ?: "0"))
+        holder.fileSizeTextView.text = Formatter.formatShortFileSize(context, java.lang.Long.parseLong(document.size
+                ?: "0"))
 
         holder.itemView.setOnClickListener { onItemClicked(document, holder) }
 
@@ -63,6 +64,11 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
         holder.checkBox.setOnCheckedChangeListener(object : SmoothCheckBox.OnCheckedChangeListener {
             override fun onCheckedChanged(checkBox: SmoothCheckBox, isChecked: Boolean) {
                 toggleSelection(document)
+                if (isChecked) {
+                    PickerManager.add(document.path, FilePickerConst.FILE_TYPE_DOCUMENT)
+                } else {
+                    PickerManager.remove(document.path, FilePickerConst.FILE_TYPE_DOCUMENT)
+                }
                 holder.itemView.setBackgroundResource(if (isChecked) R.color.bg_gray else android.R.color.white)
             }
         })
@@ -73,11 +79,9 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
             PickerManager.add(document.path, FilePickerConst.FILE_TYPE_DOCUMENT)
         } else {
             if (holder.checkBox.isChecked) {
-                PickerManager.remove(document.path, FilePickerConst.FILE_TYPE_DOCUMENT)
                 holder.checkBox.setChecked(!holder.checkBox.isChecked, true)
                 holder.checkBox.visibility = View.GONE
             } else if (PickerManager.shouldAdd()) {
-                PickerManager.add(document.path, FilePickerConst.FILE_TYPE_DOCUMENT)
                 holder.checkBox.setChecked(!holder.checkBox.isChecked, true)
                 holder.checkBox.visibility = View.VISIBLE
             }
@@ -121,8 +125,8 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
 
             @Suppress("UNCHECKED_CAST")
             override fun publishResults(charSequence: CharSequence, filterResults: Filter.FilterResults) {
-                    mFilteredList = filterResults.values as List<Document>
-                    notifyDataSetChanged()
+                mFilteredList = filterResults.values as List<Document>
+                notifyDataSetChanged()
             }
         }
     }

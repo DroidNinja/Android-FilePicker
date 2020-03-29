@@ -49,7 +49,7 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
         }
     }
 
-    private fun setToolbarTitle(count: Int) {
+    override fun setToolbarTitle(count: Int) {
         val actionBar = supportActionBar
         if (actionBar != null) {
             val maxCount = PickerManager.getMaxCount()
@@ -109,7 +109,6 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
 
     override fun onBackPressed() {
         super.onBackPressed()
-        PickerManager.reset()
         setResult(Activity.RESULT_CANCELED)
         finish()
     }
@@ -139,6 +138,11 @@ class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener
 
         setResult(Activity.RESULT_OK, intent)
         finish()
+    }
+
+    override fun onDestroy() {
+        PickerManager.reset()
+        super.onDestroy()
     }
 
     override fun onItemSelected() {

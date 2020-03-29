@@ -63,8 +63,6 @@ object PickerManager {
 
     var isShowFolderView = true
 
-    var providerAuthorities: String? = null
-
     val currentCount: Int
         get() = selectedPhotos.size + selectedFiles.size
 
@@ -89,7 +87,7 @@ object PickerManager {
         }
     }
 
-    fun add(paths: ArrayList<Uri>, type: Int) {
+    fun add(paths: List<Uri>, type: Int) {
         for (index in paths.indices) {
             add(paths[index], type)
         }
@@ -127,7 +125,7 @@ object PickerManager {
         selectedFiles.clear()
     }
 
-    fun deleteMedia(paths: ArrayList<Uri>) {
+    fun deleteMedia(paths: List<Uri>) {
         selectedPhotos.removeAll(paths)
     }
 

@@ -8,43 +8,10 @@ import java.util.ArrayList
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.models.BaseFile
 
-abstract class SelectableAdapter<VH : RecyclerView.ViewHolder, T : BaseFile>(items: List<T>, selectedPaths: List<Uri>) : RecyclerView.Adapter<VH>(), Selectable<T> {
-    var items: List<T>
-        private set
-
-    protected var selectedPhotos: MutableList<T>
+abstract class SelectableAdapter<VH : RecyclerView.ViewHolder, T : BaseFile>(var items: List<T>, var selectedPaths: MutableList<Uri> = mutableListOf()) : RecyclerView.Adapter<VH>(), Selectable<T> {
 
     override val selectedItemCount: Int
-        get() = selectedPhotos.size
-
-    val selectedPaths: ArrayList<Uri>
-        get() {
-            val paths = ArrayList<Uri>()
-            for (index in selectedPhotos.indices) {
-                paths.add(selectedPhotos[index].path)
-            }
-            return paths
-        }
-
-    init {
-        this.items = items
-        selectedPhotos = ArrayList()
-
-        addPathsToSelections(selectedPaths)
-    }
-
-    private fun addPathsToSelections(selectedPaths: List<Uri>?) {
-        if (selectedPaths == null) return
-
-        for (index in items.indices) {
-            for (jindex in selectedPaths.indices) {
-                if (items[index].path == selectedPaths[jindex]) {
-                    selectedPhotos.add(items[index])
-                }
-            }
-        }
-    }
-
+        get() = selectedPaths.size
     /**
      * Indicates if the item at position where is selected
      *
@@ -52,7 +19,7 @@ abstract class SelectableAdapter<VH : RecyclerView.ViewHolder, T : BaseFile>(ite
      * @return true if the item is selected, false otherwise
      */
     override fun isSelected(item: T): Boolean {
-        return selectedPhotos.contains(item)
+        return selectedPaths.contains(item.path)
     }
 
     /**
@@ -61,10 +28,10 @@ abstract class SelectableAdapter<VH : RecyclerView.ViewHolder, T : BaseFile>(ite
      * @param photo Media of the item to toggle the selection status for
      */
     override fun toggleSelection(item: T) {
-        if (selectedPhotos.contains(item)) {
-            selectedPhotos.remove(item)
+        if (selectedPaths.contains(item.path)) {
+            selectedPaths.remove(item.path)
         } else {
-            selectedPhotos.add(item)
+            selectedPaths.add(item.path)
         }
     }
 
@@ -72,18 +39,22 @@ abstract class SelectableAdapter<VH : RecyclerView.ViewHolder, T : BaseFile>(ite
      * Clear the selection status for all items
      */
     override fun clearSelection() {
-        selectedPhotos.clear()
+        selectedPaths.clear()
         notifyDataSetChanged()
     }
 
     fun selectAll() {
-        selectedPhotos.clear()
-        selectedPhotos.addAll(items as Iterable<T>)
+        selectedPaths.clear()
+        selectedPaths.addAll(items.map {
+            it.path
+        })
         notifyDataSetChanged()
     }
 
-    fun setData(items: List<T>) {
+    fun setData(items: List<T>, selectedPaths: MutableList<Uri>) {
         this.items = items
+        this.selectedPaths = selectedPaths
+        notifyDataSetChanged()
     }
 
     companion object {

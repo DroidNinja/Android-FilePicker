@@ -24,11 +24,15 @@ import droidninja.filepicker.MediaDetailsActivity
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.adapters.FolderGridAdapter
+import droidninja.filepicker.models.Media
 import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 import droidninja.filepicker.utils.GridSpacingItemDecoration
 import droidninja.filepicker.utils.ImageCaptureManager
 import droidninja.filepicker.viewmodels.VMMediaPicker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
 class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAdapterListener {
@@ -42,7 +46,6 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
     private var imageCaptureManager: ImageCaptureManager? = null
     private lateinit var mGlideRequestManager: RequestManager
     private var fileType: Int = 0
-    private var data: MutableList<PhotoDirectory>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -110,17 +113,20 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
                 }
             })
 
-            viewModel.lvMediaData.observe(viewLifecycleOwner, Observer { data->
-                updateList(data.toMutableList())
+            viewModel.lvPhotoDirsData.observe(viewLifecycleOwner, Observer { data ->
+                updateList(data)
             })
-            viewModel.getMedia(mediaType = fileType)
+
+            viewModel.lvDataChanged.observe(viewLifecycleOwner, Observer {
+                viewModel.getPhotoDirs(mediaType = fileType)
+            })
+
+            viewModel.getPhotoDirs(mediaType = fileType)
         }
     }
 
-    private fun updateList(dirs: MutableList<PhotoDirectory>) {
+    private fun updateList(dirs: List<PhotoDirectory>) {
         view?.let {
-            Log.i("updateList", "" + dirs.size)
-            data = dirs
             if (dirs.isNotEmpty()) {
                 emptyView.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
@@ -130,34 +136,10 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
                 return
             }
 
-            val photoDirectory = PhotoDirectory()
-            photoDirectory.bucketId = null
-
-            if (fileType == FilePickerConst.MEDIA_TYPE_VIDEO) {
-                photoDirectory.name = getString(R.string.all_videos)
-            } else if (fileType == FilePickerConst.MEDIA_TYPE_IMAGE) {
-                photoDirectory.name = getString(R.string.all_photos)
-            } else {
-                photoDirectory.name = getString(R.string.all_files)
-            }
-
-            if (dirs.size > 0 && dirs[0].medias.size > 0) {
-                photoDirectory.dateAdded = dirs[0].dateAdded
-                photoDirectory.setCoverPath(dirs[0].medias[0].path)
-            }
-
-            for (i in dirs.indices) {
-                photoDirectory.medias.addAll(dirs[i].medias)
-            }
-
-            dirs.add(0, photoDirectory)
-
             if (photoGridAdapter == null) {
-                context?.let {
-                    photoGridAdapter = FolderGridAdapter(it, mGlideRequestManager, dirs, fileType == FilePickerConst.MEDIA_TYPE_IMAGE && PickerManager.isEnableCamera)
-                    recyclerView.adapter = photoGridAdapter
-                    photoGridAdapter?.setFolderGridAdapterListener(this)
-                }
+                photoGridAdapter = FolderGridAdapter(requireContext(), mGlideRequestManager, dirs, fileType == FilePickerConst.MEDIA_TYPE_IMAGE && PickerManager.isEnableCamera)
+                recyclerView.adapter = photoGridAdapter
+                photoGridAdapter?.setFolderGridAdapterListener(this)
             } else {
                 photoGridAdapter?.setData(dirs)
                 photoGridAdapter?.notifyDataSetChanged()
@@ -167,12 +149,12 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
 
     override fun onCameraClicked() {
         try {
-            context?.let {
-                val intent = imageCaptureManager?.dispatchTakePictureIntent()
+            uiScope.launch {
+                val intent = withContext(Dispatchers.IO) { imageCaptureManager?.dispatchTakePictureIntent() }
                 if (intent != null) {
                     startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO)
                 } else {
-                    Toast.makeText(it, R.string.no_camera_exists, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), R.string.no_camera_exists, Toast.LENGTH_SHORT).show()
                 }
             }
         } catch (e: IOException) {
@@ -192,12 +174,16 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             ImageCaptureManager.REQUEST_TAKE_PHOTO -> if (resultCode == Activity.RESULT_OK) {
-                val imagePath = imageCaptureManager?.notifyMediaStoreDatabase()
-                if (imagePath != null && PickerManager.getMaxCount() == 1) {
-                    PickerManager.add(Uri.parse(imagePath), FilePickerConst.FILE_TYPE_MEDIA)
-                    mListener?.onItemSelected()
-                } else {
-                    Handler().postDelayed({ viewModel.getMedia(mediaType = fileType) }, 1000)
+                val imagePath = imageCaptureManager?.currentPhotoPath
+                if (imagePath != null) {
+                    if (PickerManager.getMaxCount() == 1) {
+                        PickerManager.add(imagePath, FilePickerConst.FILE_TYPE_MEDIA)
+                        mListener?.onItemSelected()
+                    }
+                }
+            } else {
+                uiScope.launch(Dispatchers.IO) {
+                    imageCaptureManager?.deleteContentUri(imageCaptureManager?.currentPhotoPath)
                 }
             }
         }

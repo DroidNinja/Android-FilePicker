@@ -1,38 +1,60 @@
-package droidninja.filepicker.cursors
+package droidninja.filepicker.viewmodels
 
-import android.content.ContentResolver
+import android.app.Application
 import android.content.ContentUris
-import android.content.Context
 import android.database.Cursor
-import android.os.AsyncTask
+import android.provider.BaseColumns
 import android.provider.MediaStore
 import android.text.TextUtils
-
-import java.io.File
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Comparator
-import java.util.HashMap
-
+import androidx.annotation.WorkerThread
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import droidninja.filepicker.PickerManager
-import droidninja.filepicker.cursors.loadercallbacks.FileMapResultCallback
 import droidninja.filepicker.models.Document
 import droidninja.filepicker.models.FileType
 import droidninja.filepicker.utils.FilePickerUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.util.*
 
-import android.provider.BaseColumns._ID
-import android.provider.MediaStore.MediaColumns.DATA
-import java.util.function.Predicate
+class VMDocPicker(application: Application) : BaseViewModel(application) {
+    private val _lvDocData = MutableLiveData<HashMap<FileType, List<Document>>>()
+    val lvDocData: LiveData<HashMap<FileType, List<Document>>>
+        get() = _lvDocData
 
-/**
- * Created by droidNinja on 01/08/16.
- */
-class DocScannerTask(val contentResolver: ContentResolver, private val fileTypes: List<FileType>, private val comparator: Comparator<Document>?,
-                     private val resultCallback: FileMapResultCallback?) : AsyncTask<Void, Void, Map<FileType, List<Document>>>() {
 
-    private val DOC_PROJECTION = arrayOf(MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.MIME_TYPE, MediaStore.Files.FileColumns.SIZE, MediaStore.Files.FileColumns.DATE_ADDED, MediaStore.Files.FileColumns.TITLE)
+    fun getDocs(fileTypes: List<FileType>, comparator: Comparator<Document>?) {
+        launchDataLoad {
+            val dirs = queryDocs(fileTypes, comparator)
+            _lvDocData.postValue(dirs)
+        }
+    }
 
-    private fun createDocumentType(documents: ArrayList<Document>): HashMap<FileType, List<Document>> {
+    @WorkerThread
+    suspend fun queryDocs(fileTypes: List<FileType>, comparator: Comparator<Document>?): HashMap<FileType, List<Document>> {
+        var data = HashMap<FileType, List<Document>>()
+        withContext(Dispatchers.IO) {
+
+            val DOC_PROJECTION = arrayOf(MediaStore.Files.FileColumns._ID,
+                    MediaStore.Files.FileColumns.DATA,
+                    MediaStore.Files.FileColumns.MIME_TYPE,
+                    MediaStore.Files.FileColumns.SIZE,
+                    MediaStore.Files.FileColumns.DATE_ADDED,
+                    MediaStore.Files.FileColumns.TITLE)
+
+            val cursor = getApplication<Application>().contentResolver.query(MediaStore.Downloads.EXTERNAL_CONTENT_URI, DOC_PROJECTION, null, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
+
+            if (cursor != null) {
+                data = createDocumentType(fileTypes, comparator, getDocumentFromCursor(cursor))
+                cursor.close()
+            }
+        }
+        return data
+    }
+
+    @WorkerThread
+    private fun createDocumentType(fileTypes: List<FileType>, comparator: Comparator<Document>?, documents: MutableList<Document>): HashMap<FileType, List<Document>> {
         val documentMap = HashMap<FileType, List<Document>>()
 
         for (fileType in fileTypes) {
@@ -48,30 +70,13 @@ class DocScannerTask(val contentResolver: ContentResolver, private val fileTypes
         return documentMap
     }
 
-    override fun doInBackground(vararg voids: Void): Map<FileType, List<Document>> {
-        var documents = ArrayList<Document>()
-
-
-        val cursor = contentResolver.query(MediaStore.Downloads.EXTERNAL_CONTENT_URI, DOC_PROJECTION, null, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
-
-        if (cursor != null) {
-            documents = getDocumentFromCursor(cursor)
-            cursor.close()
-        }
-
-        return createDocumentType(documents)
-    }
-
-    override fun onPostExecute(documents: Map<FileType, List<Document>>) {
-        resultCallback?.onResultCallback(documents)
-    }
-
-    private fun getDocumentFromCursor(data: Cursor): ArrayList<Document> {
-        val documents = ArrayList<Document>()
+    @WorkerThread
+    private fun getDocumentFromCursor(data: Cursor): MutableList<Document> {
+        val documents = mutableListOf<Document>()
         while (data.moveToNext()) {
 
-            val imageId = data.getLong(data.getColumnIndexOrThrow(_ID))
-            val path = data.getString(data.getColumnIndexOrThrow(DATA))
+            val imageId = data.getLong(data.getColumnIndexOrThrow(BaseColumns._ID))
+            val path = data.getString(data.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
             val title = data.getString(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.TITLE))
 
             if (path != null) {

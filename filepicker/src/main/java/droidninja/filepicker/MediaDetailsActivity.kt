@@ -98,20 +98,13 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
         })
 
         viewModel.lvMediaData.observe(this, Observer { data ->
-            updateList(data.toMutableList())
+            updateList(data)
         })
         viewModel.getMedia(bucketId = photoDirectory?.bucketId, mediaType = fileType)
     }
 
-    private fun updateList(dirs: MutableList<PhotoDirectory>) {
-        val medias = ArrayList<Media>()
-        for (i in dirs.indices) {
-            medias.addAll(dirs[i].medias)
-        }
-
-        medias.sortWith(Comparator { a, b -> (b.id - a.id).toInt() })
-
-        if (medias.size > 0) {
+    private fun updateList(medias: List<Media>) {
+        if (medias.isNotEmpty()) {
             emptyView?.visibility = View.GONE
             recyclerView?.visibility = View.VISIBLE
         } else {
@@ -121,8 +114,7 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
         }
 
         if (photoGridAdapter != null) {
-            photoGridAdapter?.setData(medias)
-            photoGridAdapter?.notifyDataSetChanged()
+            photoGridAdapter?.setData(medias, PickerManager.selectedPhotos)
         } else {
             photoGridAdapter = PhotoGridAdapter(this, mGlideRequestManager, medias,
                     PickerManager.selectedPhotos, false, this)

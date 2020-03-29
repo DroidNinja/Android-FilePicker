@@ -88,7 +88,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
 
     fun updateList(dirs: List<Document>) {
         view?.let {
-            if (dirs.size > 0) {
+            if (dirs.isNotEmpty()) {
                 recyclerView.visibility = View.VISIBLE
                 emptyView.visibility = View.GONE
 
@@ -100,8 +100,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
 
                         recyclerView.adapter = fileListAdapter
                     } else {
-                        fileListAdapter?.setData(dirs)
-                        fileListAdapter?.notifyDataSetChanged()
+                        fileListAdapter?.setData(dirs, PickerManager.selectedFiles)
                     }
                     onItemSelected()
                 }

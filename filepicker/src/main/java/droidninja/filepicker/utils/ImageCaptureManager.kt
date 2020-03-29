@@ -1,5 +1,6 @@
 package droidninja.filepicker.utils
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.provider.Settings
 import androidx.core.content.FileProvider
 import android.text.TextUtils
 import android.util.Log
+import androidx.annotation.WorkerThread
 
 import java.io.File
 import java.io.FileNotFoundException
@@ -23,36 +25,24 @@ import droidninja.filepicker.PickerManager
 
 class ImageCaptureManager(private val mContext: Context) {
 
-    var currentPhotoPath: String? = null
-        private set
+    var currentPhotoPath: Uri? = null
 
     @Throws(IOException::class)
-    private fun createImageFile(): File {
-        // Create an image file name
-        //    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
+    private fun createImageFile(): Uri? {
         val imageFileName = "JPEG_" + System.currentTimeMillis() + ".jpg"
-        val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-
-        if (!storageDir.exists()) {
-            if (!storageDir.mkdir()) {
-                Log.e("TAG", "Throwing Errors....")
-                throw IOException()
-            }
+        val resolver = mContext.contentResolver
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, imageFileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
         }
 
-        val image = File(storageDir, imageFileName)
-        //                File.createTempFile(
-        //                imageFileName,  /* prefix */
-        //                ".jpg",         /* suffix */
-        //                storageDir      /* directory */
-        //        );
+        currentPhotoPath = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
 
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.absolutePath
-        return image
+        return currentPhotoPath
     }
 
 
+    @WorkerThread
     @Throws(IOException::class)
     fun dispatchTakePictureIntent(): Intent? {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -60,15 +50,12 @@ class ImageCaptureManager(private val mContext: Context) {
         if (takePictureIntent.resolveActivity(mContext.packageManager) != null) {
             // Create the File where the photo should go
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val newFile = createImageFile()
+                val photoURI = createImageFile()
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                PickerManager.providerAuthorities?.let {
-                    val photoURI = FileProvider.getUriForFile(mContext, it, newFile)
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                }
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
             } else {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(createImageFile()))
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, createImageFile())
             }
             return takePictureIntent
         }
@@ -76,31 +63,9 @@ class ImageCaptureManager(private val mContext: Context) {
     }
 
 
-    fun notifyMediaStoreDatabase(): String? {
-        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-
-        if (TextUtils.isEmpty(currentPhotoPath)) {
-            return null
-        }
-
-        val f = File(currentPhotoPath)
-        val contentUri = Uri.fromFile(f)
-        mediaScanIntent.data = contentUri
-        mContext.sendBroadcast(mediaScanIntent)
-
-        return currentPhotoPath
-    }
-
-
-    fun onSaveInstanceState(savedInstanceState: Bundle?) {
-        if (savedInstanceState != null && currentPhotoPath != null) {
-            savedInstanceState.putString(CAPTURED_PHOTO_PATH_KEY, currentPhotoPath)
-        }
-    }
-
-    fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        if (savedInstanceState != null && savedInstanceState.containsKey(CAPTURED_PHOTO_PATH_KEY)) {
-            currentPhotoPath = savedInstanceState.getString(CAPTURED_PHOTO_PATH_KEY)
+    fun deleteContentUri(path: Uri?) {
+        if(path != null){
+            mContext.contentResolver.delete(path, null , null)
         }
     }
 

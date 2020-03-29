@@ -3,31 +3,19 @@ package droidninja.filepicker.fragments
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.OrientationHelper
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.OrientationHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-
-import java.io.IOException
-import java.util.ArrayList
-import java.util.Comparator
-
 import droidninja.filepicker.FilePickerConst
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
@@ -38,6 +26,11 @@ import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 import droidninja.filepicker.utils.ImageCaptureManager
 import droidninja.filepicker.viewmodels.VMMediaPicker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
+import java.util.*
 
 
 class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
@@ -130,22 +123,20 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
             })
         }
 
-        viewModel.lvMediaData.observe(viewLifecycleOwner, Observer { data->
-            updateList(data.toMutableList())
+        viewModel.lvMediaData.observe(viewLifecycleOwner, Observer { data ->
+            updateList(data)
         })
+
+        viewModel.lvDataChanged.observe(viewLifecycleOwner, Observer {
+            viewModel.getMedia(mediaType = fileType)
+        })
+
         viewModel.getMedia(mediaType = fileType)
     }
 
-    private fun updateList(dirs: List<PhotoDirectory>) {
+    private fun updateList(medias: List<Media>) {
         view?.let { _ ->
-            val medias = ArrayList<Media>()
-            for (i in dirs.indices) {
-                medias.addAll(dirs[i].medias)
-            }
-
-            medias.sortWith(Comparator { a, b -> (b.id - a.id).toInt() })
-
-            if (medias.size > 0) {
+            if (medias.isNotEmpty()) {
                 emptyView.visibility = View.GONE
             } else {
                 emptyView.visibility = View.VISIBLE
@@ -153,18 +144,19 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
 
             context?.let {
                 if (photoGridAdapter != null) {
-                    photoGridAdapter?.setData(medias)
-                    photoGridAdapter?.notifyDataSetChanged()
+                    photoGridAdapter?.setData(medias, PickerManager.selectedPhotos)
                 } else {
                     photoGridAdapter = PhotoGridAdapter(it, mGlideRequestManager, medias, PickerManager.selectedPhotos, fileType == FilePickerConst.MEDIA_TYPE_IMAGE && PickerManager.isEnableCamera, this)
                     recyclerView.adapter = photoGridAdapter
                     photoGridAdapter?.setCameraListener(View.OnClickListener {
                         try {
-                            val intent = imageCaptureManager?.dispatchTakePictureIntent()
-                            if (intent != null)
-                                startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO)
-                            else
-                                Toast.makeText(activity, R.string.no_camera_exists, Toast.LENGTH_SHORT).show()
+                            uiScope.launch {
+                                val intent = withContext(Dispatchers.IO) { imageCaptureManager?.dispatchTakePictureIntent() }
+                                if (intent != null)
+                                    startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO)
+                                else
+                                    Toast.makeText(activity, R.string.no_camera_exists, Toast.LENGTH_SHORT).show()
+                            }
                         } catch (e: IOException) {
                             e.printStackTrace()
                         }
@@ -178,12 +170,16 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             ImageCaptureManager.REQUEST_TAKE_PHOTO -> if (resultCode == Activity.RESULT_OK) {
-                val imagePath = imageCaptureManager?.notifyMediaStoreDatabase()
-                if (imagePath != null && PickerManager.getMaxCount() == 1) {
-                    PickerManager.add(Uri.parse(imagePath), FilePickerConst.FILE_TYPE_MEDIA)
-                    mListener?.onItemSelected()
-                } else {
-                    Handler().postDelayed({ viewModel.getMedia(mediaType = fileType) }, 1000)
+                val imagePath = imageCaptureManager?.currentPhotoPath
+                if (imagePath != null) {
+                    if (PickerManager.getMaxCount() == 1) {
+                        PickerManager.add(imagePath, FilePickerConst.FILE_TYPE_MEDIA)
+                        mListener?.onItemSelected()
+                    }
+                }
+            } else {
+                uiScope.launch(Dispatchers.IO) {
+                    imageCaptureManager?.deleteContentUri(imageCaptureManager?.currentPhotoPath)
                 }
             }
         }

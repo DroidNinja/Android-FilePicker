@@ -25,8 +25,8 @@ import droidninja.filepicker.views.SmoothCheckBox
 
 class PhotoGridAdapter(private val context: Context,
                        private val glide: RequestManager,
-                       medias: ArrayList<Media>,
-                       selectedPaths: ArrayList<Uri>,
+                       medias: List<Media>,
+                       selectedPaths: MutableList<Uri>,
                        private val showCamera: Boolean,
                        private val mListener: FileAdapterListener?) : SelectableAdapter<PhotoGridAdapter.PhotoViewHolder, Media>(medias, selectedPaths) {
     private var imageSize: Int = 0
