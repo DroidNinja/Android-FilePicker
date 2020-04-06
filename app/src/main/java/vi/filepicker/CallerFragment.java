@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.OrientationHelper;
@@ -20,8 +19,12 @@ import android.widget.Toast;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.fragments.BaseFragment;
+
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import droidninja.filepicker.utils.ContentUriUtils;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -122,7 +125,7 @@ public class CallerFragment extends BaseFragment implements EasyPermissions.Perm
 
     if (docPaths != null) filePaths.addAll(docPaths);
 
-    RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerview);
+    final RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerview);
     if (recyclerView != null) {
       StaggeredGridLayoutManager layoutManager =
           new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL);
@@ -130,7 +133,20 @@ public class CallerFragment extends BaseFragment implements EasyPermissions.Perm
           StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
       recyclerView.setLayoutManager(layoutManager);
 
-      ImageAdapter imageAdapter = new ImageAdapter(getActivity(), filePaths);
+      ImageAdapter imageAdapter = new ImageAdapter(getActivity(), filePaths, new ImageAdapter.ImageAdapterListener() {
+        @Override
+        public void onItemClick(Uri uri) {
+          try {
+            //make sure to use this getFilePath method from worker thread
+            String path = ContentUriUtils.INSTANCE.getFilePath(recyclerView.getContext(), uri);
+            if (path != null) {
+              Toast.makeText(recyclerView.getContext(), path, Toast.LENGTH_SHORT).show();
+            }
+          } catch (URISyntaxException e) {
+            e.printStackTrace();
+          }
+        }
+      });
 
       recyclerView.setAdapter(imageAdapter);
       recyclerView.setItemAnimator(new DefaultItemAnimator());

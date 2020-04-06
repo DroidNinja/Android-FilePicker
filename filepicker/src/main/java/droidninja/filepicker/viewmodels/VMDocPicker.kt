@@ -92,7 +92,7 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
                 val fileType = getFileType(PickerManager.getFileTypes(), path)
                 val file = File(path)
                 val contentUri = ContentUris.withAppendedId(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL),
                         imageId
                 )
                 if (fileType != null && !file.isDirectory && file.exists()) {
