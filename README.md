@@ -15,9 +15,11 @@ A filepicker which allows to select images and videos with flexibility. It also 
     compile 'com.droidninja:filepicker:2.2.3'
 ```
 There is a method `getFilePath` in `ContentUriUtils` class through you can get the file path from Uri. e.g.
+Java:
 ```java
 ContentUriUtils.INSTANCE.getFilePath(getContext(), uri);
 ```
+Kotlin
 ```kotlin
 ContentUriUtils.getFilePath(context, uri);
 ```
