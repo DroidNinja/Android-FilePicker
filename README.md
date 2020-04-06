@@ -109,10 +109,10 @@ enableDocSupport(boolean status)    | If you want to enable/disable default docu
 enableCameraSupport(boolean status)    | to show camera in the picker (*Enabled by default*)
 addFileSupport(String title, String[] extensions, @DrawableRes int drawable)    | If you want to specify custom file type, use this method. (*example below*)
 
-If you want to add custom file type picker, use *addFileSupport()* method like this ( for zip support):
+If you want to add custom file type picker(do not use . in extension types), use *addFileSupport()* method like this ( for zip support):
 
  ```java
-String zipTypes = {".zip",".rar"};
+String zipTypes = {"zip","rar"};
     addFileSupport("ZIP",zipTypes, R.drawable.ic_zip_icon);
 ```
 
