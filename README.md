@@ -73,14 +73,14 @@ If you want to use custom request code, you just have to like this:
                     if(resultCode== Activity.RESULT_OK && data!=null)
                     {
                         photoPaths = new ArrayList<>();
-                        photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
+                        photoPaths.addAll(data.getParcelableArrayListExtra<Uri>(FilePickerConst.KEY_SELECTED_MEDIA));
                     }
                     break;
                 case FilePickerConst.REQUEST_CODE_DOC:
                     if(resultCode== Activity.RESULT_OK && data!=null)
                     {
                         docPaths = new ArrayList<>();
-                        docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
+                        docPaths.addAll(data.getParcelableArrayListExtra<Uri>(FilePickerConst.KEY_SELECTED_DOCS));
                     }
                     break;
             }
@@ -89,7 +89,7 @@ If you want to use custom request code, you just have to like this:
  ```
 
  # Builder Methods
-
+ 
 **Android FilePicker** now has more flexibility. Supported builder methods are:
 
 Method     | Use
