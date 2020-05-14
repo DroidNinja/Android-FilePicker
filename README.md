@@ -30,9 +30,10 @@ This Filepicker is based on the MediaStore api provided by android. It checks Me
   Just include this in your onclick function:
   * For **photopicker**:
  ```java
- FilePickerBuilder.getInstance().setMaxCount(5)
-                .setSelectedFiles(filePaths)
-                .setActivityTheme(R.style.LibAppTheme)
+ FilePickerBuilder.getInstance()
+                .setMaxCount(5) //optional
+                .setSelectedFiles(filePaths) //optional
+                .setActivityTheme(R.style.LibAppTheme) //optional
                 .pickPhoto(this);
  ```
 If you want to use custom request code, you just have to like this:
