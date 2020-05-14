@@ -48,7 +48,6 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
             fileType = intent.getIntExtra(FilePickerConst.EXTRA_FILE_TYPE, FilePickerConst.MEDIA_TYPE_IMAGE)
             photoDirectory = intent.getParcelableExtra(PhotoDirectory::class.java.simpleName)
             if (photoDirectory != null) {
-
                 setUpView()
                 setTitle(0)
             }
