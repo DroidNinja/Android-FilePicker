@@ -165,7 +165,9 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
 
     override fun onFolderClicked(photoDirectory: PhotoDirectory) {
         val intent = Intent(activity, MediaDetailsActivity::class.java)
-        intent.putExtra(PhotoDirectory::class.java.simpleName, photoDirectory)
+        intent.putExtra(PhotoDirectory::class.java.simpleName, photoDirectory.apply {
+            medias.clear()
+        })
         intent.putExtra(FilePickerConst.EXTRA_FILE_TYPE, fileType)
         activity?.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_MEDIA_DETAIL)
     }

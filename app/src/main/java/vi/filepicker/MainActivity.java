@@ -148,13 +148,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         } else {
             FilePickerBuilder.getInstance()
                     .setMaxCount(maxCount)
-                    .setSelectedFiles(photoPaths)
+                    .setSelectedFiles(photoPaths) //this is optional
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select media")
                     .enableVideoPicker(true)
                     .enableCameraSupport(true)
                     .showGifs(true)
-                    .showFolderView(false)
+                    .showFolderView(true)
                     .enableSelectAll(false)
                     .enableImagePicker(true)
                     .setCameraPlaceholder(R.drawable.custom_camera)

@@ -12,7 +12,7 @@ A filepicker which allows to select images and videos with flexibility. It also 
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    compile 'com.droidninja:filepicker:2.2.3'
+    implementation 'com.droidninja:filepicker:2.2.4'
 ```
 There is a method `getFilePath` in `ContentUriUtils` class through you can get the file path from Uri. e.g.
 
@@ -33,32 +33,36 @@ This Filepicker is based on the MediaStore api provided by android. It checks Me
   Just include this in your onclick function:
   * For **photopicker**:
  ```java
- FilePickerBuilder.getInstance().setMaxCount(5)
-                .setSelectedFiles(filePaths)
-                .setActivityTheme(R.style.LibAppTheme)
+ FilePickerBuilder.getInstance()
+                .setMaxCount(5) //optional
+                .setSelectedFiles(filePaths) //optional
+                .setActivityTheme(R.style.LibAppTheme) //optional
                 .pickPhoto(this);
  ```
 If you want to use custom request code, you just have to like this:
   ```java
-  FilePickerBuilder.getInstance().setMaxCount(5)
-                 .setSelectedFiles(filePaths)
-                 .setActivityTheme(R.style.LibAppTheme)
+  FilePickerBuilder.getInstance()
+                 .setMaxCount(5) //optional
+                 .setSelectedFiles(filePaths) //optional
+                 .setActivityTheme(R.style.LibAppTheme) //optional
                  .pickPhoto(this, CUSTOM_REQUEST_CODE);
   ```
  
   * For **document picker**:
  ```java
-  FilePickerBuilder.getInstance().setMaxCount(10)
-                .setSelectedFiles(filePaths)
-                .setActivityTheme(R.style.LibAppTheme)
+  FilePickerBuilder.getInstance()
+                .setMaxCount(10) //optional
+                .setSelectedFiles(filePaths) //optional
+                .setActivityTheme(R.style.LibAppTheme) //optional
                 .pickFile(this);
  ```
  
  If you want to use custom request code, you just have to like this:
    ```java
-   FilePickerBuilder.getInstance().setMaxCount(5)
-                  .setSelectedFiles(filePaths)
-                  .setActivityTheme(R.style.LibAppTheme)
+   FilePickerBuilder.getInstance()
+                  .setMaxCount(5) //optional
+                  .setSelectedFiles(filePaths) //optional
+                  .setActivityTheme(R.style.LibAppTheme) //optional
                   .pickFile(this, CUSTOM_REQUEST_CODE);
    ```
   
@@ -97,7 +101,7 @@ Method     | Use
 setMaxCount(int maxCount) | used to specify maximum count of media picks (dont use if you want no limit)
 setActivityTheme(int theme)    | used to set theme for toolbar (must be an non-actionbar theme or use LibAppTheme)
 setActivityTitle(String title)    | used to set title for toolbar
-setSelectedFiles(ArrayList<String> selectedPhotos)     | to show already selected items
+setSelectedFiles(ArrayList<Uri> selectedPhotos)     | to show already selected items (optional)
 enableVideoPicker(boolean status)    | added video picker alongside images
 enableImagePicker(boolean status)    | added option to disable image picker
 enableSelectAll(boolean status)    | added option to enable/disable select all feature(it will only work with no limit option)
@@ -146,22 +150,19 @@ Just override these styles in your main module to change colors and themes
 ```
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
--keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-    **[] $VALUES;
-    public *;
+-keep class * extends com.bumptech.glide.module.AppGlideModule {
+ <init>(...);
 }
-# support-v7-appcompat
--keep public class android.support.v7.widget.** { *; }
--keep public class android.support.v7.internal.widget.** { *; }
--keep public class android.support.v7.internal.view.menu.** { *; }
--keep public class * extends android.support.v4.view.ActionProvider {
-    public <init>(android.content.Context);
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
 }
-# support-design
--dontwarn android.support.design.**
--keep class android.support.design.** { *; }
--keep interface android.support.design.** { *; }
--keep public class android.support.design.R$* { *; }
+-keep class com.bumptech.glide.load.data.ParcelFileDescriptorRewinder$InternalRewinder {
+  *** rewind();
+}
+
+# Uncomment for DexGuard only
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 ```
 
 # Donate

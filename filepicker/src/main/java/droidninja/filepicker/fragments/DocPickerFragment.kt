@@ -2,15 +2,14 @@ package droidninja.filepicker.fragments
 
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.adapters.SectionsPagerAdapter
@@ -84,14 +83,14 @@ class DocPickerFragment : BaseFragment() {
             val sectionsPagerAdapter = viewPager.adapter as SectionsPagerAdapter?
             if (sectionsPagerAdapter != null) {
                 for (index in 0 until sectionsPagerAdapter.count) {
-                    val docFragment = childFragmentManager
-                            .findFragmentByTag(
-                                    "android:switcher:" + R.id.viewPager + ":" + index) as DocFragment
-                    val fileType = docFragment.fileType
-                    if (fileType != null) {
-                        val filesFilteredByType = filesMap[fileType]
-                        if (filesFilteredByType != null)
-                            docFragment.updateList(filesFilteredByType)
+                    val docFragment = sectionsPagerAdapter.getItem(index)
+                    if (docFragment is DocFragment) {
+                        val fileType = docFragment.fileType
+                        if (fileType != null) {
+                            val filesFilteredByType = filesMap[fileType]
+                            if (filesFilteredByType != null)
+                                docFragment.updateList(filesFilteredByType)
+                        }
                     }
                 }
             }
@@ -102,7 +101,7 @@ class DocPickerFragment : BaseFragment() {
         val adapter = SectionsPagerAdapter(childFragmentManager)
         val supportedTypes = PickerManager.getFileTypes()
         for (index in supportedTypes.indices) {
-            adapter.addFragment(DocFragment.newInstance(supportedTypes.get(index)), supportedTypes.get(index).title)
+            adapter.addFragment(DocFragment.newInstance(supportedTypes[index]), supportedTypes[index].title)
         }
 
         viewPager.offscreenPageLimit = supportedTypes.size
