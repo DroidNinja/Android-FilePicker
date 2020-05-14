@@ -12,7 +12,14 @@ A filepicker which allows to select images and videos with flexibility. It also 
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    implementation 'com.droidninja:filepicker:2.2.2'
+    implementation 'com.droidninja:filepicker:2.2.4'
+```
+There is a method `getFilePath` in `ContentUriUtils` class through you can get the file path from Uri. e.g.
+```java
+ContentUriUtils.INSTANCE.getFilePath(getContext(), uri);
+```
+```kotlin
+ContentUriUtils.getFilePath(context, uri);
 ```
 
 # Note
