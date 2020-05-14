@@ -37,25 +37,28 @@ This Filepicker is based on the MediaStore api provided by android. It checks Me
  ```
 If you want to use custom request code, you just have to like this:
   ```java
-  FilePickerBuilder.getInstance().setMaxCount(5)
-                 .setSelectedFiles(filePaths)
-                 .setActivityTheme(R.style.LibAppTheme)
+  FilePickerBuilder.getInstance()
+                 .setMaxCount(5) //optional
+                 .setSelectedFiles(filePaths) //optional
+                 .setActivityTheme(R.style.LibAppTheme) //optional
                  .pickPhoto(this, CUSTOM_REQUEST_CODE);
   ```
  
   * For **document picker**:
  ```java
-  FilePickerBuilder.getInstance().setMaxCount(10)
-                .setSelectedFiles(filePaths)
-                .setActivityTheme(R.style.LibAppTheme)
+  FilePickerBuilder.getInstance()
+                .setMaxCount(10) //optional
+                .setSelectedFiles(filePaths) //optional
+                .setActivityTheme(R.style.LibAppTheme) //optional
                 .pickFile(this);
  ```
  
  If you want to use custom request code, you just have to like this:
    ```java
-   FilePickerBuilder.getInstance().setMaxCount(5)
-                  .setSelectedFiles(filePaths)
-                  .setActivityTheme(R.style.LibAppTheme)
+   FilePickerBuilder.getInstance()
+                  .setMaxCount(5) //optional
+                  .setSelectedFiles(filePaths) //optional
+                  .setActivityTheme(R.style.LibAppTheme) //optional
                   .pickFile(this, CUSTOM_REQUEST_CODE);
    ```
   
@@ -94,7 +97,7 @@ Method     | Use
 setMaxCount(int maxCount) | used to specify maximum count of media picks (dont use if you want no limit)
 setActivityTheme(int theme)    | used to set theme for toolbar (must be an non-actionbar theme or use LibAppTheme)
 setActivityTitle(String title)    | used to set title for toolbar
-setSelectedFiles(ArrayList<String> selectedPhotos)     | to show already selected items
+setSelectedFiles(ArrayList<Uri> selectedPhotos)     | to show already selected items (optional)
 enableVideoPicker(boolean status)    | added video picker alongside images
 enableImagePicker(boolean status)    | added option to disable image picker
 enableSelectAll(boolean status)    | added option to enable/disable select all feature(it will only work with no limit option)
