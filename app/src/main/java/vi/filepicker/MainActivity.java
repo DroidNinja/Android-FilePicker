@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     public void onPickDoc() {
         String[] zips = {"zip", "rar"};
-        String[] pdfs = {"pdf"};
+        String[] pdfs = {"aac"};
         int maxCount = MAX_ATTACHMENT_COUNT - photoPaths.size();
         if ((docPaths.size() + photoPaths.size()) == MAX_ATTACHMENT_COUNT) {
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select doc")
                     .addFileSupport("ZIP", zips)
-                    .addFileSupport("PDF", pdfs, R.drawable.pdf_blue)
+                    .addFileSupport("AAC", pdfs, R.drawable.pdf_blue)
                     .enableDocSupport(true)
                     .enableSelectAll(true)
                     .sortDocumentsBy(SortingTypes.name)
