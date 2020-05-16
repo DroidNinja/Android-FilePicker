@@ -3,6 +3,7 @@
  [ ![Latest Version](https://api.bintray.com/packages/droidninja/maven/com.droidninja.filepicker/images/download.svg) ](https://bintray.com/droidninja/maven/com.droidninja.filepicker/_latestVersion)
  
 A filepicker which allows to select images and videos with flexibility. It also supports selection of files by specifying its file type. For using this library, you have to migrate your project to [androidx](https://developer.android.com/jetpack/androidx/migrate) or you can use older version(2.1.5). Check out app module for example.
+For Android 10 devices using document picker, you will need to enable `android:requestLegacyExternalStorage="true"` option in your manifest file. Document picker will get deprecated soon since this flag will not in Android 11.
 
   ![demo](https://image.ibb.co/iRpztv/device_2017_03_10_164003.png)
   ![demo](https://image.ibb.co/m75uRF/device_2017_03_10_163900.png)
