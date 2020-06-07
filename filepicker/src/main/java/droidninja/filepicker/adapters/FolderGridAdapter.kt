@@ -1,7 +1,6 @@
 package droidninja.filepicker.adapters
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -9,19 +8,21 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
-
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-
-import java.io.File
-import java.util.ArrayList
-
+import droidninja.filepicker.FilePickerConst
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 
-class FolderGridAdapter(private val context: Context, private val glide: RequestManager, var items: List<PhotoDirectory>, private val showCamera: Boolean) : RecyclerView.Adapter<FolderGridAdapter.PhotoViewHolder>() {
+class FolderGridAdapter(private val context: Context,
+                        private val glide: RequestManager,
+                        var items: List<PhotoDirectory>,
+                        private val showCamera: Boolean,
+                        private val fileType: Int
+) : RecyclerView.Adapter<FolderGridAdapter.PhotoViewHolder>() {
     private var imageSize: Int = 0
     private var folderGridAdapterListener: FolderGridAdapterListener? = null
 
@@ -66,11 +67,16 @@ class FolderGridAdapter(private val context: Context, private val glide: Request
             holder.folderCount.text = photoDirectory.medias.size.toString()
 
             holder.itemView.setOnClickListener {
-                    folderGridAdapterListener?.onFolderClicked(photoDirectory)
+                folderGridAdapterListener?.onFolderClicked(photoDirectory)
             }
             holder.bottomOverlay.visibility = View.VISIBLE
         } else {
-            holder.imageView.setImageResource(PickerManager.cameraDrawable)
+            if (fileType == FilePickerConst.MEDIA_TYPE_IMAGE) {
+                holder.imageView.setImageResource(PickerManager.cameraImageDrawable)
+            } else {
+                holder.imageView.setImageResource(PickerManager.cameraVideoDrawable)
+            }
+
             holder.itemView.setOnClickListener {
                 folderGridAdapterListener?.onCameraClicked()
             }

@@ -6,14 +6,14 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.annotation.DrawableRes
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.annotation.IntegerRes
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import droidninja.filepicker.models.FileType
 import droidninja.filepicker.models.sort.SortingTypes
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -42,70 +42,64 @@ class FilePickerBuilder {
         return this
     }
 
-    fun enableVideoPicker(status: Boolean): FilePickerBuilder {
+    fun enableVideoPicker(status: Boolean) = apply {
         PickerManager.setShowVideos(status)
-        return this
     }
 
-    fun enableImagePicker(status: Boolean): FilePickerBuilder {
+    fun enableImagePicker(status: Boolean) = apply {
         PickerManager.setShowImages(status)
-        return this
     }
 
-    fun enableSelectAll(status: Boolean): FilePickerBuilder {
+    fun enableSelectAll(status: Boolean) = apply {
         PickerManager.enableSelectAll(status)
-        return this
     }
 
-    fun setCameraPlaceholder(@DrawableRes drawable: Int): FilePickerBuilder {
-        PickerManager.cameraDrawable = drawable
-        return this
+    fun setCameraImagePlaceholder(@DrawableRes drawable: Int) = apply {
+        PickerManager.cameraImageDrawable = drawable
     }
 
-    fun showGifs(status: Boolean): FilePickerBuilder {
+    fun setCameraVideoPlaceholder(@DrawableRes drawable: Int) = apply {
+        PickerManager.cameraVideoDrawable = drawable
+    }
+
+    fun showGifs(status: Boolean) = apply {
         PickerManager.isShowGif = status
-        return this
     }
 
-    fun showFolderView(status: Boolean): FilePickerBuilder {
+    fun showFolderView(status: Boolean) = apply {
         PickerManager.isShowFolderView = status
-        return this
     }
 
-    fun enableDocSupport(status: Boolean): FilePickerBuilder {
+    fun enableDocSupport(status: Boolean) = apply {
         PickerManager.isDocSupport = status
-        return this
     }
 
-    fun enableCameraSupport(status: Boolean): FilePickerBuilder {
+    fun enableCameraSupport(status: Boolean) = apply {
         PickerManager.isEnableCamera = status
-        return this
     }
 
 
-    fun withOrientation(@IntegerRes orientation:  Int): FilePickerBuilder {
+    fun withOrientation(@IntegerRes orientation: Int) = apply {
         PickerManager.orientation = orientation
-        return this
     }
 
     @JvmOverloads
-    fun addFileSupport(title: String, extensions: Array<String>,
-                       @DrawableRes drawable: Int = R.drawable.icon_file_unknown): FilePickerBuilder {
+    fun addFileSupport(title: String,
+                       extensions: Array<String>,
+                       @DrawableRes drawable: Int = R.drawable.icon_file_unknown) = apply {
         PickerManager.addFileType(FileType(title, extensions, drawable))
-        return this
     }
 
-    fun sortDocumentsBy(type: SortingTypes): FilePickerBuilder {
+    fun sortDocumentsBy(type: SortingTypes) = apply {
         PickerManager.sortingType = type
-        return this
     }
 
-    fun pickPhoto(context: Activity) {
+    fun pickMedia(context: Activity) {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER)
         start(context, FilePickerConst.REQUEST_CODE_PHOTO)
     }
 
-    fun pickPhoto(context: Fragment) {
+    fun pickMedia(context: Fragment) {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER)
         start(context, FilePickerConst.REQUEST_CODE_PHOTO)
     }
@@ -120,12 +114,12 @@ class FilePickerBuilder {
         start(context, FilePickerConst.REQUEST_CODE_DOC)
     }
 
-    fun pickPhoto(context: Activity, requestCode: Int) {
+    fun pickMedia(context: Activity, requestCode: Int) {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER)
         start(context, requestCode)
     }
 
-    fun pickPhoto(context: Fragment, requestCode: Int) {
+    fun pickMedia(context: Fragment, requestCode: Int) {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.MEDIA_PICKER)
         start(context, requestCode)
     }

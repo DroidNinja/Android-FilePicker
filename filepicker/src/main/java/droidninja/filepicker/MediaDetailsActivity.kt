@@ -3,16 +3,16 @@ package droidninja.filepicker
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.OrientationHelper
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.OrientationHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import droidninja.filepicker.adapters.FileAdapterListener
@@ -21,8 +21,7 @@ import droidninja.filepicker.models.Media
 import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 import droidninja.filepicker.viewmodels.VMMediaPicker
-import java.util.ArrayList
-import java.util.Comparator
+import kotlin.math.abs
 
 class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     private var recyclerView: RecyclerView? = null
@@ -32,7 +31,7 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     private var fileType: Int = 0
     private var selectAllItem: MenuItem? = null
     private var photoDirectory: PhotoDirectory? = null
-    lateinit var viewModel: VMMediaPicker
+    private lateinit var viewModel: VMMediaPicker
 
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +82,7 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 // Log.d(">>> Picker >>>", "dy = " + dy);
-                if (Math.abs(dy) > SCROLL_THRESHOLD) {
+                if (abs(dy) > SCROLL_THRESHOLD) {
                     mGlideRequestManager.pauseRequests()
                 } else {
                     resumeRequestsIfNotDestroyed()
@@ -116,8 +115,14 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
         if (photoGridAdapter != null) {
             photoGridAdapter?.setData(medias, PickerManager.selectedPhotos)
         } else {
-            photoGridAdapter = PhotoGridAdapter(this, mGlideRequestManager, medias,
-                    PickerManager.selectedPhotos, false, this)
+            photoGridAdapter = PhotoGridAdapter(this,
+                    mGlideRequestManager,
+                    medias,
+                    PickerManager.selectedPhotos,
+                    false,
+                    this,
+                    fileType)
+
             recyclerView?.adapter = photoGridAdapter
         }
 
@@ -149,35 +154,38 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val itemId = item.itemId
-        if (itemId == R.id.action_done) {
-            setResult(Activity.RESULT_OK, null)
-            finish()
+        when (item.itemId) {
+            R.id.action_done -> {
+                setResult(Activity.RESULT_OK, null)
+                finish()
 
-            return true
-        } else if (itemId == R.id.action_select) {
-            selectAllItem?.let {
-                photoGridAdapter?.let { adapter ->
-                    if (it.isChecked) {
-                        PickerManager.deleteMedia(adapter.selectedPaths)
-                        adapter.clearSelection()
-
-                        it.setIcon(R.drawable.ic_deselect_all)
-                    } else {
-                        adapter.selectAll()
-                        PickerManager.add(adapter.selectedPaths, FilePickerConst.FILE_TYPE_MEDIA)
-                        it.setIcon(R.drawable.ic_select_all)
-                    }
-                    it.isChecked = !it.isChecked
-                    setTitle(PickerManager.currentCount)
-                }
+                return true
             }
-            return true
-        } else if (itemId == android.R.id.home) {
-            onBackPressed()
-            return true
+            R.id.action_select -> {
+                selectAllItem?.let {
+                    photoGridAdapter?.let { adapter ->
+                        if (it.isChecked) {
+                            PickerManager.deleteMedia(adapter.selectedPaths)
+                            adapter.clearSelection()
+
+                            it.setIcon(R.drawable.ic_deselect_all)
+                        } else {
+                            adapter.selectAll()
+                            PickerManager.add(adapter.selectedPaths, FilePickerConst.FILE_TYPE_MEDIA)
+                            it.setIcon(R.drawable.ic_select_all)
+                        }
+                        it.isChecked = !it.isChecked
+                        setTitle(PickerManager.currentCount)
+                    }
+                }
+                return true
+            }
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onItemSelected() {
@@ -196,6 +204,6 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
 
     companion object {
 
-        private val SCROLL_THRESHOLD = 30
+        private const val SCROLL_THRESHOLD = 30
     }
 }

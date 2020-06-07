@@ -2,20 +2,15 @@ package droidninja.filepicker.adapters
 
 import android.content.Context
 import android.net.Uri
-import androidx.recyclerview.widget.RecyclerView
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
-
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-
-import java.io.File
-import java.util.ArrayList
-
 import droidninja.filepicker.FilePickerConst
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
@@ -28,7 +23,9 @@ class PhotoGridAdapter(private val context: Context,
                        medias: List<Media>,
                        selectedPaths: MutableList<Uri>,
                        private val showCamera: Boolean,
-                       private val mListener: FileAdapterListener?) : SelectableAdapter<PhotoGridAdapter.PhotoViewHolder, Media>(medias, selectedPaths) {
+                       private val mListener: FileAdapterListener?,
+                       private val fileType: Int
+) : SelectableAdapter<PhotoGridAdapter.PhotoViewHolder, Media>(medias, selectedPaths) {
     private var imageSize: Int = 0
     private var cameraOnClickListener: View.OnClickListener? = null
 
@@ -101,7 +98,12 @@ class PhotoGridAdapter(private val context: Context,
             })
 
         } else {
-            holder.imageView.setImageResource(PickerManager.cameraDrawable)
+            if (fileType == FilePickerConst.MEDIA_TYPE_IMAGE) {
+                holder.imageView.setImageResource(PickerManager.cameraImageDrawable)
+            } else {
+                holder.imageView.setImageResource(PickerManager.cameraVideoDrawable)
+            }
+
             holder.checkBox.visibility = View.GONE
             holder.itemView.setOnClickListener(cameraOnClickListener)
             holder.videoIcon.visibility = View.GONE

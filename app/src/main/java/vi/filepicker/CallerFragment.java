@@ -150,7 +150,7 @@ public class CallerFragment extends BaseFragment implements EasyPermissions.Perm
           .setMaxCount(maxCount)
           .setSelectedFiles(photoPaths)
           .setActivityTheme(R.style.FilePickerTheme)
-          .pickPhoto(this);
+          .pickMedia(this);
     }
   }
 
