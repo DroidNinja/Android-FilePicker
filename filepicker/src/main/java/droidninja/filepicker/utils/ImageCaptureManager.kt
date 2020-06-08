@@ -72,7 +72,7 @@ class ImageCaptureManager(private val mContext: Context) {
         if (takeVideoIntent.resolveActivity(mContext.packageManager) != null) {
             // Create the File where the photo should go
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val photoURI = createImageFile()
+                val photoURI = createVideoFile()
                 takeVideoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 takeVideoIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
