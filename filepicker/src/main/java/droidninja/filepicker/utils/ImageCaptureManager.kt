@@ -77,7 +77,7 @@ class ImageCaptureManager(private val mContext: Context) {
                 takeVideoIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
             } else {
-                takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, createImageFile())
+                takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, createVideoFile())
             }
             return takeVideoIntent
         }
