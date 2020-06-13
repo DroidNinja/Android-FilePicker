@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_settings">تنظیمات</string>
+
+    <string name="permission_filepicker_rationale">مجوز دسترسی به فایل، برای خواندن فایل ها لازم است.</string>
+    <string name="no_files_found">فایلی وجود ندارد</string>
+    <string name="attachments_title_text" formatted="false">(%d/%d)</string>
+    <string name="attachments_num" formatted="false">%d</string>
+    <string name="select_photo_text">یک عکس انتخاب کنید</string>
+    <string name="select_doc_text">یک مستند انتخاب کنید</string>
+    <string name="no_camera_exists">هیچ برنامه برای دوربین وجود ندارد!</string>
+    <string name="pdf_title">PDF</string>
+    <string name="ppt_title">PPT</string>
+    <string name="word_title">DOC</string>
+    <string name="excel_title">XLS</string>
+    <string name="txt_title">TXT</string>
+    <string name="videos">فیلم ها</string>
+    <string name="images">تصاویر</string>
+    <string name="all_photos">همه تصویرها</string>
+    <string name="all_videos">همه فیلم ها</string>
+    <string name="all_files">همه فایل ها</string>
+
+</resources>
