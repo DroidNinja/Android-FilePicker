@@ -15,6 +15,7 @@ import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.models.Media
 import droidninja.filepicker.models.PhotoDirectory
+import droidninja.filepicker.utils.ImageCaptureManager
 import droidninja.filepicker.utils.registerObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -34,20 +35,19 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
     val lvDataChanged: LiveData<Boolean>
         get() = _lvDataChanged
 
-    private var imageContentObserver: ContentObserver? = null
-    private var videoContentObserver: ContentObserver? = null
+    private var contentObserver: ContentObserver? = null
+    private var videoObserver: ContentObserver? = null
 
-    private fun registerContentObserver() {
-        if (imageContentObserver == null) {
-            imageContentObserver = getApplication<Application>().contentResolver.registerObserver(
+    private fun registerContentObserver(){
+        if (contentObserver == null) {
+            contentObserver = getApplication<Application>().contentResolver.registerObserver(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             ) {
                 _lvDataChanged.value = true
             }
         }
-
-        if (videoContentObserver == null) {
-            videoContentObserver = getApplication<Application>().contentResolver.registerObserver(
+        if (videoObserver == null) {
+            videoObserver = getApplication<Application>().contentResolver.registerObserver(
                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI
             ) {
                 _lvDataChanged.value = true
@@ -58,7 +58,7 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
     fun getMedia(bucketId: String? = null, mediaType: Int = FilePickerConst.MEDIA_TYPE_IMAGE) {
         launchDataLoad {
             val medias = mutableListOf<Media>()
-            queryImages(bucketId, mediaType).map { dir ->
+            queryImages(bucketId, mediaType).map { dir->
                 medias.addAll(dir.medias)
             }
             medias.sortWith(Comparator { a, b -> (b.id - a.id).toInt() })
@@ -124,6 +124,7 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
             if (bucketId != null)
                 selection += " AND " + MediaStore.Images.Media.BUCKET_ID + "='" + bucketId + "'"
 
+
             val cursor = getApplication<Application>().contentResolver.query(uri, projection, selection, null, sortOrder)
 
             if (cursor != null) {
@@ -175,7 +176,10 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
     }
 
     override fun onCleared() {
-        imageContentObserver?.let {
+        contentObserver?.let {
+            getApplication<Application>().contentResolver.unregisterContentObserver(it)
+        }
+        videoObserver?.let {
             getApplication<Application>().contentResolver.unregisterContentObserver(it)
         }
     }

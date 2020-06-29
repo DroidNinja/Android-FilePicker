@@ -6,14 +6,14 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.annotation.DrawableRes
-import androidx.annotation.IntegerRes
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
+import android.widget.Toast
+import androidx.annotation.IntegerRes
 import droidninja.filepicker.models.FileType
 import droidninja.filepicker.models.sort.SortingTypes
-import java.util.*
+import java.util.ArrayList
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -42,56 +42,67 @@ class FilePickerBuilder {
         return this
     }
 
-    fun enableVideoPicker(status: Boolean) = apply {
+    fun enableVideoPicker(status: Boolean): FilePickerBuilder {
         PickerManager.setShowVideos(status)
+        return this
     }
 
-    fun enableImagePicker(status: Boolean) = apply {
+    fun enableImagePicker(status: Boolean): FilePickerBuilder {
         PickerManager.setShowImages(status)
+        return this
     }
 
-    fun enableSelectAll(status: Boolean) = apply {
+    fun enableSelectAll(status: Boolean): FilePickerBuilder {
         PickerManager.enableSelectAll(status)
+        return this
     }
 
-    fun setCameraImagePlaceholder(@DrawableRes drawable: Int) = apply {
+
+    fun setCameraImagePlaceholder(@DrawableRes drawable: Int): FilePickerBuilder {
         PickerManager.cameraImageDrawable = drawable
+        return this
     }
-
-    fun setCameraVideoPlaceholder(@DrawableRes drawable: Int) = apply {
+    fun setCameraVideoPlaceholder(@DrawableRes drawable: Int): FilePickerBuilder {
         PickerManager.cameraVideoDrawable = drawable
+        return this
     }
 
-    fun showGifs(status: Boolean) = apply {
+    fun showGifs(status: Boolean): FilePickerBuilder {
         PickerManager.isShowGif = status
+        return this
     }
 
-    fun showFolderView(status: Boolean) = apply {
+    fun showFolderView(status: Boolean): FilePickerBuilder {
         PickerManager.isShowFolderView = status
+        return this
     }
 
-    fun enableDocSupport(status: Boolean) = apply {
+    fun enableDocSupport(status: Boolean): FilePickerBuilder {
         PickerManager.isDocSupport = status
+        return this
     }
 
-    fun enableCameraSupport(status: Boolean) = apply {
+    fun enableCameraSupport(status: Boolean): FilePickerBuilder {
         PickerManager.isEnableCamera = status
+        return this
     }
 
 
-    fun withOrientation(@IntegerRes orientation: Int) = apply {
+    fun withOrientation(@IntegerRes orientation:  Int): FilePickerBuilder {
         PickerManager.orientation = orientation
+        return this
     }
 
     @JvmOverloads
-    fun addFileSupport(title: String,
-                       extensions: Array<String>,
-                       @DrawableRes drawable: Int = R.drawable.icon_file_unknown) = apply {
+    fun addFileSupport(title: String, extensions: Array<String>,
+                       @DrawableRes drawable: Int = R.drawable.icon_file_unknown): FilePickerBuilder {
         PickerManager.addFileType(FileType(title, extensions, drawable))
+        return this
     }
 
-    fun sortDocumentsBy(type: SortingTypes) = apply {
+    fun sortDocumentsBy(type: SortingTypes): FilePickerBuilder {
         PickerManager.sortingType = type
+        return this
     }
 
     fun pickMedia(context: Activity) {

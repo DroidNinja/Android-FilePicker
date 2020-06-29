@@ -2,16 +2,13 @@ package droidninja.filepicker.adapters
 
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
-
-import java.util.ArrayList
-
-import droidninja.filepicker.PickerManager
 import droidninja.filepicker.models.BaseFile
 
 abstract class SelectableAdapter<VH : RecyclerView.ViewHolder, T : BaseFile>(var items: List<T>, var selectedPaths: MutableList<Uri> = mutableListOf()) : RecyclerView.Adapter<VH>(), Selectable<T> {
 
     override val selectedItemCount: Int
         get() = selectedPaths.size
+
     /**
      * Indicates if the item at position where is selected
      *
@@ -59,6 +56,6 @@ abstract class SelectableAdapter<VH : RecyclerView.ViewHolder, T : BaseFile>(var
 
     companion object {
 
-        private val TAG = "SelectableAdapter"
+        private const val TAG = "SelectableAdapter"
     }
 }

@@ -22,36 +22,32 @@ object ContentUriUtils {
         var selectionArgs: Array<String>? = null
         // Uri is different in versions after KITKAT (Android 4.4), we need to
         if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context.applicationContext, uri)) {
-            when {
-                isExternalStorageDocument(uri) -> {
-                    val docId = DocumentsContract.getDocumentId(uri)
-                    val split = docId.split(":").toTypedArray()
-                    return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
-                }
-                isDownloadsDocument(uri) -> {
-                    val id = DocumentsContract.getDocumentId(uri)
-                    uri = ContentUris.withAppendedId(
-                            Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
-                }
-                isMediaDocument(uri) -> {
-                    val docId = DocumentsContract.getDocumentId(uri)
-                    val split = docId.split(":").toTypedArray()
-                    when (split[0]) {
-                        "image" -> {
-                            uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                        }
-                        "video" -> {
-                            uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                        }
-                        "audio" -> {
-                            uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                        }
+            if (isExternalStorageDocument(uri)) {
+                val docId = DocumentsContract.getDocumentId(uri)
+                val split = docId.split(":").toTypedArray()
+                return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+            } else if (isDownloadsDocument(uri)) {
+                val id = DocumentsContract.getDocumentId(uri)
+                uri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
+            } else if (isMediaDocument(uri)) {
+                val docId = DocumentsContract.getDocumentId(uri)
+                val split = docId.split(":").toTypedArray()
+                when (split[0]) {
+                    "image" -> {
+                        uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                     }
-                    selection = "_id=?"
-                    selectionArgs = arrayOf(
-                            split[1]
-                    )
+                    "video" -> {
+                        uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                    }
+                    "audio" -> {
+                        uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    }
                 }
+                selection = "_id=?"
+                selectionArgs = arrayOf(
+                        split[1]
+                )
             }
         }
         if ("content".equals(uri.scheme, ignoreCase = true)) {
@@ -65,9 +61,9 @@ object ContentUriUtils {
                 val cursor = context.contentResolver?.query(uri, projection, selection, selectionArgs, null)
                 var path: String? = null
                 if (cursor != null) {
-                    val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                    val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
                     if (cursor.moveToFirst()) {
-                        path = cursor.getString(columnIndex)
+                        path = cursor.getString(column_index)
                         cursor.close()
                     }
                 }
@@ -81,19 +77,19 @@ object ContentUriUtils {
         return null
     }
 
-    private fun isExternalStorageDocument(uri: Uri): Boolean {
+    fun isExternalStorageDocument(uri: Uri): Boolean {
         return "com.android.externalstorage.documents" == uri.authority
     }
 
-    private fun isDownloadsDocument(uri: Uri): Boolean {
+    fun isDownloadsDocument(uri: Uri): Boolean {
         return "com.android.providers.downloads.documents" == uri.authority
     }
 
-    private fun isMediaDocument(uri: Uri): Boolean {
+    fun isMediaDocument(uri: Uri): Boolean {
         return "com.android.providers.media.documents" == uri.authority
     }
 
-    private fun isGooglePhotosUri(uri: Uri): Boolean {
+    fun isGooglePhotosUri(uri: Uri): Boolean {
         return "com.google.android.apps.photos.content" == uri.authority
     }
 }

@@ -17,12 +17,11 @@ object FilePickerUtils {
 
     fun getFileExtension(file: File): String {
         val name = file.name
-        try {
-            return name.substring(name.lastIndexOf(".") + 1)
+        return try {
+            name.substring(name.lastIndexOf(".") + 1)
         } catch (e: Exception) {
-            return ""
+            ""
         }
-
     }
 
     fun contains(types: Array<String>, mimeType: String?): Boolean {

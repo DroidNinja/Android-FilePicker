@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.*
 import android.widget.TextView
 import android.widget.Toast
@@ -21,6 +22,7 @@ import droidninja.filepicker.R
 import droidninja.filepicker.adapters.FileAdapterListener
 import droidninja.filepicker.adapters.PhotoGridAdapter
 import droidninja.filepicker.models.Media
+import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 import droidninja.filepicker.utils.ImageCaptureManager
 import droidninja.filepicker.viewmodels.VMMediaPicker
@@ -28,25 +30,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.util.*
 
 
 class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
-    private lateinit var recyclerView: RecyclerView
+    lateinit var recyclerView: RecyclerView
 
-    private lateinit var emptyView: TextView
-    private lateinit var viewModel: VMMediaPicker
+    lateinit var emptyView: TextView
+    lateinit var viewModel: VMMediaPicker
 
     private var mListener: PhotoPickerFragmentListener? = null
     private var photoGridAdapter: PhotoGridAdapter? = null
     private var imageCaptureManager: ImageCaptureManager? = null
     private lateinit var mGlideRequestManager: RequestManager
-
+    private var fileType: Int = 0
     private var selectAllItem: MenuItem? = null
 
-
-    private val fileType by lazy {
-        arguments?.getInt(FILE_TYPE) ?: 0
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -84,9 +83,7 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(PickerManager.hasSelectAll())
         mGlideRequestManager = Glide.with(this)
-        viewModel = ViewModelProvider(this,
-                ViewModelProvider.AndroidViewModelFactory(requireActivity().application))
-                .get(VMMediaPicker::class.java)
+        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(requireActivity().application)).get(VMMediaPicker::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -95,26 +92,19 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
     }
 
     private fun initView(view: View) {
-
-        if (fileType == 0) {
-            throw Exception("fileType invalid value($fileType)")
-        }
-
         recyclerView = view.findViewById(R.id.recyclerview)
         emptyView = view.findViewById(R.id.empty_view)
-
-        activity?.let {
-            imageCaptureManager = ImageCaptureManager(it)
-        }
-
-
-        with(recyclerView) {
-            layoutManager = StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL).apply {
-                StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
+        arguments?.let {
+            fileType = it.getInt(BaseFragment.FILE_TYPE)
+            activity?.let {
+                imageCaptureManager = ImageCaptureManager(it)
             }
+            val layoutManager = StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL)
+            layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
+            recyclerView.layoutManager = layoutManager
+            recyclerView.itemAnimator = DefaultItemAnimator()
 
-            itemAnimator = DefaultItemAnimator()
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     // Log.d(">>> Picker >>>", "dy = " + dy);
@@ -132,7 +122,6 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
                 }
             })
         }
-
 
         viewModel.lvMediaData.observe(viewLifecycleOwner, Observer { data ->
             updateList(data)
@@ -157,24 +146,22 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
                 if (photoGridAdapter != null) {
                     photoGridAdapter?.setData(medias, PickerManager.selectedPhotos)
                 } else {
-                    photoGridAdapter = PhotoGridAdapter(it,
-                            mGlideRequestManager,
-                            medias,
-                            PickerManager.selectedPhotos,
-                            PickerManager.isEnableCamera,
-                            this,
-                            fileType)
-
+                    photoGridAdapter = PhotoGridAdapter(it, mGlideRequestManager, medias, PickerManager.selectedPhotos, PickerManager.isEnableCamera,fileType, this)
                     recyclerView.adapter = photoGridAdapter
-
                     photoGridAdapter?.setCameraListener(View.OnClickListener {
                         try {
                             uiScope.launch {
                                 val intent = withContext(Dispatchers.IO) {
-                                    if (fileType == FilePickerConst.MEDIA_TYPE_IMAGE) {
-                                        imageCaptureManager?.dispatchTakePictureIntent()
-                                    } else {
-                                        imageCaptureManager?.dispatchTakeVideoIntent()
+                                    when (fileType) {
+                                        FilePickerConst.MEDIA_TYPE_IMAGE -> {
+                                            imageCaptureManager?.dispatchTakePictureIntent()
+                                        }
+                                        FilePickerConst.MEDIA_TYPE_VIDEO -> {
+                                            imageCaptureManager?.dispatchTakeVideoIntent()
+                                        }
+                                        else -> {
+                                            null
+                                        }
                                     }
                                 }
 
@@ -255,14 +242,14 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
     companion object {
 
         private val TAG = MediaDetailPickerFragment::class.java.simpleName
-        private const val SCROLL_THRESHOLD = 30
+        private val SCROLL_THRESHOLD = 30
 
         fun newInstance(fileType: Int): MediaDetailPickerFragment {
             val mediaDetailPickerFragment = MediaDetailPickerFragment()
             val bun = Bundle()
-            bun.putInt(FILE_TYPE, fileType)
+            bun.putInt(BaseFragment.Companion.FILE_TYPE, fileType)
             mediaDetailPickerFragment.arguments = bun
             return mediaDetailPickerFragment
         }
     }
-}
+}// Required empty public constructor

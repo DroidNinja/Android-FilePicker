@@ -21,7 +21,6 @@ import droidninja.filepicker.models.Media
 import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 import droidninja.filepicker.viewmodels.VMMediaPicker
-import kotlin.math.abs
 
 class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     private var recyclerView: RecyclerView? = null
@@ -47,7 +46,6 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
             fileType = intent.getIntExtra(FilePickerConst.EXTRA_FILE_TYPE, FilePickerConst.MEDIA_TYPE_IMAGE)
             photoDirectory = intent.getParcelableExtra(PhotoDirectory::class.java.simpleName)
             if (photoDirectory != null) {
-
                 setUpView()
                 setTitle(0)
             }
@@ -82,7 +80,7 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 // Log.d(">>> Picker >>>", "dy = " + dy);
-                if (abs(dy) > SCROLL_THRESHOLD) {
+                if (Math.abs(dy) > SCROLL_THRESHOLD) {
                     mGlideRequestManager.pauseRequests()
                 } else {
                     resumeRequestsIfNotDestroyed()
@@ -115,14 +113,8 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
         if (photoGridAdapter != null) {
             photoGridAdapter?.setData(medias, PickerManager.selectedPhotos)
         } else {
-            photoGridAdapter = PhotoGridAdapter(this,
-                    mGlideRequestManager,
-                    medias,
-                    PickerManager.selectedPhotos,
-                    false,
-                    this,
-                    fileType)
-
+            photoGridAdapter = PhotoGridAdapter(this, mGlideRequestManager, medias,
+                    PickerManager.selectedPhotos, false, fileType, this)
             recyclerView?.adapter = photoGridAdapter
         }
 
@@ -154,38 +146,35 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_done -> {
-                setResult(Activity.RESULT_OK, null)
-                finish()
+        val itemId = item.itemId
+        if (itemId == R.id.action_done) {
+            setResult(Activity.RESULT_OK, null)
+            finish()
 
-                return true
-            }
-            R.id.action_select -> {
-                selectAllItem?.let {
-                    photoGridAdapter?.let { adapter ->
-                        if (it.isChecked) {
-                            PickerManager.deleteMedia(adapter.selectedPaths)
-                            adapter.clearSelection()
+            return true
+        } else if (itemId == R.id.action_select) {
+            selectAllItem?.let {
+                photoGridAdapter?.let { adapter ->
+                    if (it.isChecked) {
+                        PickerManager.deleteMedia(adapter.selectedPaths)
+                        adapter.clearSelection()
 
-                            it.setIcon(R.drawable.ic_deselect_all)
-                        } else {
-                            adapter.selectAll()
-                            PickerManager.add(adapter.selectedPaths, FilePickerConst.FILE_TYPE_MEDIA)
-                            it.setIcon(R.drawable.ic_select_all)
-                        }
-                        it.isChecked = !it.isChecked
-                        setTitle(PickerManager.currentCount)
+                        it.setIcon(R.drawable.ic_deselect_all)
+                    } else {
+                        adapter.selectAll()
+                        PickerManager.add(adapter.selectedPaths, FilePickerConst.FILE_TYPE_MEDIA)
+                        it.setIcon(R.drawable.ic_select_all)
                     }
+                    it.isChecked = !it.isChecked
+                    setTitle(PickerManager.currentCount)
                 }
-                return true
             }
-            android.R.id.home -> {
-                onBackPressed()
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
+            return true
+        } else if (itemId == android.R.id.home) {
+            onBackPressed()
+            return true
         }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onItemSelected() {
@@ -204,6 +193,6 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
 
     companion object {
 
-        private const val SCROLL_THRESHOLD = 30
+        private val SCROLL_THRESHOLD = 30
     }
 }

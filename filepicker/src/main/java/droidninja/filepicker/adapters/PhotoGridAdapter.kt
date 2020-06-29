@@ -23,9 +23,8 @@ class PhotoGridAdapter(private val context: Context,
                        medias: List<Media>,
                        selectedPaths: MutableList<Uri>,
                        private val showCamera: Boolean,
-                       private val mListener: FileAdapterListener?,
-                       private val fileType: Int
-) : SelectableAdapter<PhotoGridAdapter.PhotoViewHolder, Media>(medias, selectedPaths) {
+                       private val fileType: Int,
+                       private val mListener: FileAdapterListener?) : SelectableAdapter<PhotoGridAdapter.PhotoViewHolder, Media>(medias, selectedPaths) {
     private var imageSize: Int = 0
     private var cameraOnClickListener: View.OnClickListener? = null
 
@@ -68,6 +67,7 @@ class PhotoGridAdapter(private val context: Context,
                 holder.videoIcon.visibility = View.GONE
 
             holder.itemView.setOnClickListener { onItemClicked(holder, media) }
+            holder.imageView.setBackgroundResource(R.drawable.image_placeholder)
 
             //in some cases, it will prevent unwanted situations
             holder.checkBox.visibility = View.GONE
@@ -98,12 +98,16 @@ class PhotoGridAdapter(private val context: Context,
             })
 
         } else {
-            if (fileType == FilePickerConst.MEDIA_TYPE_IMAGE) {
-                holder.imageView.setImageResource(PickerManager.cameraImageDrawable)
+            val resId = if (fileType == FilePickerConst.MEDIA_TYPE_IMAGE) {
+                PickerManager.cameraImageDrawable
             } else {
-                holder.imageView.setImageResource(PickerManager.cameraVideoDrawable)
+                PickerManager.cameraVideoDrawable
             }
 
+            glide.load(resId)
+                    .into(holder.imageView)
+
+            holder.imageView.setBackgroundResource(0)
             holder.checkBox.visibility = View.GONE
             holder.itemView.setOnClickListener(cameraOnClickListener)
             holder.videoIcon.visibility = View.GONE
@@ -137,25 +141,18 @@ class PhotoGridAdapter(private val context: Context,
 
     class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var checkBox: SmoothCheckBox
+        var checkBox: SmoothCheckBox = itemView.findViewById<View>(R.id.checkbox) as SmoothCheckBox
 
-        var imageView: ImageView
+        var imageView: ImageView = itemView.findViewById<View>(R.id.iv_photo) as ImageView
 
-        var videoIcon: ImageView
+        var videoIcon: ImageView = itemView.findViewById<View>(R.id.video_icon) as ImageView
 
-        var selectBg: View
+        var selectBg: View = itemView.findViewById(R.id.transparent_bg)
 
-        init {
-            checkBox = itemView.findViewById<View>(R.id.checkbox) as SmoothCheckBox
-            imageView = itemView.findViewById<View>(R.id.iv_photo) as ImageView
-            videoIcon = itemView.findViewById<View>(R.id.video_icon) as ImageView
-            selectBg = itemView.findViewById(R.id.transparent_bg)
-        }
     }
 
     companion object {
-
-        val ITEM_TYPE_CAMERA = 100
-        val ITEM_TYPE_PHOTO = 101
+        const val ITEM_TYPE_CAMERA = 100
+        const val ITEM_TYPE_PHOTO = 101
     }
 }

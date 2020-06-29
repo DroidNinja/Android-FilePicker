@@ -2,10 +2,12 @@ package droidninja.filepicker
 
 import android.content.pm.ActivityInfo
 import android.net.Uri
+import java.util.ArrayList
+
 import droidninja.filepicker.models.BaseFile
 import droidninja.filepicker.models.FileType
 import droidninja.filepicker.models.sort.SortingTypes
-import java.util.*
+import java.util.LinkedHashSet
 
 /**
  * Created by droidNinja on 29/07/16.
@@ -13,10 +15,8 @@ import java.util.*
 object PickerManager {
     private var maxCount = FilePickerConst.DEFAULT_MAX_COUNT
     private var showImages = true
-
     var cameraImageDrawable = R.drawable.ic_camera
-    var cameraVideoDrawable = R.drawable.ic_camera
-
+    var cameraVideoDrawable = R.drawable.ic_video
     var sortingType = SortingTypes.none
 
     val selectedPhotos: ArrayList<Uri> = ArrayList()
@@ -24,7 +24,7 @@ object PickerManager {
 
     private val fileTypes: LinkedHashSet<FileType> = LinkedHashSet()
 
-    var theme: Int = R.style.LibAppTheme
+    var theme : Int = R.style.LibAppTheme
 
     var title: String? = null
 

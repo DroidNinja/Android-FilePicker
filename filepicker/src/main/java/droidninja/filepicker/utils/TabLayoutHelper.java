@@ -33,20 +33,20 @@ import java.lang.reflect.Method;
 
 
 public class TabLayoutHelper {
-    protected TabLayout mTabLayout;
-    protected ViewPager mViewPager;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
 
-    protected TabLayout.OnTabSelectedListener mUserOnTabSelectedListener;
+    private TabLayout.OnTabSelectedListener mUserOnTabSelectedListener;
 
-    protected TabLayout.OnTabSelectedListener mInternalOnTabSelectedListener;
-    protected FixedTabLayoutOnPageChangeListener mInternalTabLayoutOnPageChangeListener;
-    protected ViewPager.OnAdapterChangeListener mInternalOnAdapterChangeListener;
-    protected DataSetObserver mInternalDataSetObserver;
-    protected Runnable mAdjustTabModeRunnable;
-    protected Runnable mSetTabsFromPagerAdapterRunnable;
-    protected Runnable mUpdateScrollPositionRunnable;
-    protected boolean mAutoAdjustTabMode = false;
-    protected boolean mDuringSetTabsFromPagerAdapter;
+    private TabLayout.OnTabSelectedListener mInternalOnTabSelectedListener;
+    private FixedTabLayoutOnPageChangeListener mInternalTabLayoutOnPageChangeListener;
+    private ViewPager.OnAdapterChangeListener mInternalOnAdapterChangeListener;
+    private DataSetObserver mInternalDataSetObserver;
+    private Runnable mAdjustTabModeRunnable;
+    private Runnable mSetTabsFromPagerAdapterRunnable;
+    private Runnable mUpdateScrollPositionRunnable;
+    private boolean mAutoAdjustTabMode = false;
+    private boolean mDuringSetTabsFromPagerAdapter;
 
     /**
      * Constructor.

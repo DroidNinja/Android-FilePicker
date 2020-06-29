@@ -1,6 +1,7 @@
 package droidninja.filepicker.adapters
 
 import android.content.Context
+import androidx.recyclerview.widget.RecyclerView
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +9,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
+
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import droidninja.filepicker.FilePickerConst
+
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.models.PhotoDirectory
@@ -21,8 +23,7 @@ class FolderGridAdapter(private val context: Context,
                         private val glide: RequestManager,
                         var items: List<PhotoDirectory>,
                         private val showCamera: Boolean,
-                        private val fileType: Int
-) : RecyclerView.Adapter<FolderGridAdapter.PhotoViewHolder>() {
+                        private val fileType: Int) : RecyclerView.Adapter<FolderGridAdapter.PhotoViewHolder>() {
     private var imageSize: Int = 0
     private var folderGridAdapterListener: FolderGridAdapterListener? = null
 
@@ -67,7 +68,7 @@ class FolderGridAdapter(private val context: Context,
             holder.folderCount.text = photoDirectory.medias.size.toString()
 
             holder.itemView.setOnClickListener {
-                folderGridAdapterListener?.onFolderClicked(photoDirectory)
+                    folderGridAdapterListener?.onFolderClicked(photoDirectory)
             }
             holder.bottomOverlay.visibility = View.VISIBLE
         } else {
@@ -76,7 +77,6 @@ class FolderGridAdapter(private val context: Context,
             } else {
                 holder.imageView.setImageResource(PickerManager.cameraVideoDrawable)
             }
-
             holder.itemView.setOnClickListener {
                 folderGridAdapterListener?.onCameraClicked()
             }
@@ -106,24 +106,17 @@ class FolderGridAdapter(private val context: Context,
 
     class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var imageView: ImageView
-        var folderTitle: TextView
-        var folderCount: TextView
-        var bottomOverlay: View
-        var selectBg: View
+        var imageView: ImageView = itemView.findViewById<View>(R.id.iv_photo) as ImageView
+        var folderTitle: TextView = itemView.findViewById<View>(R.id.folder_title) as TextView
+        var folderCount: TextView = itemView.findViewById<View>(R.id.folder_count) as TextView
+        var bottomOverlay: View = itemView.findViewById(R.id.bottomOverlay)
+        var selectBg: View = itemView.findViewById(R.id.transparent_bg)
 
-        init {
-            imageView = itemView.findViewById<View>(R.id.iv_photo) as ImageView
-            folderTitle = itemView.findViewById<View>(R.id.folder_title) as TextView
-            folderCount = itemView.findViewById<View>(R.id.folder_count) as TextView
-            bottomOverlay = itemView.findViewById(R.id.bottomOverlay)
-            selectBg = itemView.findViewById(R.id.transparent_bg)
-        }
     }
 
     companion object {
 
-        val ITEM_TYPE_CAMERA = 100
-        val ITEM_TYPE_PHOTO = 101
+        const val ITEM_TYPE_CAMERA = 100
+        const val ITEM_TYPE_PHOTO = 101
     }
 }
