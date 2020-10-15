@@ -9,6 +9,7 @@ import android.text.TextUtils
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import droidninja.filepicker.FilePickerConst
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.models.Document
 import droidninja.filepicker.models.FileType
@@ -24,25 +25,26 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
         get() = _lvDocData
 
 
-    fun getDocs(fileTypes: List<FileType>, comparator: Comparator<Document>?) {
+    fun getDocs(fileTypes: List<FileType>, docFileSize: Int, comparator: Comparator<Document>?) {
         launchDataLoad {
-            val dirs = queryDocs(fileTypes, comparator)
+            val dirs = queryDocs(fileTypes, docFileSize, comparator)
             _lvDocData.postValue(dirs)
         }
     }
 
     @WorkerThread
-    suspend fun queryDocs(fileTypes: List<FileType>, comparator: Comparator<Document>?): HashMap<FileType, List<Document>> {
+    suspend fun queryDocs(fileTypes: List<FileType>, docFileSize: Int, comparator: Comparator<Document>?): HashMap<FileType, List<Document>> {
         var data = HashMap<FileType, List<Document>>()
         withContext(Dispatchers.IO) {
 
-            val selection = (MediaStore.Files.FileColumns.MEDIA_TYPE
-                    + "!="
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
-                    + " AND "
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE
-                    + "!="
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
+            var selection = ("${MediaStore.Files.FileColumns.MEDIA_TYPE}!=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE}" +
+                    " AND ${MediaStore.Files.FileColumns.MEDIA_TYPE}!=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}")
+
+            val selectionArgs = mutableListOf<String>()
+            if (docFileSize != FilePickerConst.DEFAULT_FILE_SIZE) {
+                selection += " AND ${MediaStore.Files.FileColumns.SIZE}<=?"
+                selectionArgs.add("${docFileSize * 1024 * 1024}")
+            }
 
             val DOC_PROJECTION = arrayOf(MediaStore.Files.FileColumns._ID,
                     MediaStore.Files.FileColumns.DATA,
@@ -51,7 +53,7 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
                     MediaStore.Files.FileColumns.DATE_ADDED,
                     MediaStore.Files.FileColumns.TITLE)
 
-            val cursor = getApplication<Application>().contentResolver.query(MediaStore.Files.getContentUri("external"), DOC_PROJECTION, selection, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
+            val cursor = getApplication<Application>().contentResolver.query(MediaStore.Files.getContentUri("external"), DOC_PROJECTION, selection, selectionArgs.toTypedArray(), MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
 
             if (cursor != null) {
                 data = createDocumentType(fileTypes, comparator, getDocumentFromCursor(cursor))

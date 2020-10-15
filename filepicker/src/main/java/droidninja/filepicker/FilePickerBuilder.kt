@@ -22,6 +22,21 @@ class FilePickerBuilder {
 
     private val mPickerOptionsBundle: Bundle = Bundle()
 
+    fun setImageFileSize(fileSize: Int): FilePickerBuilder {
+        PickerManager.imageFileSize = fileSize
+        return this
+    }
+
+    fun setVideoFileSize(fileSize: Int) : FilePickerBuilder{
+        PickerManager.videoFileSize = fileSize
+        return this
+    }
+
+    fun setDocFileSize(fileSize: Int): FilePickerBuilder{
+        PickerManager.docFileSize = fileSize
+        return this
+    }
+
     fun setMaxCount(maxCount: Int): FilePickerBuilder {
         PickerManager.setMaxCount(maxCount)
         return this
@@ -83,7 +98,7 @@ class FilePickerBuilder {
     }
 
 
-    fun withOrientation(@IntegerRes orientation:  Int): FilePickerBuilder {
+    fun withOrientation(@IntegerRes orientation: Int): FilePickerBuilder {
         PickerManager.orientation = orientation
         return this
     }

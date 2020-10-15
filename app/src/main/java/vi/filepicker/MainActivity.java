@@ -151,6 +151,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     .setSelectedFiles(photoPaths) //this is optional
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select media")
+                    .setImageFileSize(5)
+                    .setVideoFileSize(10)
                     .enableVideoPicker(true)
                     .enableCameraSupport(true)
                     .showGifs(true)
@@ -176,6 +178,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select doc")
+                    .setImageFileSize(5) //Provide Size in MB
+                    .setVideoFileSize(20)
+                    .setDocFileSize(6)
                     .addFileSupport("ZIP", zips)
                     .addFileSupport("AAC", pdfs, R.drawable.pdf_blue)
                     .enableDocSupport(true)

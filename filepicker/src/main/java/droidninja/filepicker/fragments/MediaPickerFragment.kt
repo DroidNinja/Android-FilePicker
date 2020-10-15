@@ -59,17 +59,17 @@ class MediaPickerFragment : BaseFragment() {
 
         if (PickerManager.showImages()) {
             if (PickerManager.isShowFolderView)
-                adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE), getString(R.string.images))
+                adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE, PickerManager.imageFileSize, PickerManager.videoFileSize), getString(R.string.images))
             else
-                adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE), getString(R.string.images))
+                adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE, PickerManager.imageFileSize, PickerManager.videoFileSize), getString(R.string.images))
         } else
             tabLayout.visibility = View.GONE
 
         if (PickerManager.showVideo()) {
             if (PickerManager.isShowFolderView)
-                adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO), getString(R.string.videos))
+                adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO, PickerManager.imageFileSize, PickerManager.videoFileSize), getString(R.string.videos))
             else
-                adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO), getString(R.string.videos))
+                adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO, PickerManager.imageFileSize, PickerManager.videoFileSize), getString(R.string.videos))
         } else
             tabLayout.visibility = View.GONE
 
