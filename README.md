@@ -113,6 +113,7 @@ showFolderView(boolean status)    | if you want to show folder type pick view, e
 enableDocSupport(boolean status)    | If you want to enable/disable default document picker, use this method. (*Enabled by default*)
 enableCameraSupport(boolean status)    | to show camera in the picker (*Enabled by default*)
 addFileSupport(String title, String[] extensions, @DrawableRes int drawable)    | If you want to specify custom file type, use this method. (*example below*)
+setSpan(spanType: FilePickerConst.SPAN_TYPE, count: Int)    | Set Span count for folder and detail screen ( [FilePickerConst.SPAN_TYPE.FOLDER_SPAN] or [FilePickerConst.SPAN_TYPE.DETAIL_SPAN]])
 
 If you want to add custom file type picker(do not use . in extension types), use *addFileSupport()* method like this ( for zip support):
 

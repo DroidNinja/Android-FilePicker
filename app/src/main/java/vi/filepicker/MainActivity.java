@@ -151,6 +151,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     .setSelectedFiles(photoPaths) //this is optional
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select media")
+                    .setSpan(FilePickerConst.SPAN_TYPE.FOLDER_SPAN, 3)
+                    .setSpan(FilePickerConst.SPAN_TYPE.DETAIL_SPAN, 4)
                     .enableVideoPicker(true)
                     .enableCameraSupport(true)
                     .showGifs(true)

@@ -39,6 +39,16 @@ object PickerManager {
     var isEnableCamera = true
 
     /**
+     * Recyclerview span count for both folder and detail screen
+     * Default Folder span is 2
+     * Default Detail Span is 3
+     */
+    var spanTypes = mutableMapOf(
+            FilePickerConst.SPAN_TYPE.FOLDER_SPAN to 2,
+            FilePickerConst.SPAN_TYPE.DETAIL_SPAN to 3
+    )
+
+    /**
      * The preferred screen orientation this activity would like to run in.
      * From the {@link android.R.attr#screenOrientation} attribute, one of
      * {@link #SCREEN_ORIENTATION_UNSPECIFIED},

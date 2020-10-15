@@ -73,7 +73,8 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
         recyclerView = findViewById(R.id.recyclerview)
         emptyView = findViewById(R.id.empty_view)
 
-        val layoutManager = StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL)
+        val spanCount = PickerManager.spanTypes[FilePickerConst.SPAN_TYPE.DETAIL_SPAN] ?: 3
+        val layoutManager = StaggeredGridLayoutManager(spanCount, OrientationHelper.VERTICAL)
         layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
         recyclerView?.layoutManager = layoutManager
         recyclerView?.itemAnimator = DefaultItemAnimator()
