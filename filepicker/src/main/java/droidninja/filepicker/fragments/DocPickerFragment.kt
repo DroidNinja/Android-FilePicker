@@ -66,7 +66,7 @@ class DocPickerFragment : BaseFragment() {
             progressBar?.visibility = View.GONE
             setDataOnFragments(files)
         })
-        viewModel.getDocs(PickerManager.getFileTypes(), PickerManager.docFileSize, PickerManager.sortingType.comparator)
+        viewModel.getDocs(PickerManager.getFileTypes(), PickerManager.sortingType.comparator)
     }
 
     private fun setViews(view: View) {

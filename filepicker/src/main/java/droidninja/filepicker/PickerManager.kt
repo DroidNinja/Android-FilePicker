@@ -35,7 +35,6 @@ object PickerManager {
 
     var imageFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE
     var videoFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE
-    var docFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE
 
     var isDocSupport = true
         get() = field

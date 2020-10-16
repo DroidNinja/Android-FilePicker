@@ -32,11 +32,6 @@ class FilePickerBuilder {
         return this
     }
 
-    fun setDocFileSize(fileSize: Int): FilePickerBuilder{
-        PickerManager.docFileSize = fileSize
-        return this
-    }
-
     fun setMaxCount(maxCount: Int): FilePickerBuilder {
         PickerManager.setMaxCount(maxCount)
         return this

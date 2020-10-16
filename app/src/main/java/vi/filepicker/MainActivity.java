@@ -180,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     .setActivityTitle("Please select doc")
                     .setImageFileSize(5) //Provide Size in MB
                     .setVideoFileSize(20)
-                    .setDocFileSize(6)
                     .addFileSupport("ZIP", zips)
                     .addFileSupport("AAC", pdfs, R.drawable.pdf_blue)
                     .enableDocSupport(true)
