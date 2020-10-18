@@ -147,12 +147,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Toast.LENGTH_SHORT).show();
         } else {
             FilePickerBuilder.getInstance()
-                    .setMaxCount(maxCount)
+                    .setMaxCount(1)
                     .setSelectedFiles(photoPaths) //this is optional
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select media")
-                    .setImageFileSize(5)
-                    .setVideoFileSize(10)
+                    .setImageSizeLimit(5)
+                    .setVideoSizeLimit(10)
                     .enableVideoPicker(true)
                     .enableCameraSupport(true)
                     .showGifs(true)
@@ -174,12 +174,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Toast.LENGTH_SHORT).show();
         } else {
             FilePickerBuilder.getInstance()
-                    .setMaxCount(maxCount)
+                    .setMaxCount(1)
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select doc")
-                    .setImageFileSize(5) //Provide Size in MB
-                    .setVideoFileSize(20)
+                    .setImageSizeLimit(5) //Provide Size in MB
+                    .setVideoSizeLimit(20)
                     .addFileSupport("ZIP", zips)
                     .addFileSupport("AAC", pdfs, R.drawable.pdf_blue)
                     .enableDocSupport(true)

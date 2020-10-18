@@ -22,12 +22,12 @@ class FilePickerBuilder {
 
     private val mPickerOptionsBundle: Bundle = Bundle()
 
-    fun setImageFileSize(fileSize: Int): FilePickerBuilder {
+    fun setImageSizeLimit(fileSize: Int): FilePickerBuilder {
         PickerManager.imageFileSize = fileSize
         return this
     }
 
-    fun setVideoFileSize(fileSize: Int) : FilePickerBuilder{
+    fun setVideoSizeLimit(fileSize: Int) : FilePickerBuilder{
         PickerManager.videoFileSize = fileSize
         return this
     }
