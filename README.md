@@ -123,29 +123,53 @@ String zipTypes = {"zip","rar"};
 ```
 
 #Styling
-Just override these styles in your main module to change colors and themes
+Just override these styles in your main module to change colors and themes. 
+
+- If you have dark theme colors, just use `LibAppTheme.Dark`
+- If you have light theme colors, just use `LibAppTheme`
+
 ```xml
-<style name="LibAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+<style name="LibAppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@android:color/black</item>
         <item name="android:colorBackground">@android:color/background_light</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="toolbarStyle">@style/ToolbarTheme</item>
+        <item name="tabStyle">@style/PickerTabLayout</item>
     </style>
 
-    <style name="PickerTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabBackground">@color/colorPrimary</item>
-        <item name="tabGravity">fill</item>
-        <item name="tabMaxWidth">0dp</item>
+    <style name="LibAppTheme.Dark" parent="LibAppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@android:color/white</item>
+        <item name="toolbarStyle">@style/ToolbarTheme.Dark</item>
+        <item name="tabStyle">@style/PickerTabLayout.Dark</item>
     </style>
+
+    <style name="PickerTabLayout" parent="Widget.MaterialComponents.TabLayout">
+           <!--        tab background-->
+           <item name="tabBackground">@color/colorPrimary</item>
+           <!--        tab text color selector : set selector accordingly to dark or light theme-->
+           <item name="tabTextColor">@color/selector_tab_text_color</item>
+           <!--        tab indicator color: set indicator color accordingly-->
+           <item name="tabIndicatorColor">@android:color/black</item>
+           <item name="tabGravity">fill</item>
+           <item name="tabMaxWidth">0dp</item>
+       </style>
+       
+       
+       <style name="ToolbarTheme" parent="Widget.MaterialComponents.Toolbar.Primary">
+               <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Light</item>
+               <item name="android:theme">@style/ThemeOverlay.App.Toolbar.Light</item>
+           </style>
     
     <style name="SmoothCheckBoxStyle">
-        <item name="color_checked">@color/checkbox_color</item>
-        <item name="color_unchecked">@android:color/white</item>
-        <item name="color_unchecked_stroke">@color/checkbox_unchecked_color</item>
-        <item name="color_tick">@android:color/white</item>
-    </style>
+            <item name="color_checked">@color/colorAccent</item>
+            <item name="color_unchecked">@android:color/white</item>
+            <item name="color_unchecked_stroke">@color/checkbox_unchecked_color</item>
+            <item name="color_tick">@android:color/white</item>
+        </style>
 ```
 
 # Proguard

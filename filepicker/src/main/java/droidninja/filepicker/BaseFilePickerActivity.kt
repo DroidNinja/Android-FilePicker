@@ -3,8 +3,7 @@ package droidninja.filepicker
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-
-import androidx.appcompat.widget.Toolbar
+import com.google.android.material.appbar.MaterialToolbar
 
 /**
  * Created by droidNinja on 22/07/17.
@@ -17,7 +16,7 @@ abstract class BaseFilePickerActivity : AppCompatActivity() {
         setTheme(PickerManager.theme)
         setContentView(layout)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
