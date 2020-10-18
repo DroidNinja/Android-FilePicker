@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -7,8 +6,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        />
+        android:layout_height="fill_parent" />
 
     <TextView
         android:id="@+id/empty_view"
@@ -19,6 +17,5 @@
         android:text="@string/no_files_found"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 </RelativeLayout>

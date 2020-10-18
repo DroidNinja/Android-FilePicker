@@ -51,4 +51,8 @@ object FilePickerConst {
     enum class FILE_TYPE {
         PDF, WORD, EXCEL, PPT, TXT, UNKNOWN
     }
+
+    enum class SPAN_TYPE{
+        FOLDER_SPAN, DETAIL_SPAN
+    }
 }

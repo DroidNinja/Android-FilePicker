@@ -83,14 +83,15 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
         arguments?.let {
             fileType = it.getInt(BaseFragment.FILE_TYPE)
             imageFileSize = it.getInt(FilePickerConst.EXTRA_IMAGE_FILE_SIZE)
-            videoFileSize = it.getInt(FilePickerConst.EXTRA_VIDEO_FILE_SIZE)
+            videoFileSize = it.getInt(FilePickerConst.EXTRA_VIDEO_FILE_SIZE
+            fileType = it.getInt(FILE_TYPE)
+
 
             imageCaptureManager = ImageCaptureManager(requireContext())
-            val layoutManager = GridLayoutManager(activity, 2)
-
-            val spanCount = 2 // 2 columns
+            val spanCount = PickerManager.spanTypes[FilePickerConst.SPAN_TYPE.FOLDER_SPAN] ?: 2// default 2 columns
             val spacing = 5 // 5px
             val includeEdge = false
+            val layoutManager = GridLayoutManager(activity, spanCount)
             recyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount, spacing, includeEdge))
             recyclerView.layoutManager = layoutManager
             recyclerView.itemAnimator = DefaultItemAnimator()
@@ -204,8 +205,8 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
     companion object {
 
         private val TAG = MediaFolderPickerFragment::class.java.simpleName
-        private val SCROLL_THRESHOLD = 30
-        private val PERMISSION_WRITE_EXTERNAL_STORAGE_RC = 908
+        private const val SCROLL_THRESHOLD = 30
+        private const val PERMISSION_WRITE_EXTERNAL_STORAGE_RC = 908
 
         fun newInstance(fileType: Int, imageFileSize: Int, videoFileSize: Int): MediaFolderPickerFragment {
             val photoPickerFragment = MediaFolderPickerFragment()
@@ -213,6 +214,7 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
             bun.putInt(BaseFragment.FILE_TYPE, fileType)
             bun.putInt(FilePickerConst.EXTRA_IMAGE_FILE_SIZE, imageFileSize)
             bun.putInt(FilePickerConst.EXTRA_VIDEO_FILE_SIZE, videoFileSize)
+            bun.putInt(FILE_TYPE, fileType)
             photoPickerFragment.arguments = bun
             return photoPickerFragment
         }

@@ -100,7 +100,8 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
             activity?.let {
                 imageCaptureManager = ImageCaptureManager(it)
             }
-            val layoutManager = StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL)
+            val spanCount = PickerManager.spanTypes[FilePickerConst.SPAN_TYPE.DETAIL_SPAN] ?: 3
+            val layoutManager = StaggeredGridLayoutManager(spanCount, OrientationHelper.VERTICAL)
             layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
             recyclerView.layoutManager = layoutManager
             recyclerView.itemAnimator = DefaultItemAnimator()
@@ -195,7 +196,7 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater?.inflate(R.menu.select_menu, menu)
+        inflater.inflate(R.menu.select_menu, menu)
         selectAllItem = menu.findItem(R.id.action_select)
         onItemSelected()
         super.onCreateOptionsMenu(menu, inflater)
