@@ -3,13 +3,10 @@ package droidninja.filepicker.fragments
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +21,6 @@ import droidninja.filepicker.MediaDetailsActivity
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.adapters.FolderGridAdapter
-import droidninja.filepicker.models.Media
 import droidninja.filepicker.models.PhotoDirectory
 import droidninja.filepicker.utils.AndroidLifecycleUtils
 import droidninja.filepicker.utils.GridSpacingItemDecoration
@@ -46,6 +42,8 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
     private var imageCaptureManager: ImageCaptureManager? = null
     private lateinit var mGlideRequestManager: RequestManager
     private var fileType: Int = 0
+    private var imageFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE
+    private var videoFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -83,7 +81,11 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
         recyclerView = view.findViewById(R.id.recyclerview)
         emptyView = view.findViewById(R.id.empty_view)
         arguments?.let {
+            fileType = it.getInt(BaseFragment.FILE_TYPE)
+            imageFileSize = it.getInt(FilePickerConst.EXTRA_IMAGE_FILE_SIZE)
+            videoFileSize = it.getInt(FilePickerConst.EXTRA_VIDEO_FILE_SIZE
             fileType = it.getInt(FILE_TYPE)
+
 
             imageCaptureManager = ImageCaptureManager(requireContext())
             val spanCount = PickerManager.spanTypes[FilePickerConst.SPAN_TYPE.FOLDER_SPAN] ?: 2// default 2 columns
@@ -117,10 +119,10 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
             })
 
             viewModel.lvDataChanged.observe(viewLifecycleOwner, Observer {
-                viewModel.getPhotoDirs(mediaType = fileType)
+                viewModel.getPhotoDirs(mediaType = fileType, imageFileSize = imageFileSize, videoFileSize = videoFileSize)
             })
 
-            viewModel.getPhotoDirs(mediaType = fileType)
+            viewModel.getPhotoDirs(mediaType = fileType, imageFileSize = imageFileSize, videoFileSize = videoFileSize)
         }
     }
 
@@ -168,6 +170,8 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
             medias.clear()
         })
         intent.putExtra(FilePickerConst.EXTRA_FILE_TYPE, fileType)
+        intent.putExtra(FilePickerConst.EXTRA_IMAGE_FILE_SIZE, imageFileSize)
+        intent.putExtra(FilePickerConst.EXTRA_VIDEO_FILE_SIZE, videoFileSize)
         activity?.startActivityForResult(intent, FilePickerConst.REQUEST_CODE_MEDIA_DETAIL)
     }
 
@@ -204,9 +208,12 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
         private const val SCROLL_THRESHOLD = 30
         private const val PERMISSION_WRITE_EXTERNAL_STORAGE_RC = 908
 
-        fun newInstance(fileType: Int): MediaFolderPickerFragment {
+        fun newInstance(fileType: Int, imageFileSize: Int, videoFileSize: Int): MediaFolderPickerFragment {
             val photoPickerFragment = MediaFolderPickerFragment()
             val bun = Bundle()
+            bun.putInt(BaseFragment.FILE_TYPE, fileType)
+            bun.putInt(FilePickerConst.EXTRA_IMAGE_FILE_SIZE, imageFileSize)
+            bun.putInt(FilePickerConst.EXTRA_VIDEO_FILE_SIZE, videoFileSize)
             bun.putInt(FILE_TYPE, fileType)
             photoPickerFragment.arguments = bun
             return photoPickerFragment

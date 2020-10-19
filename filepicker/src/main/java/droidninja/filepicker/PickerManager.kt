@@ -23,7 +23,7 @@ object PickerManager {
 
     private val fileTypes: LinkedHashSet<FileType> = LinkedHashSet()
 
-    var theme : Int = R.style.LibAppTheme
+    var theme: Int = R.style.LibAppTheme
 
     var title: String? = null
 
@@ -32,6 +32,9 @@ object PickerManager {
     var isShowGif: Boolean = false
 
     private var showSelectAll = false
+
+    var imageFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE
+    var videoFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE
 
     var isDocSupport = true
         get() = field

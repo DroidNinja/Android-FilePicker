@@ -15,7 +15,6 @@ import droidninja.filepicker.PickerManager
 import droidninja.filepicker.R
 import droidninja.filepicker.models.Media
 import droidninja.filepicker.models.PhotoDirectory
-import droidninja.filepicker.utils.ImageCaptureManager
 import droidninja.filepicker.utils.registerObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -37,7 +36,7 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
 
     private var contentObserver: ContentObserver? = null
 
-    private fun registerContentObserver(){
+    private fun registerContentObserver() {
         if (contentObserver == null) {
             contentObserver = getApplication<Application>().contentResolver.registerObserver(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI
@@ -47,10 +46,10 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
         }
     }
 
-    fun getMedia(bucketId: String? = null, mediaType: Int = FilePickerConst.MEDIA_TYPE_IMAGE) {
+    fun getMedia(bucketId: String? = null, mediaType: Int = FilePickerConst.MEDIA_TYPE_IMAGE, imageFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE, videoFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE) {
         launchDataLoad {
             val medias = mutableListOf<Media>()
-            queryImages(bucketId, mediaType).map { dir->
+            queryImages(bucketId, mediaType, imageFileSize, videoFileSize).map { dir ->
                 medias.addAll(dir.medias)
             }
             medias.sortWith(Comparator { a, b -> (b.id - a.id).toInt() })
@@ -60,9 +59,9 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
         }
     }
 
-    fun getPhotoDirs(bucketId: String? = null, mediaType: Int = FilePickerConst.MEDIA_TYPE_IMAGE) {
+    fun getPhotoDirs(bucketId: String? = null, mediaType: Int = FilePickerConst.MEDIA_TYPE_IMAGE, imageFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE, videoFileSize: Int = FilePickerConst.DEFAULT_FILE_SIZE) {
         launchDataLoad {
-            val dirs = queryImages(bucketId, mediaType)
+            val dirs = queryImages(bucketId, mediaType, imageFileSize, videoFileSize)
             val photoDirectory = PhotoDirectory()
             photoDirectory.bucketId = null
 
@@ -94,12 +93,13 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
     }
 
     @WorkerThread
-    suspend fun queryImages(bucketId: String?, mediaType: Int): MutableList<PhotoDirectory> {
+    suspend fun queryImages(bucketId: String?, mediaType: Int, imageFileSize: Int, videoFileSize: Int): MutableList<PhotoDirectory> {
         var data = mutableListOf<PhotoDirectory>()
         withContext(Dispatchers.IO) {
             val projection = null
             val uri = MediaStore.Files.getContentUri("external")
             val sortOrder = MediaStore.Images.Media._ID + " DESC"
+            val selectionArgs = mutableListOf<String>()
 
             var selection = (MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                     + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)
@@ -107,6 +107,16 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
             if (mediaType == FilePickerConst.MEDIA_TYPE_VIDEO) {
                 selection = (MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                         + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
+
+                if (videoFileSize != FilePickerConst.DEFAULT_FILE_SIZE) {
+                    selection += " AND ${MediaStore.Video.Media.SIZE}<=?"
+                    selectionArgs.add("${videoFileSize * 1024 * 1024}")
+                }
+            }
+
+            if (mediaType == FilePickerConst.MEDIA_TYPE_IMAGE && imageFileSize != FilePickerConst.DEFAULT_FILE_SIZE) {
+                selection += " AND ${MediaStore.Images.Media.SIZE}<=?"
+                selectionArgs.add("${imageFileSize * 1024 * 1024}")
             }
 
             if (!PickerManager.isShowGif) {
@@ -116,8 +126,7 @@ class VMMediaPicker(application: Application) : BaseViewModel(application) {
             if (bucketId != null)
                 selection += " AND " + MediaStore.Images.Media.BUCKET_ID + "='" + bucketId + "'"
 
-
-            val cursor = getApplication<Application>().contentResolver.query(uri, projection, selection, null, sortOrder)
+            val cursor = getApplication<Application>().contentResolver.query(uri, projection, selection, selectionArgs.toTypedArray(), sortOrder)
 
             if (cursor != null) {
                 data = getPhotoDirectories(mediaType, cursor)
