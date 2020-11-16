@@ -16,8 +16,8 @@ object ContentUriUtils {
      */
     @WorkerThread
     @Throws(URISyntaxException::class)
-    fun getFilePath(context: Context, uri: Uri): String? {
-        var uri = uri
+    fun getFilePath(context: Context, fileUri: Uri): String? {
+        var uri = fileUri
         var selection: String? = null
         var selectionArgs: Array<String>? = null
         // Uri is different in versions after KITKAT (Android 4.4), we need to

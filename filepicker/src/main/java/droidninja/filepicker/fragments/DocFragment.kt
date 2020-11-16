@@ -44,7 +44,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
             mListener = context
         } else {
             throw RuntimeException(
-                    context?.toString() + " must implement PhotoPickerFragmentListener")
+                    "$context must implement PhotoPickerFragmentListener")
         }
     }
 
