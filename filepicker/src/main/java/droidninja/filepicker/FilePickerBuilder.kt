@@ -22,6 +22,16 @@ class FilePickerBuilder {
 
     private val mPickerOptionsBundle: Bundle = Bundle()
 
+    fun setImageSizeLimit(fileSize: Int): FilePickerBuilder {
+        PickerManager.imageFileSize = fileSize
+        return this
+    }
+
+    fun setVideoSizeLimit(fileSize: Int) : FilePickerBuilder{
+        PickerManager.videoFileSize = fileSize
+        return this
+    }
+
     fun setMaxCount(maxCount: Int): FilePickerBuilder {
         PickerManager.setMaxCount(maxCount)
         return this
@@ -34,6 +44,16 @@ class FilePickerBuilder {
 
     fun setActivityTitle(title: String): FilePickerBuilder {
         PickerManager.title = title
+        return this
+    }
+
+    /**
+     * @param spanType it could be [FilePickerConst.SPAN_TYPE.FOLDER_SPAN] (for folder screen)
+     * or [FilePickerConst.SPAN_TYPE.DETAIL_SPAN] (for details screen)
+     * @param count span count in integer, defaults for Folder is 2 and Details is 3
+     */
+    fun setSpan(spanType: FilePickerConst.SPAN_TYPE, count: Int): FilePickerBuilder {
+        PickerManager.spanTypes[spanType] = count
         return this
     }
 
@@ -83,7 +103,7 @@ class FilePickerBuilder {
     }
 
 
-    fun withOrientation(@IntegerRes orientation:  Int): FilePickerBuilder {
+    fun withOrientation(@IntegerRes orientation: Int): FilePickerBuilder {
         PickerManager.orientation = orientation
         return this
     }

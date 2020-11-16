@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.ActionBar
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
@@ -14,7 +13,7 @@ import droidninja.filepicker.fragments.DocPickerFragment
 import droidninja.filepicker.fragments.MediaPickerFragment
 import droidninja.filepicker.fragments.PhotoPickerFragmentListener
 import droidninja.filepicker.utils.FragmentUtil
-import java.util.ArrayList
+import java.util.*
 
 class FilePickerActivity : BaseFilePickerActivity(), PhotoPickerFragmentListener, DocFragment.DocFragmentListener, DocPickerFragment.DocPickerFragmentListener, MediaPickerFragment.MediaPickerFragmentListener {
     private var type: Int = 0

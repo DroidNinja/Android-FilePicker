@@ -147,10 +147,14 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Toast.LENGTH_SHORT).show();
         } else {
             FilePickerBuilder.getInstance()
-                    .setMaxCount(maxCount)
+                    .setMaxCount(1)
                     .setSelectedFiles(photoPaths) //this is optional
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select media")
+                    .setImageSizeLimit(5)
+                    .setVideoSizeLimit(10)
+                    .setSpan(FilePickerConst.SPAN_TYPE.FOLDER_SPAN, 3)
+                    .setSpan(FilePickerConst.SPAN_TYPE.DETAIL_SPAN, 4)
                     .enableVideoPicker(true)
                     .enableCameraSupport(true)
                     .showGifs(true)
@@ -165,19 +169,21 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     public void onPickDoc() {
         String[] zips = {"zip", "rar"};
-        String[] pdfs = {"pdf"};
+        String[] pdfs = {"aac"};
         int maxCount = MAX_ATTACHMENT_COUNT - photoPaths.size();
         if ((docPaths.size() + photoPaths.size()) == MAX_ATTACHMENT_COUNT) {
             Toast.makeText(this, "Cannot select more than " + MAX_ATTACHMENT_COUNT + " items",
                     Toast.LENGTH_SHORT).show();
         } else {
             FilePickerBuilder.getInstance()
-                    .setMaxCount(maxCount)
+                    .setMaxCount(1)
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select doc")
+                    .setImageSizeLimit(5) //Provide Size in MB
+                    .setVideoSizeLimit(20)
                     .addFileSupport("ZIP", zips)
-                    .addFileSupport("PDF", pdfs, R.drawable.pdf_blue)
+                    .addFileSupport("AAC", pdfs, R.drawable.pdf_blue)
                     .enableDocSupport(true)
                     .enableSelectAll(true)
                     .sortDocumentsBy(SortingTypes.name)
