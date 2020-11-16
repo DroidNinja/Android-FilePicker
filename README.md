@@ -7,9 +7,9 @@ A filepicker which allows to select images and videos with flexibility. It also 
 For **Android 10** devices using document picker, you will need to enable `android:requestLegacyExternalStorage="true"` option in your manifest file. This document picker will get **deprecated** soon over scoped storage and also, this flag will not work in when you target **Android 11.** :/
 
 If your app
-- targets 28: Everything will work. Nothing required.
-- targets 29: You will need add `android:requestLegacyExternalStorage="true"` option in your manifest file. This will work for Android 11 devices also.
-- targets 30: Doc picker will not work in this case. Scope storage handling is required. Please suggest [ideas here](https://github.com/DroidNinja/Android-FilePicker/issues/305#issuecomment-728250023)
+* **targets 28**: Everything will work. Nothing required.
+* **targets 29**: You will need add `android:requestLegacyExternalStorage="true"` option in your manifest file. This will work for Android 11 devices also.
+* **targets 30**: Doc picker will not work in this case. Scope storage handling is required. Please suggest [ideas here](https://github.com/DroidNinja/Android-FilePicker/issues/305#issuecomment-728250023)
 
   ![demo](https://image.ibb.co/iRpztv/device_2017_03_10_164003.png)
   ![demo](https://image.ibb.co/m75uRF/device_2017_03_10_163900.png)
