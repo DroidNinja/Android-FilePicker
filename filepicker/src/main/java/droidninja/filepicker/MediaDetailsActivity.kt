@@ -148,6 +148,7 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
         menuInflater.inflate(R.menu.media_detail_menu, menu)
         selectAllItem = menu.findItem(R.id.action_select)
         selectAllItem?.isVisible = PickerManager.hasSelectAll()
+        menu.findItem(R.id.action_done)?.isVisible = PickerManager.getMaxCount() > 1
 
         return super.onCreateOptionsMenu(menu)
     }

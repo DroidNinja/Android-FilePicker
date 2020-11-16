@@ -198,6 +198,7 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.select_menu, menu)
         selectAllItem = menu.findItem(R.id.action_select)
+        menu.findItem(R.id.action_done)?.isVisible = PickerManager.getMaxCount() > 1
         onItemSelected()
         super.onCreateOptionsMenu(menu, inflater)
     }
@@ -211,7 +212,6 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
                     if (it.isChecked) {
                         PickerManager.clearSelections()
                         adapter.clearSelection()
-
                         it.setIcon(R.drawable.ic_deselect_all)
                     } else {
                         adapter.selectAll()

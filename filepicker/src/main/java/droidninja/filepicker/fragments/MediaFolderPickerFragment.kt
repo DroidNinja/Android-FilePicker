@@ -83,7 +83,7 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
         arguments?.let {
             fileType = it.getInt(BaseFragment.FILE_TYPE)
             imageFileSize = it.getInt(FilePickerConst.EXTRA_IMAGE_FILE_SIZE)
-            videoFileSize = it.getInt(FilePickerConst.EXTRA_VIDEO_FILE_SIZE
+            videoFileSize = it.getInt(FilePickerConst.EXTRA_VIDEO_FILE_SIZE)
             fileType = it.getInt(FILE_TYPE)
 
 
