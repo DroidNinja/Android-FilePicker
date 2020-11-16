@@ -206,7 +206,6 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
 
         private val TAG = MediaFolderPickerFragment::class.java.simpleName
         private const val SCROLL_THRESHOLD = 30
-        private const val PERMISSION_WRITE_EXTERNAL_STORAGE_RC = 908
 
         fun newInstance(fileType: Int, imageFileSize: Int, videoFileSize: Int): MediaFolderPickerFragment {
             val photoPickerFragment = MediaFolderPickerFragment()

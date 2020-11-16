@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Toast.LENGTH_SHORT).show();
         } else {
             FilePickerBuilder.getInstance()
-                    .setMaxCount(1)
+                    .setMaxCount(10)
                     .setSelectedFiles(photoPaths) //this is optional
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select media")
