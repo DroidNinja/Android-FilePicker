@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rationale_doc_picker">L\'app ha bisogno di questo permesso per accedere ai documenti del dispositivo.</string>
+    <string name="rationale_photo_picker">L\'app ha bisogno di questo permesso per selezionare foto dalla galleria e dalla camera.</string>
+</resources>

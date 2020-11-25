@@ -129,7 +129,7 @@ String zipTypes = {"zip","rar"};
 ```
 
 #Styling
-Just override these styles in your main module to change colors and themes. 
+Just override these styles in your main module to change colors and themes.
 
 - If you have dark theme colors, just use `LibAppTheme.Dark`
 - If you have light theme colors, just use `LibAppTheme`
@@ -163,8 +163,8 @@ Just override these styles in your main module to change colors and themes.
            <item name="tabGravity">fill</item>
            <item name="tabMaxWidth">0dp</item>
        </style>
-       
-       
+
+
        <style name="ToolbarTheme" parent="Widget.MaterialComponents.Toolbar.Primary">
                <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Light</item>
                <item name="android:theme">@style/ThemeOverlay.App.Toolbar.Light</item>
