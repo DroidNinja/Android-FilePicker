@@ -16,7 +16,7 @@ object PickerManager {
     private var maxCount = FilePickerConst.DEFAULT_MAX_COUNT
     private var showImages = true
     var cameraDrawable = R.drawable.ic_camera
-    var sortingType = SortingTypes.none
+    var sortingType = SortingTypes.NONE
 
     val selectedPhotos: ArrayList<Uri> = ArrayList()
     val selectedFiles: ArrayList<Uri> = ArrayList()

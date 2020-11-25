@@ -19,7 +19,7 @@ If your app
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    implementation 'com.droidninja:filepicker:2.2.4'
+    implementation 'com.droidninja:filepicker:2.2.5'
 ```
 There is a method `getFilePath` in `ContentUriUtils` class through you can get the file path from Uri. e.g.
 
