@@ -115,7 +115,6 @@ class FilePickerBuilder {
         start(context, FilePickerConst.REQUEST_CODE_DOC)
     }
 
-
     fun pickFile(context: Fragment) {
         mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, FilePickerConst.DOC_PICKER)
         start(context, FilePickerConst.REQUEST_CODE_DOC)
