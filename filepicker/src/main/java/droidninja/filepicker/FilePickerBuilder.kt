@@ -160,6 +160,13 @@ class FilePickerBuilder {
         start(context, requestCode)
     }
 
+    fun build(pickerType: Int, context: Activity): Intent {
+        val intent = Intent(context, FilePickerActivity::class.java)
+        mPickerOptionsBundle.putInt(FilePickerConst.EXTRA_PICKER_TYPE, pickerType)
+        intent.putExtras(mPickerOptionsBundle)
+        return intent
+    }
+
     private fun start(context: Activity, requestCode: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context, FilePickerConst.PERMISSIONS_FILE_PICKER) != PackageManager.PERMISSION_GRANTED) {
