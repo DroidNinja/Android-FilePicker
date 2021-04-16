@@ -128,7 +128,8 @@ String zipTypes = {"zip","rar"};
     addFileSupport("ZIP",zipTypes, R.drawable.ic_zip_icon);
 ```
 
-#Styling
+# Styling
+
 Just override these styles in your main module to change colors and themes.
 
 - If you have dark theme colors, just use `LibAppTheme.Dark`
