@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -35,7 +36,7 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
 
     lateinit var emptyView: TextView
     lateinit var viewModel: VMMediaPicker
-
+    private lateinit var progressBar: ContentLoadingProgressBar
     private var mListener: PhotoPickerFragmentListener? = null
     private var photoGridAdapter: PhotoGridAdapter? = null
     private var imageCaptureManager: ImageCaptureManager? = null
@@ -91,6 +92,8 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
     }
 
     private fun initView(view: View) {
+        progressBar = view.findViewById(R.id.progressbar)
+        progressBar.visibility = View.VISIBLE
         recyclerView = view.findViewById(R.id.recyclerview)
         emptyView = view.findViewById(R.id.empty_view)
         arguments?.let {
@@ -138,6 +141,7 @@ class MediaDetailPickerFragment : BaseFragment(), FileAdapterListener {
 
     private fun updateList(medias: List<Media>) {
         view?.let { _ ->
+            progressBar.visibility = View.GONE
             if (medias.isNotEmpty()) {
                 emptyView.visibility = View.GONE
             } else {

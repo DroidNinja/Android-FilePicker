@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -36,7 +37,7 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
 
     lateinit var emptyView: TextView
     lateinit var viewModel: VMMediaPicker
-
+    private lateinit var progressBar: ContentLoadingProgressBar
     private var mListener: PhotoPickerFragmentListener? = null
     private var photoGridAdapter: FolderGridAdapter? = null
     private var imageCaptureManager: ImageCaptureManager? = null
@@ -78,6 +79,8 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
     }
 
     private fun initView(view: View) {
+        progressBar = view.findViewById(R.id.progressbar)
+        progressBar.visibility = View.VISIBLE
         recyclerView = view.findViewById(R.id.recyclerview)
         emptyView = view.findViewById(R.id.empty_view)
         arguments?.let {
@@ -128,6 +131,7 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
 
     private fun updateList(dirs: List<PhotoDirectory>) {
         view?.let {
+            progressBar.visibility = View.GONE
             if (dirs.isNotEmpty()) {
                 emptyView.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
@@ -166,9 +170,11 @@ class MediaFolderPickerFragment : BaseFragment(), FolderGridAdapter.FolderGridAd
 
     override fun onFolderClicked(photoDirectory: PhotoDirectory) {
         val intent = Intent(activity, MediaDetailsActivity::class.java)
-        intent.putExtra(PhotoDirectory::class.java.simpleName, photoDirectory.apply {
-            medias.clear()
-        })
+        val intentPhotoDir = PhotoDirectory(bucketId = photoDirectory.bucketId,name = photoDirectory.name)
+        intent.putExtra(PhotoDirectory::class.java.simpleName, intentPhotoDir)
+//        intent.putExtra(PhotoDirectory::class.java.simpleName, photoDirectory.apply {
+//            medias.clear()
+//        })
         intent.putExtra(FilePickerConst.EXTRA_FILE_TYPE, fileType)
         intent.putExtra(FilePickerConst.EXTRA_IMAGE_FILE_SIZE, imageFileSize)
         intent.putExtra(FilePickerConst.EXTRA_VIDEO_FILE_SIZE, videoFileSize)
