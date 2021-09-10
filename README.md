@@ -19,7 +19,7 @@ If your app
 
 * As of now, It is only available in jCenter(), So just put this in your app dependencies:
 ```gradle
-    implementation 'com.droidninja:filepicker:2.2.4'
+    implementation 'com.droidninja:filepicker:2.2.5'
 ```
 There is a method `getFilePath` in `ContentUriUtils` class through you can get the file path from Uri. e.g.
 
@@ -128,8 +128,9 @@ String zipTypes = {"zip","rar"};
     addFileSupport("ZIP",zipTypes, R.drawable.ic_zip_icon);
 ```
 
-#Styling
-Just override these styles in your main module to change colors and themes. 
+# Styling
+
+Just override these styles in your main module to change colors and themes.
 
 - If you have dark theme colors, just use `LibAppTheme.Dark`
 - If you have light theme colors, just use `LibAppTheme`
@@ -163,8 +164,8 @@ Just override these styles in your main module to change colors and themes.
            <item name="tabGravity">fill</item>
            <item name="tabMaxWidth">0dp</item>
        </style>
-       
-       
+
+
        <style name="ToolbarTheme" parent="Widget.MaterialComponents.Toolbar.Primary">
                <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar.Light</item>
                <item name="android:theme">@style/ThemeOverlay.App.Toolbar.Light</item>

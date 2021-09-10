@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -27,6 +28,7 @@ import java.util.Comparator
 class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     private var recyclerView: RecyclerView? = null
     private var emptyView: TextView? = null
+    private lateinit var progressBar: ContentLoadingProgressBar
     private lateinit var mGlideRequestManager: RequestManager
     private var photoGridAdapter: PhotoGridAdapter? = null
     private var fileType: Int = 0
@@ -74,6 +76,8 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     }
 
     private fun setUpView() {
+        progressBar = findViewById(R.id.progressbar)
+        progressBar.visibility = View.VISIBLE
         recyclerView = findViewById(R.id.recyclerview)
         emptyView = findViewById(R.id.empty_view)
 
@@ -108,6 +112,7 @@ class MediaDetailsActivity : BaseFilePickerActivity(), FileAdapterListener {
     }
 
     private fun updateList(medias: List<Media>) {
+        progressBar.visibility = View.GONE
         if (medias.isNotEmpty()) {
             emptyView?.visibility = View.GONE
             recyclerView?.visibility = View.VISIBLE
