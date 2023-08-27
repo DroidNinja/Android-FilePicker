@@ -182,11 +182,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     .setActivityTitle("Please select doc")
                     .setImageSizeLimit(5) //Provide Size in MB
                     .setVideoSizeLimit(20)
-                    .addFileSupport("ZIP", zips)
-                    .addFileSupport("AAC", pdfs, R.drawable.pdf_blue)
+//                    .addFileSupport("ZIP", zips)
+//                    .addFileSupport("AAC", pdfs, R.drawable.pdf_blue)
                     .enableDocSupport(true)
                     .enableSelectAll(true)
-                    .sortDocumentsBy(SortingTypes.name)
+                    .sortDocumentsBy(SortingTypes.NAME)
                     .withOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                     .pickFile(this);
         }
